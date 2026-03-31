@@ -134,6 +134,37 @@ export function getCategories(productLineId?: string): Category[] {
   return mockCategories;
 }
 
+export function getProductBySlug(slug: string): Product | undefined {
+  return mockProducts.find((p) => p.slug === slug && p.is_active);
+}
+
+export function getAllProductSlugs(): string[] {
+  return mockProducts.filter((p) => p.is_active).map((p) => p.slug);
+}
+
+export function getRelatedProducts(product: Product, limit = 4): Product[] {
+  return mockProducts
+    .filter((p) => p.id !== product.id && p.category_id === product.category_id && p.is_active)
+    .sort((a, b) => b.reviews_count - a.reviews_count)
+    .slice(0, limit);
+}
+
+export function getCrossSellProducts(product: Product, limit = 4): Product[] {
+  const otherBrand = product.brand === "ecokon" ? "tsvetologiya" : "ecokon";
+  return mockProducts
+    .filter((p) => p.brand === otherBrand && p.is_active)
+    .sort((a, b) => b.reviews_count - a.reviews_count)
+    .slice(0, limit);
+}
+
+export function getProductLineById(id: string): ProductLine | undefined {
+  return mockProductLines.find((l) => l.id === id);
+}
+
+export function getCategoryById(id: string): Category | undefined {
+  return mockCategories.find((c) => c.id === id);
+}
+
 export function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price) + " ₽";
 }
