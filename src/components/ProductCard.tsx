@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/catalog";
+import { useCartStore } from "@/store/cartStore";
 import type { Product } from "@/types/database";
 
 const badgeMap: Record<string, { variant: "bestseller" | "new" | "sale"; label: string }> = {
@@ -15,10 +16,27 @@ const badgeMap: Record<string, { variant: "bestseller" | "new" | "sale"; label: 
 };
 
 export function ProductCard({ product }: { product: Product }) {
+  const addItem = useCartStore((s) => s.addItem);
+
   const discountPercent =
     product.price_old && product.price_old > product.price
       ? Math.round(((product.price_old - product.price) / product.price_old) * 100)
       : null;
+
+  function handleAddToCart(e: React.MouseEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+    addItem({
+      product_id: product.id,
+      name: product.name,
+      brand: product.brand,
+      price: product.price,
+      quantity: 1,
+      image: product.images[0] || "",
+      slug: product.slug,
+      weight_grams: product.weight_grams,
+    });
+  }
 
   return (
     <div className="group relative flex flex-col rounded-2xl bg-white shadow-md transition-all duration-200 hover:shadow-lg hover:scale-[1.01]">
@@ -49,12 +67,10 @@ export function ProductCard({ product }: { product: Product }) {
 
         {/* Content */}
         <div className="flex flex-1 flex-col p-4">
-          {/* Name */}
           <h3 className="text-sm font-semibold leading-snug line-clamp-2 group-hover:text-brand-green md:text-base">
             {product.name}
           </h3>
 
-          {/* Rating */}
           <div className="mt-2 flex items-center gap-1 text-sm">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
             <span className="font-medium">{product.rating}</span>
@@ -63,7 +79,6 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           </div>
 
-          {/* Price */}
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-lg font-bold">{formatPrice(product.price)}</span>
             {product.price_old && (
@@ -75,16 +90,9 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </Link>
 
-      {/* Add to cart — outside the Link */}
+      {/* Add to cart */}
       <div className="px-4 pb-4">
-        <Button
-          size="sm"
-          className="w-full"
-          onClick={(e) => {
-            e.stopPropagation();
-            // TODO: add to cart store
-          }}
-        >
+        <Button size="sm" className="w-full" onClick={handleAddToCart}>
           В корзину
         </Button>
       </div>

@@ -8,12 +8,14 @@ import { BrandLabel } from "@/components/BrandLabel";
 import { VariantSelector } from "@/components/VariantSelector";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
 import { formatPrice } from "@/lib/catalog";
+import { useCartStore } from "@/store/cartStore";
 import type { Product } from "@/types/database";
 
 export function ProductInfo({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const addItem = useCartStore((s) => s.addItem);
 
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
 
@@ -108,7 +110,23 @@ export function ProductInfo({ product }: { product: Product }) {
 
       {/* CTA buttons */}
       <div className="flex gap-3">
-        <Button size="lg" className="flex-1">
+        <Button
+          size="lg"
+          className="flex-1"
+          onClick={() => {
+            addItem({
+              product_id: product.id,
+              variant_id: selectedVariant || undefined,
+              name: product.name,
+              brand: product.brand,
+              price: product.price,
+              quantity,
+              image: product.images[0] || "",
+              slug: product.slug,
+              weight_grams: product.weight_grams,
+            });
+          }}
+        >
           Добавить в корзину
         </Button>
         <button

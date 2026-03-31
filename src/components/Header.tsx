@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, User, Menu } from "lucide-react";
 import { MobileMenu } from "./MobileMenu";
+import { useCartCount } from "@/hooks/useCart";
 
 const navLinks = [
   { href: "/catalog/udobreniya", label: "Удобрения" },
@@ -14,6 +15,7 @@ const navLinks = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const cartCount = useCartCount();
 
   return (
     <>
@@ -50,9 +52,11 @@ export function Header() {
               className="relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-brand-gray-light"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-green text-[10px] font-bold text-white">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-green text-[10px] font-bold text-white">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
             </Link>
 
             {/* Profile — desktop */}
