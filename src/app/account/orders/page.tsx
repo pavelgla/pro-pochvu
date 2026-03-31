@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { OrderTracker } from "@/components/OrderTracker";
 import { formatPrice } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { cn } from "@/lib/utils";
@@ -152,6 +153,15 @@ export default function OrdersPage() {
                         </span>
                       </div>
                     ))}
+
+                    {/* Order tracker */}
+                    <div className="border-t border-brand-gray-light pt-3">
+                      <OrderTracker
+                        currentStatus={order.status === "delivered" ? "delivered" : order.status === "shipped" ? "shipped" : "paid"}
+                        trackNumber={order.delivery_track}
+                        deliveryProvider={order.delivery_provider}
+                      />
+                    </div>
 
                     <div className="flex items-center justify-between border-t border-brand-gray-light pt-3">
                       <span className="text-xs text-brand-gray-dark/50">
