@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ShoppingCart, User, Menu } from "lucide-react";
 import { MobileMenu } from "./MobileMenu";
 import { useCartCount } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
 
 const navLinks = [
   { href: "/catalog/udobreniya", label: "Удобрения" },
@@ -16,12 +17,12 @@ const navLinks = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const cartCount = useCartCount();
+  const { user } = useAuth();
 
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-brand-gray-light bg-white/95 backdrop-blur">
         <div className="container-main flex h-16 items-center justify-between">
-          {/* Logo */}
           <Link
             href="/"
             className="flex items-center gap-1.5 text-lg font-bold"
@@ -31,7 +32,6 @@ export function Header() {
             <span className="text-tsvetologiya">Цветология</span>
           </Link>
 
-          {/* Desktop nav */}
           <nav className="hidden items-center gap-6 md:flex">
             {navLinks.map((link) => (
               <Link
@@ -44,9 +44,7 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Right side */}
           <div className="flex items-center gap-2">
-            {/* Cart */}
             <Link
               href="/cart"
               className="relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-brand-gray-light"
@@ -59,15 +57,16 @@ export function Header() {
               )}
             </Link>
 
-            {/* Profile — desktop */}
             <Link
-              href="/account"
+              href={user ? "/account" : "/auth/login"}
               className="hidden h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-brand-gray-light md:flex"
             >
-              <User className="h-5 w-5" />
+              <User
+                className={`h-5 w-5 ${user ? "text-brand-green" : ""}`}
+                fill={user ? "currentColor" : "none"}
+              />
             </Link>
 
-            {/* Burger — mobile */}
             <button
               onClick={() => setMobileMenuOpen(true)}
               className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-brand-gray-light md:hidden"

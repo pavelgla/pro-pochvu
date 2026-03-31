@@ -7,8 +7,10 @@ import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
 import { VariantSelector } from "@/components/VariantSelector";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
+import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
+import { useAuth } from "@/hooks/useAuth";
 import type { Product } from "@/types/database";
 
 export function ProductInfo({ product }: { product: Product }) {
@@ -16,6 +18,8 @@ export function ProductInfo({ product }: { product: Product }) {
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
+  const { user } = useAuth();
+  const router = useRouter();
 
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
 
@@ -130,7 +134,13 @@ export function ProductInfo({ product }: { product: Product }) {
           Добавить в корзину
         </Button>
         <button
-          onClick={() => setIsFavorite(!isFavorite)}
+          onClick={() => {
+            if (!user) {
+              router.push(`/auth/login?return=/product/${product.slug}`);
+              return;
+            }
+            setIsFavorite(!isFavorite);
+          }}
           className="flex h-13 w-13 items-center justify-center rounded-xl border-2 border-brand-gray-light transition-colors hover:border-brand-green/50"
           aria-label="В избранное"
         >
