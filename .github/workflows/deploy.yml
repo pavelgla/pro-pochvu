@@ -1,0 +1,133 @@
+name: Deploy Ecokon
+
+on:
+  push:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/web
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ecokon_test
+          POSTGRES_USER: ecokon
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://ecokon:test_password@localhost:5432/ecokon_test
+      - run: npm run build
+        env:
+          DATABASE_URL: postgresql://ecokon:test_password@localhost:5432/ecokon_test
+          NEXTAUTH_SECRET: test-secret-for-build
+          NEXTAUTH_URL: http://localhost:3002
+
+  build-and-push:
+    name: Build & push Docker image
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=https://ecokon.ru
+            NEXT_PUBLIC_YMAPS_API_KEY=${{ secrets.NEXT_PUBLIC_YMAPS_API_KEY }}
+            NEXT_PUBLIC_METRIKA_ID=${{ secrets.NEXT_PUBLIC_METRIKA_ID }}
+            NEXT_PUBLIC_VK_PIXEL_ID=${{ secrets.NEXT_PUBLIC_VK_PIXEL_ID }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
+  deploy:
+    name: Deploy to VPS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync config files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "docker-compose.prod.yml,deploy/"
+          target: ~/ecokon
+          overwrite: true
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd ~/ecokon
+
+            # Login to GHCR
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Ensure webproxy network exists
+            docker network create webproxy 2>/dev/null || true
+
+            # Pull latest image
+            docker compose -f docker-compose.prod.yml pull web
+
+            # Run Prisma migrations
+            docker compose -f docker-compose.prod.yml run --rm web npx prisma migrate deploy
+
+            # Restart services
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            # Reload nginx (from pdnguard stack)
+            docker exec pdnguard-nginx nginx -s reload 2>/dev/null || true
+
+            # Cleanup old images
+            docker image prune -f
+
+            # Verify health
+            sleep 10
+            curl -sf http://localhost:3002/ || echo "⚠️ Health check failed"

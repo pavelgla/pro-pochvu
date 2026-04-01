@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecokon-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ecokon}
+      POSTGRES_USER: ${POSTGRES_USER:-ecokon}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ecokon_pgdata:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ecokon}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: ghcr.io/pavelgla/ecokon/web:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: https://ecokon.ru
+        NEXT_PUBLIC_YMAPS_API_KEY: ${NEXT_PUBLIC_YMAPS_API_KEY:-}
+        NEXT_PUBLIC_METRIKA_ID: ${NEXT_PUBLIC_METRIKA_ID:-}
+        NEXT_PUBLIC_VK_PIXEL_ID: ${NEXT_PUBLIC_VK_PIXEL_ID:-}
+    container_name: ecokon-web
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ecokon}:${POSTGRES_PASSWORD}@ecokon-db:5432/${POSTGRES_DB:-ecokon}
+      NEXTAUTH_URL: https://ecokon.ru
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      YOOKASSA_SHOP_ID: ${YOOKASSA_SHOP_ID}
+      YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY}
+      APISHIP_API_KEY: ${APISHIP_API_KEY}
+      APISHIP_FROM_CITY_ID: ${APISHIP_FROM_CITY_ID}
+      APISHIP_PLATFORM_ID: ${APISHIP_PLATFORM_ID:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@ecokon.ru}
+    networks:
+      - webproxy
+      - internal
+
+volumes:
+  ecokon_pgdata:
+
+networks:
+  webproxy:
+    external: true
+  internal:
+    driver: bridge

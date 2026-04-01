@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.github
+.env*
+docker-compose.yml
+docker-compose.prod.yml
+README.md
+docs/
+supabase/
