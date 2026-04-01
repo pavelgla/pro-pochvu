@@ -1,32 +1,29 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+export default withAuth(
+  function middleware(req) {
+    const { pathname } = req.nextUrl;
+    const token = req.nextauth.token;
 
-  // Check for Supabase auth cookies
-  const hasSession = req.cookies.getAll().some(
-    (c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token")
-  );
-
-  // Protected routes: /account/*
-  if (pathname.startsWith("/account")) {
-    if (!hasSession) {
-      const loginUrl = new URL("/auth/login", req.url);
-      loginUrl.searchParams.set("return", pathname);
-      return NextResponse.redirect(loginUrl);
+    if (pathname.startsWith("/admin") && token?.role !== "admin") {
+      return NextResponse.redirect(new URL("/", req.url));
     }
-  }
 
-  // Admin routes: /admin/*
-  if (pathname.startsWith("/admin")) {
-    if (!hasSession) {
-      return NextResponse.redirect(new URL("/auth/login", req.url));
-    }
-    // Role check happens in admin layout (server-side via Supabase)
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token, req }) => {
+        const { pathname } = req.nextUrl;
+        if (pathname.startsWith("/account") || pathname.startsWith("/admin")) {
+          return !!token;
+        }
+        return true;
+      },
+    },
   }
-
-  return NextResponse.next();
-}
+);
 
 export const config = {
   matcher: ["/account/:path*", "/admin/:path*"],

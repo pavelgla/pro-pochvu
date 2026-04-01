@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
-import type { Json } from "@/types/database";
 
 type Address = {
   id: string;
@@ -42,7 +41,7 @@ export default function ProfilePage() {
       await updateProfile({
         name,
         phone,
-        addresses: addresses as unknown as Json,
+        addresses,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);

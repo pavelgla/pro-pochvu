@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
 import { getProducts } from "@/lib/catalog";
 
-export function Bestsellers() {
-  const { products } = getProducts({ sort: "popularity", limit: 4 });
+export async function Bestsellers() {
+  const { products } = await getProducts({ sort: "popularity", limit: 4 });
 
   return (
     <section className="section-padding bg-brand-gray-light/50">

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { Json } from "@/types/database";
+import type { Prisma } from "@prisma/client";
 
 type Variant = {
   id: string;
@@ -11,7 +11,7 @@ type Variant = {
 };
 
 type Props = {
-  variants: Json;
+  variants: Prisma.JsonValue;
   selectedId: string | null;
   onSelect: (id: string) => void;
 };

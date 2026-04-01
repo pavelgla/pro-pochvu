@@ -1,32 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { notifyNewOrder, notifyStatusChange } from "@/lib/telegram";
 import type { OrderForNotification } from "@/lib/telegram";
 
-// Mock order loader (replace with Supabase when connected)
 async function loadOrder(orderId: string): Promise<OrderForNotification | null> {
-  // TODO: replace with real Supabase query
-  // const { data } = await supabase
-  //   .from('orders')
-  //   .select('*, order_items(*)')
-  //   .eq('id', orderId)
-  //   .single();
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  });
+
+  if (!order) return null;
 
   return {
-    id: orderId,
-    order_number: 100044,
-    total: 1863,
-    delivery_cost: 0,
-    delivery_provider: "СДЭК",
-    delivery_address: { city: "Москва", street: "ул. Ленина", house: "10" },
-    delivery_track: null,
-    delivery_status: null,
-    payment_method: "Банковская карта",
-    customer_name: "Тестовый Клиент",
-    customer_phone: "+7 999 000-00-00",
-    items: [
-      { name: "Био-чай Универсальный с янтарём", quantity: 2, price: 626 },
-      { name: "Био-чай Для орхидей", quantity: 1, price: 611 },
-    ],
+    id: order.id,
+    order_number: order.orderNumber,
+    total: order.total,
+    delivery_cost: order.deliveryCost,
+    delivery_provider: order.deliveryProvider,
+    delivery_address: order.deliveryAddress as Record<string, string> | null,
+    delivery_track: order.deliveryTrack,
+    delivery_status: order.deliveryStatus,
+    payment_method: order.paymentMethod,
+    customer_name: order.customerName,
+    customer_phone: order.customerPhone,
+    items: order.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
   };
 }
 

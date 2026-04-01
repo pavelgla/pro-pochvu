@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Tabs } from "@/components/ui/Tabs";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
 import { Reviews } from "@/components/Reviews";
-import type { Product } from "@/types/database";
+import type { ProductWithLine } from "@/types/database";
 
 const tabList = [
   { id: "description", label: "Описание" },
@@ -20,11 +20,12 @@ const howToUse: Record<string, string> = {
     "1. Выберите место для установки (стена или пол).\n2. Закрепите модуль согласно инструкции (крепёж в комплекте).\n3. Заполните карманы грунтом на 2/3 объёма.\n4. Посадите растения, аккуратно расправив корни.\n5. Полейте каждый карман и дайте воде стечь через дренаж.\n6. Регулярно поливайте и подкармливайте удобрениями ЭКО Конь.",
 };
 
-export function ProductTabs({ product }: { product: Product }) {
+export function ProductTabs({ product }: { product: ProductWithLine }) {
   const [activeTab, setActiveTab] = useState("description");
+  const brand = product.productLine?.brand || "ecokon";
 
-  const description = product.description || product.short_description || "Описание товара скоро появится.";
-  const usage = howToUse[product.brand] || howToUse.ecokon;
+  const description = product.fullDesc || product.shortDesc || "Описание товара скоро появится.";
+  const usage = howToUse[brand] || howToUse.ecokon;
 
   return (
     <div>
@@ -44,7 +45,7 @@ export function ProductTabs({ product }: { product: Product }) {
         {activeTab === "reviews" && (
           <Reviews
             productRating={product.rating}
-            reviewsCount={product.reviews_count}
+            reviewsCount={product.reviewsCount}
           />
         )}
 

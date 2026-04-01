@@ -1,21 +1,24 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { useCartStore } from "@/store/cartStore";
-import { getCrossSellProducts } from "@/lib/catalog";
-import type { Product } from "@/types/database";
 
 export function CartRecommendations() {
   const items = useCartStore((s) => s.items);
+  const [recommendations, setRecommendations] = useState<any[]>([]);
 
-  if (items.length === 0) return null;
+  useEffect(() => {
+    if (items.length === 0) return;
+    // Show products from the other brand
+    const firstBrand = items[0].brand;
+    const otherBrand = firstBrand === "ecokon" ? "tsvetologiya" : "ecokon";
+    fetch(`/api/catalog?brand=${otherBrand}&limit=3`)
+      .then((res) => res.json())
+      .then((data) => setRecommendations(data.products || []));
+  }, [items]);
 
-  // Get cross-sell based on first item's brand
-  const firstBrand = items[0].brand;
-  const mockProduct = { brand: firstBrand } as Product;
-  const recommendations = getCrossSellProducts(mockProduct, 3);
-
-  if (recommendations.length === 0) return null;
+  if (items.length === 0 || recommendations.length === 0) return null;
 
   return (
     <section className="mt-12">

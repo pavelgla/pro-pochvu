@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { ProductLines } from "@/components/sections/ProductLines";
 import { Bestsellers } from "@/components/sections/Bestsellers";
@@ -20,12 +21,16 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>
       <Hero />
       <ProductLines />
-      <Bestsellers />
+      <Suspense>
+        <Bestsellers />
+      </Suspense>
       <Benefits />
       <Testimonials />
       <Newsletter />

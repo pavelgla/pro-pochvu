@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPayment } from "@/lib/yookassa";
+import { prisma } from "@/lib/prisma";
 import type { PaymentMethod } from "@/types/yookassa";
 
 export async function POST(req: NextRequest) {
@@ -44,8 +45,10 @@ export async function POST(req: NextRequest) {
       paymentMethod,
     });
 
-    // TODO: update order in Supabase with payment_id
-    // await supabase.from('orders').update({ payment_id: paymentId }).eq('id', orderId)
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { paymentId },
+    });
 
     return NextResponse.json({ paymentId, confirmationUrl });
   } catch (err) {

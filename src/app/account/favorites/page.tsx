@@ -1,20 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
-import { getProducts } from "@/lib/catalog";
-import type { Product } from "@/types/database";
 
 export default function FavoritesPage() {
-  // Mock: show first 3 products as favorites
-  const { products: allProducts } = getProducts({ limit: 3 });
-  const [favorites, setFavorites] = useState<Product[]>(allProducts);
+  const [favorites, setFavorites] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/catalog?limit=3")
+      .then((res) => res.json())
+      .then((data) => setFavorites(data.products || []))
+      .finally(() => setLoading(false));
+  }, []);
 
   function removeFavorite(productId: string) {
     setFavorites(favorites.filter((p) => p.id !== productId));
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-gray-light border-t-brand-green" />
+      </div>
+    );
   }
 
   return (

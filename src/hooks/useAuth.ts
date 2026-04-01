@@ -1,153 +1,83 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase";
-import type { User } from "@supabase/supabase-js";
-import type { Profile } from "@/types/database";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useState, useCallback } from "react";
 
-type AuthState = {
-  user: User | null;
-  profile: Profile | null;
-  loading: boolean;
+type Profile = {
+  id: string;
+  name: string | null;
+  email: string;
+  phone: string | null;
+  addresses: any[];
+  loyaltyPoints: number;
+  referralCode: string | null;
+  role: string;
 };
 
-// Mock profile for when Supabase is not connected
-function mockProfile(user: User): Profile {
-  return {
-    id: user.id,
-    user_id: user.id,
-    name: user.user_metadata?.name || null,
-    phone: null,
-    addresses: [],
-    loyalty_points: 0,
-    referral_code: null,
-    referred_by: null,
-    role: "customer",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
-}
-
 export function useAuth() {
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    profile: null,
-    loading: true,
-  });
+  const { data: session, status } = useSession();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
 
-  const supabase = createClient();
+  const loading = status === "loading";
+  const user = session?.user ?? null;
 
-  const fetchProfile = useCallback(
-    async (userId: string) => {
-      try {
-        const { data } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", userId)
-          .single();
-        return data as Profile | null;
-      } catch {
-        return null;
-      }
-    },
-    [supabase]
-  );
-
-  useEffect(() => {
-    let mounted = true;
-
-    async function init() {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!mounted) return;
-
-        if (session?.user) {
-          const profile = (await fetchProfile(session.user.id)) || mockProfile(session.user);
-          setState({ user: session.user, profile, loading: false });
-        } else {
-          setState({ user: null, profile: null, loading: false });
-        }
-      } catch {
-        if (mounted) setState({ user: null, profile: null, loading: false });
-      }
+  const fetchProfile = useCallback(async () => {
+    if (!session?.user) return;
+    setProfileLoading(true);
+    try {
+      const res = await fetch("/api/user/profile");
+      if (res.ok) setProfile(await res.json());
+    } catch { /* ignore */ } finally {
+      setProfileLoading(false);
     }
+  }, [session?.user]);
 
-    init();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!mounted) return;
-      if (session?.user) {
-        const profile = (await fetchProfile(session.user.id)) || mockProfile(session.user);
-        setState({ user: session.user, profile, loading: false });
-      } else {
-        setState({ user: null, profile: null, loading: false });
-      }
-    });
-
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
-  }, [supabase, fetchProfile]);
-
-  async function signIn(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+  async function handleSignIn(email: string, password: string) {
+    const res = await signIn("credentials", { email, password, redirect: false });
+    if (res?.error) throw new Error("Неверный email или пароль");
   }
 
-  async function signUp(email: string, password: string, name: string) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { name } },
+  async function handleSignUp(email: string, password: string, name: string) {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
     });
-    if (error) throw error;
-
-    // Create profile
-    if (data.user) {
-      await supabase.from("profiles").insert({
-        user_id: data.user.id,
-        name,
-        role: "customer",
-      });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || "Ошибка регистрации");
     }
+    await handleSignIn(email, password);
   }
 
-  async function signOut() {
-    await supabase.auth.signOut();
-    setState({ user: null, profile: null, loading: false });
+  async function handleSignOut() {
+    await signOut({ redirect: false });
+    setProfile(null);
   }
 
   async function resetPassword(email: string) {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/account`,
+    const res = await fetch("/api/auth/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
     });
-    if (error) throw error;
+    if (!res.ok) throw new Error("Ошибка сброса пароля");
   }
 
   async function updateProfile(updates: Partial<Profile>) {
-    if (!state.user) return;
-    const { error } = await supabase
-      .from("profiles")
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq("user_id", state.user.id);
-    if (error) throw error;
-    setState((s) => ({
-      ...s,
-      profile: s.profile ? { ...s.profile, ...updates } : null,
-    }));
+    const res = await fetch("/api/user/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    });
+    if (!res.ok) throw new Error("Ошибка обновления профиля");
+    setProfile(await res.json());
   }
 
   return {
-    ...state,
-    signIn,
-    signUp,
-    signOut,
-    resetPassword,
-    updateProfile,
+    user, profile, loading: loading || profileLoading,
+    signIn: handleSignIn, signUp: handleSignUp, signOut: handleSignOut,
+    resetPassword, updateProfile, fetchProfile,
   };
 }

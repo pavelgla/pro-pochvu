@@ -1,9 +1,10 @@
 import { ProductCard } from "@/components/ProductCard";
 import { getCrossSellProducts } from "@/lib/catalog";
-import type { Product } from "@/types/database";
+import type { ProductWithLine } from "@/types/database";
 
-export function CrossSell({ product }: { product: Product }) {
-  const items = getCrossSellProducts(product, 4);
+export async function CrossSell({ product }: { product: ProductWithLine }) {
+  const brand = product.productLine?.brand || "ecokon";
+  const items = await getCrossSellProducts(brand, product.id, 4);
   if (items.length === 0) return null;
 
   return (

@@ -7,7 +7,7 @@ import { BrandLabel } from "@/components/BrandLabel";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
-import type { Product } from "@/types/database";
+import type { ProductWithLine } from "@/types/database";
 
 const badgeMap: Record<string, { variant: "bestseller" | "new" | "sale"; label: string }> = {
   bestseller: { variant: "bestseller", label: "Хит" },
@@ -15,12 +15,13 @@ const badgeMap: Record<string, { variant: "bestseller" | "new" | "sale"; label: 
   sale: { variant: "sale", label: "Скидка" },
 };
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product }: { product: ProductWithLine }) {
   const addItem = useCartStore((s) => s.addItem);
+  const brand = product.productLine?.brand || "ecokon";
 
   const discountPercent =
-    product.price_old && product.price_old > product.price
-      ? Math.round(((product.price_old - product.price) / product.price_old) * 100)
+    product.oldPrice && product.oldPrice > product.price
+      ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : null;
 
   function handleAddToCart(e: React.MouseEvent) {
@@ -29,12 +30,12 @@ export function ProductCard({ product }: { product: Product }) {
     addItem({
       product_id: product.id,
       name: product.name,
-      brand: product.brand,
+      brand,
       price: product.price,
       quantity: 1,
-      image: product.images[0] || "",
+      image: (product.images as string[])[0] || "",
       slug: product.slug,
-      weight_grams: product.weight_grams,
+      weight_grams: product.weightGrams,
     });
   }
 
@@ -44,12 +45,12 @@ export function ProductCard({ product }: { product: Product }) {
         {/* Image */}
         <div className="relative aspect-square overflow-hidden rounded-t-xl bg-brand-gray-light">
           <div className="flex h-full items-center justify-center text-5xl text-brand-gray-dark/15">
-            {product.brand === "ecokon" ? "🌿" : "🌱"}
+            {brand === "ecokon" ? "🌿" : "🌱"}
           </div>
 
           {/* BrandLabel — top left */}
           <div className="absolute left-2 top-2">
-            <BrandLabel brand={product.brand as "ecokon" | "tsvetologiya"} />
+            <BrandLabel brand={brand as "ecokon" | "tsvetologiya"} />
           </div>
 
           {/* Badge — top right */}
@@ -75,15 +76,15 @@ export function ProductCard({ product }: { product: Product }) {
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
             <span className="font-medium">{product.rating}</span>
             <span className="text-brand-gray-dark/50">
-              ({product.reviews_count.toLocaleString("ru-RU")})
+              ({product.reviewsCount.toLocaleString("ru-RU")})
             </span>
           </div>
 
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-lg font-bold">{formatPrice(product.price)}</span>
-            {product.price_old && (
+            {product.oldPrice && (
               <span className="text-sm text-brand-gray-dark/40 line-through">
-                {formatPrice(product.price_old)}
+                {formatPrice(product.oldPrice)}
               </span>
             )}
           </div>

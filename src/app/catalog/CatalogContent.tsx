@@ -1,28 +1,48 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { CatalogFilters } from "@/components/CatalogFilters";
 import { CatalogSort } from "@/components/CatalogSort";
 import { CatalogPagination } from "@/components/CatalogPagination";
-import { getProducts, type CatalogFilters as Filters } from "@/lib/catalog";
+type CatalogResult = {
+  products: any[];
+  total: number;
+  page: number;
+  totalPages: number;
+};
 
 export function CatalogContent({ productLineSlug }: { productLineSlug?: string }) {
   const searchParams = useSearchParams();
+  const [data, setData] = useState<CatalogResult>({ products: [], total: 0, page: 1, totalPages: 1 });
+  const [loading, setLoading] = useState(true);
 
-  const filters: Filters = {
-    brand: searchParams.get("brand") || undefined,
-    productLine: productLineSlug || undefined,
-    category: searchParams.get("category") || undefined,
-    priceMin: searchParams.get("priceMin") ? Number(searchParams.get("priceMin")) : undefined,
-    priceMax: searchParams.get("priceMax") ? Number(searchParams.get("priceMax")) : undefined,
-    rating: searchParams.get("rating") ? Number(searchParams.get("rating")) : undefined,
-    sort: (searchParams.get("sort") as Filters["sort"]) || undefined,
-    page: searchParams.get("page") ? Number(searchParams.get("page")) : 1,
-    limit: 12,
-  };
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (productLineSlug) params.set("productLine", productLineSlug);
+    const brand = searchParams.get("brand");
+    if (brand) params.set("brand", brand);
+    const category = searchParams.get("category");
+    if (category) params.set("category", category);
+    const priceMin = searchParams.get("priceMin");
+    if (priceMin) params.set("priceMin", priceMin);
+    const priceMax = searchParams.get("priceMax");
+    if (priceMax) params.set("priceMax", priceMax);
+    const rating = searchParams.get("rating");
+    if (rating) params.set("rating", rating);
+    const sort = searchParams.get("sort");
+    if (sort) params.set("sort", sort);
+    const page = searchParams.get("page");
+    if (page) params.set("page", page);
+    params.set("limit", "12");
 
-  const { products, total, page, totalPages } = getProducts(filters);
+    setLoading(true);
+    fetch(`/api/catalog?${params.toString()}`)
+      .then((res) => res.json())
+      .then((result) => setData(result))
+      .finally(() => setLoading(false));
+  }, [searchParams, productLineSlug]);
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
@@ -32,15 +52,19 @@ export function CatalogContent({ productLineSlug }: { productLineSlug?: string }
         {/* Toolbar */}
         <div className="mb-6 flex items-center justify-between">
           <p className="text-sm text-brand-gray-dark/60">
-            {total} {total === 1 ? "товар" : total < 5 ? "товара" : "товаров"}
+            {data.total} {data.total === 1 ? "товар" : data.total < 5 ? "товара" : "товаров"}
           </p>
           <CatalogSort />
         </div>
 
         {/* Grid */}
-        {products.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-gray-light border-t-brand-green" />
+          </div>
+        ) : data.products.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {products.map((product) => (
+            {data.products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -57,7 +81,7 @@ export function CatalogContent({ productLineSlug }: { productLineSlug?: string }
 
         {/* Pagination */}
         <div className="mt-8">
-          <CatalogPagination page={page} totalPages={totalPages} />
+          <CatalogPagination page={data.page} totalPages={data.totalPages} />
         </div>
       </div>
     </div>

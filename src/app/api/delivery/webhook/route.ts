@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { notifyStatusChange } from "@/lib/telegram";
 import { sendShippingNotification, sendDeliveryConfirmation } from "@/lib/email";
 
@@ -8,49 +9,62 @@ export async function POST(req: NextRequest) {
 
   console.log("ApiShip webhook:", JSON.stringify(body));
 
-  // TODO: update order delivery_status in Supabase
-  // await supabase.from('orders').update({
-  //   delivery_status: status,
-  //   delivery_track: trackNumber,
-  // }).eq('id', orderId)
-
-  // TODO: load real order from Supabase when connected
   if (!orderId) {
     return NextResponse.json({ ok: true });
   }
 
-  const mockOrder = {
-    id: orderId,
-    order_number: 0,
-    total: 0,
-    subtotal: 0,
-    delivery_cost: 0,
-    discount: 0,
-    delivery_provider: null as string | null,
-    delivery_address: null as Record<string, string> | null,
-    delivery_track: trackNumber || null,
-    delivery_status: status || null,
-    payment_method: null as string | null,
-    customer_name: "",
-    customer_email: "",
-    customer_phone: "",
-    items: [] as { name: string; quantity: number; price: number }[],
+  const order = await prisma.order.update({
+    where: { id: orderId },
+    data: {
+      deliveryStatus: status,
+      deliveryTrack: trackNumber,
+    },
+    include: { items: true },
+  });
+
+  const telegramOrder = {
+    id: order.id,
+    order_number: order.orderNumber,
+    total: order.total,
+    delivery_cost: order.deliveryCost,
+    delivery_provider: order.deliveryProvider,
+    delivery_address: order.deliveryAddress as Record<string, string> | null,
+    delivery_track: order.deliveryTrack,
+    delivery_status: order.deliveryStatus,
+    payment_method: order.paymentMethod,
+    customer_name: order.customerName,
+    customer_phone: order.customerPhone,
+    items: order.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
+  };
+
+  const emailOrder = {
+    id: order.id,
+    order_number: order.orderNumber,
+    total: order.total,
+    subtotal: order.subtotal,
+    delivery_cost: order.deliveryCost,
+    discount: order.discount,
+    delivery_provider: order.deliveryProvider,
+    delivery_address: order.deliveryAddress as Record<string, string> | null,
+    delivery_track: order.deliveryTrack,
+    customer_name: order.customerName,
+    customer_email: order.customerEmail,
+    items: order.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
   };
 
   try {
     if (status === "shipped" || status === "in_transit") {
       await Promise.allSettled([
-        notifyStatusChange(mockOrder),
-        sendShippingNotification(mockOrder),
+        notifyStatusChange(telegramOrder),
+        sendShippingNotification(emailOrder),
       ]);
     } else if (status === "delivered") {
       await Promise.allSettled([
-        notifyStatusChange(mockOrder),
-        sendDeliveryConfirmation(mockOrder),
+        notifyStatusChange(telegramOrder),
+        sendDeliveryConfirmation(emailOrder),
       ]);
     } else {
-      // Other statuses — just notify admin
-      await notifyStatusChange(mockOrder);
+      await notifyStatusChange(telegramOrder);
     }
   } catch (err) {
     console.error("Delivery notification error:", err);

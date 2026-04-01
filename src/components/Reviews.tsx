@@ -7,21 +7,21 @@ import { cn } from "@/lib/utils";
 
 type ReviewData = {
   id: string;
-  author_name: string;
+  author: string;
   rating: number;
   text: string;
   source: string;
-  is_verified: boolean;
-  created_at: string;
+  isVerified: boolean;
+  createdAt: string;
 };
 
 // Mock reviews
 const mockReviews: ReviewData[] = [
-  { id: "r1", author_name: "Елена М.", rating: 5, text: "Отличное удобрение! Растения ожили буквально за неделю. Удобный формат стиков — просто заварить и полить. Рекомендую!", source: "Ozon", is_verified: true, created_at: "2026-03-15" },
-  { id: "r2", author_name: "Алексей К.", rating: 5, text: "Заказываю уже третий раз. Монстера и фикус растут как на дрожжах. Состав натуральный, запах приятный.", source: "Wildberries", is_verified: true, created_at: "2026-03-10" },
-  { id: "r3", author_name: "Ирина С.", rating: 4, text: "Хорошее удобрение, результат видно через пару недель. Единственный минус — хотелось бы упаковку побольше.", source: "Ozon", is_verified: true, created_at: "2026-03-05" },
-  { id: "r4", author_name: "Дмитрий В.", rating: 5, text: "Перешёл с химических удобрений на Эко Конь. Разница заметна — растения выглядят здоровее, листья ярче.", source: "site", is_verified: false, created_at: "2026-02-28" },
-  { id: "r5", author_name: "Марина Т.", rating: 5, text: "Купила для орхидей по совету подруги. Через месяц появились два новых цветоноса! Очень довольна.", source: "Ozon", is_verified: true, created_at: "2026-02-20" },
+  { id: "r1", author: "Елена М.", rating: 5, text: "Отличное удобрение! Растения ожили буквально за неделю. Удобный формат стиков — просто заварить и полить. Рекомендую!", source: "Ozon", isVerified: true, createdAt: "2026-03-15" },
+  { id: "r2", author: "Алексей К.", rating: 5, text: "Заказываю уже третий раз. Монстера и фикус растут как на дрожжах. Состав натуральный, запах приятный.", source: "Wildberries", isVerified: true, createdAt: "2026-03-10" },
+  { id: "r3", author: "Ирина С.", rating: 4, text: "Хорошее удобрение, результат видно через пару недель. Единственный минус — хотелось бы упаковку побольше.", source: "Ozon", isVerified: true, createdAt: "2026-03-05" },
+  { id: "r4", author: "Дмитрий В.", rating: 5, text: "Перешёл с химических удобрений на Эко Конь. Разница заметна — растения выглядят здоровее, листья ярче.", source: "site", isVerified: false, createdAt: "2026-02-28" },
+  { id: "r5", author: "Марина Т.", rating: 5, text: "Купила для орхидей по совету подруги. Через месяц появились два новых цветоноса! Очень довольна.", source: "Ozon", isVerified: true, createdAt: "2026-02-20" },
 ];
 
 function Stars({ count, size = "sm" }: { count: number; size?: "sm" | "md" }) {
@@ -42,7 +42,6 @@ function Stars({ count, size = "sm" }: { count: number; size?: "sm" | "md" }) {
 }
 
 function RatingDistribution({ rating, total }: { rating: number; total: number }) {
-  // Approximate distribution from the average
   const dist = [
     { stars: 5, pct: rating >= 4.8 ? 85 : rating >= 4.5 ? 70 : 55 },
     { stars: 4, pct: rating >= 4.8 ? 10 : 20 },
@@ -83,7 +82,6 @@ function ReviewForm({ onSubmit }: { onSubmit: (data: ReviewFormState) => void })
   return (
     <div className="rounded-xl border border-brand-gray-light p-5 space-y-4">
       <h4 className="font-bold">Оставить отзыв</h4>
-      {/* Star picker */}
       <div className="flex gap-1">
         {Array.from({ length: 5 }, (_, i) => (
           <button
@@ -155,7 +153,6 @@ export function Reviews({ productRating, reviewsCount }: Props) {
       {showForm && (
         <ReviewForm
           onSubmit={(data) => {
-            // TODO: submit to Supabase
             console.log("Review submitted:", data);
             setShowForm(false);
           }}
@@ -169,8 +166,8 @@ export function Reviews({ productRating, reviewsCount }: Props) {
             <div key={r.id} className="rounded-xl border border-brand-gray-light p-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="font-medium">{r.author_name}</span>
-                  {r.is_verified && (
+                  <span className="font-medium">{r.author}</span>
+                  {r.isVerified && (
                     <span className="rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
                       Проверенная покупка
                     </span>
@@ -178,7 +175,7 @@ export function Reviews({ productRating, reviewsCount }: Props) {
                 </div>
                 <span className="text-xs text-brand-gray-dark/40">
                   {r.source !== "site" ? r.source : "Сайт"} •{" "}
-                  {new Date(r.created_at).toLocaleDateString("ru-RU")}
+                  {new Date(r.createdAt).toLocaleDateString("ru-RU")}
                 </span>
               </div>
               <div className="mt-2">

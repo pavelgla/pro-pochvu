@@ -5,12 +5,6 @@ import { ExternalLink } from "lucide-react";
 
 type OrderStatus = "created" | "paid" | "shipped" | "in_transit" | "delivered";
 
-type StatusStep = {
-  key: OrderStatus;
-  label: string;
-  date?: string;
-};
-
 const STEPS: { key: OrderStatus; label: string }[] = [
   { key: "created", label: "Оформлен" },
   { key: "paid", label: "Оплачен" },

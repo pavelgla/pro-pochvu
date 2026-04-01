@@ -11,14 +11,10 @@ type Props = {
   params: { "product-line": string };
 };
 
-export function generateStaticParams() {
-  return getProductLines().map((pl) => ({
-    "product-line": pl.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
-export function generateMetadata({ params }: Props): Metadata {
-  const pl = getProductLineBySlug(params["product-line"]);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const pl = await getProductLineBySlug(params["product-line"]);
   if (!pl) return {};
 
   const title = `${pl.name} — ${pl.brand === "ecokon" ? "ЭКО Конь" : "Цветология"}`;
@@ -72,8 +68,8 @@ const whyChoose: Record<string, { emoji: string; title: string; text: string }[]
   ],
 };
 
-export default function ProductLinePage({ params }: Props) {
-  const pl = getProductLineBySlug(params["product-line"]);
+export default async function ProductLinePage({ params }: Props) {
+  const pl = await getProductLineBySlug(params["product-line"]);
   if (!pl) notFound();
 
   const cross = crossSell[pl.brand];

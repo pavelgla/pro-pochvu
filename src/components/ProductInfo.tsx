@@ -11,21 +11,22 @@ import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/hooks/useAuth";
-import type { Product } from "@/types/database";
+import type { ProductWithLine } from "@/types/database";
 
-export function ProductInfo({ product }: { product: Product }) {
+export function ProductInfo({ product }: { product: ProductWithLine }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
   const { user } = useAuth();
   const router = useRouter();
+  const brand = product.productLine?.brand || "ecokon";
 
-  const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
+  const hasVariants = Array.isArray(product.variants) && (product.variants as any[]).length > 0;
 
   const discountPercent =
-    product.price_old && product.price_old > product.price
-      ? Math.round(((product.price_old - product.price) / product.price_old) * 100)
+    product.oldPrice && product.oldPrice > product.price
+      ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : null;
 
   function scrollToReviews() {
@@ -35,7 +36,7 @@ export function ProductInfo({ product }: { product: Product }) {
   return (
     <div className="space-y-5">
       {/* Brand */}
-      <BrandLabel brand={product.brand as "ecokon" | "tsvetologiya"} />
+      <BrandLabel brand={brand as "ecokon" | "tsvetologiya"} />
 
       {/* Name */}
       <h1 className="text-2xl md:text-3xl">{product.name}</h1>
@@ -48,16 +49,16 @@ export function ProductInfo({ product }: { product: Product }) {
         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
         <span className="font-medium">{product.rating} из 5</span>
         <span className="text-brand-gray-dark/50">
-          ({product.reviews_count.toLocaleString("ru-RU")} отзывов)
+          ({product.reviewsCount.toLocaleString("ru-RU")} отзывов)
         </span>
       </button>
 
       {/* Price */}
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-bold">{formatPrice(product.price)}</span>
-        {product.price_old && (
+        {product.oldPrice && (
           <span className="text-lg text-brand-gray-dark/40 line-through">
-            {formatPrice(product.price_old)}
+            {formatPrice(product.oldPrice)}
           </span>
         )}
         {discountPercent && (
@@ -122,12 +123,12 @@ export function ProductInfo({ product }: { product: Product }) {
               product_id: product.id,
               variant_id: selectedVariant || undefined,
               name: product.name,
-              brand: product.brand,
+              brand,
               price: product.price,
               quantity,
-              image: product.images[0] || "",
+              image: (product.images as string[])[0] || "",
               slug: product.slug,
-              weight_grams: product.weight_grams,
+              weight_grams: product.weightGrams,
             });
           }}
         >

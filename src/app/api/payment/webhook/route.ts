@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isYooKassaIp } from "@/lib/yookassa";
+import { prisma } from "@/lib/prisma";
 import type { WebhookEvent } from "@/types/yookassa";
 import { notifyNewOrder } from "@/lib/telegram";
 import { sendOrderConfirmation } from "@/lib/email";
@@ -25,39 +26,44 @@ export async function POST(req: NextRequest) {
 
   switch (event.event) {
     case "payment.succeeded": {
-      // TODO: update order in Supabase
-      // await supabase.from('orders').update({
-      //   status: 'paid',
-      //   payment_status: 'succeeded',
-      // }).eq('id', orderId)
+      const order = await prisma.order.update({
+        where: { id: orderId },
+        data: { status: "paid", paymentStatus: "succeeded" },
+        include: { items: true },
+      });
 
-      // TODO: create delivery order via ApiShip
-      // const order = await supabase.from('orders').select().eq('id', orderId).single()
-      // await createOrder(order.delivery_provider, order.delivery_tariff_id, {...})
+      const items = order.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price }));
 
-      // Send notifications (fire-and-forget, don't block webhook response)
-      // TODO: load real order from Supabase when connected
-      const mockOrder = {
-        id: orderId,
-        order_number: Number(payment.metadata?.order_number) || 0,
-        total: Number(payment.amount?.value) || 0,
-        subtotal: Number(payment.amount?.value) || 0,
-        delivery_cost: 0,
-        discount: 0,
-        delivery_provider: null as string | null,
-        delivery_address: null as Record<string, string> | null,
-        delivery_track: null as string | null,
-        delivery_status: null as string | null,
-        payment_method: "bank_card",
-        customer_name: "",
-        customer_email: "",
-        customer_phone: "",
-        items: [] as { name: string; quantity: number; price: number }[],
-      };
-
+      // Send notifications (fire-and-forget)
       Promise.allSettled([
-        notifyNewOrder(mockOrder),
-        sendOrderConfirmation(mockOrder),
+        notifyNewOrder({
+          id: order.id,
+          order_number: order.orderNumber,
+          total: order.total,
+          delivery_cost: order.deliveryCost,
+          delivery_provider: order.deliveryProvider,
+          delivery_address: order.deliveryAddress as Record<string, string> | null,
+          delivery_track: order.deliveryTrack,
+          delivery_status: order.deliveryStatus,
+          payment_method: order.paymentMethod || "bank_card",
+          customer_name: order.customerName,
+          customer_phone: order.customerPhone,
+          items,
+        }),
+        sendOrderConfirmation({
+          id: order.id,
+          order_number: order.orderNumber,
+          total: order.total,
+          subtotal: order.subtotal,
+          delivery_cost: order.deliveryCost,
+          discount: order.discount,
+          delivery_provider: order.deliveryProvider,
+          delivery_address: order.deliveryAddress as Record<string, string> | null,
+          delivery_track: order.deliveryTrack,
+          customer_name: order.customerName,
+          customer_email: order.customerEmail,
+          items,
+        }),
       ]).then((results) => {
         for (const r of results) {
           if (r.status === "rejected") {
@@ -71,18 +77,16 @@ export async function POST(req: NextRequest) {
     }
 
     case "payment.canceled": {
-      // TODO: update order in Supabase
-      // await supabase.from('orders').update({
-      //   status: 'cancelled',
-      //   payment_status: 'cancelled',
-      // }).eq('id', orderId)
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { status: "cancelled", paymentStatus: "cancelled" },
+      });
 
       console.log(`Payment canceled for order ${orderId}, payment ${payment.id}`);
       break;
     }
 
     case "payment.waiting_for_capture": {
-      // Auto-capture is enabled (capture: true), this shouldn't happen
       console.log(`Payment waiting_for_capture for order ${orderId}`);
       break;
     }

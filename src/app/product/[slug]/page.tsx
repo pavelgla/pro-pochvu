@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  getProductBySlug,
-  getAllProductSlugs,
-  getProductLineById,
-  getCategoryById,
-} from "@/lib/catalog";
+import { Suspense } from "react";
+import { getProductBySlug } from "@/lib/catalog";
 import { generateProductJsonLd } from "@/lib/structured-data";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ProductGallery } from "@/components/ProductGallery";
@@ -18,18 +14,16 @@ type Props = {
   params: { slug: string };
 };
 
-export function generateStaticParams() {
-  return getAllProductSlugs().map((slug) => ({ slug }));
-}
+export const dynamic = "force-dynamic";
 
-export function generateMetadata({ params }: Props): Metadata {
-  const product = getProductBySlug(params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const product = await getProductBySlug(params.slug);
   if (!product) return {};
 
-  const title = product.seo_title || product.name;
+  const title = product.seoTitle || product.name;
   const description =
-    product.seo_description ||
-    product.short_description ||
+    product.seoDescription ||
+    product.shortDesc ||
     `${product.name} — купить в интернет-магазине ecokon.ru`;
 
   return {
@@ -40,27 +34,22 @@ export function generateMetadata({ params }: Props): Metadata {
       title,
       description,
       type: "website",
-      images: product.seo_og_image ? [product.seo_og_image] : undefined,
+      images: product.seoOgImage ? [product.seoOgImage] : undefined,
     },
   };
 }
 
-export default function ProductPage({ params }: Props) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductPage({ params }: Props) {
+  const product = await getProductBySlug(params.slug);
   if (!product) notFound();
-
-  const productLine = getProductLineById(product.product_line_id);
-  const category = product.category_id
-    ? getCategoryById(product.category_id)
-    : null;
 
   const breadcrumbs = [
     { label: "Главная", href: "/" },
     { label: "Каталог", href: "/catalog" },
-    ...(productLine
-      ? [{ label: productLine.name, href: `/catalog/${productLine.slug}` }]
+    ...(product.productLine
+      ? [{ label: product.productLine.name, href: `/catalog/${product.productLine.slug}` }]
       : []),
-    ...(category ? [{ label: category.name }] : []),
+    ...(product.category ? [{ label: product.category.name }] : []),
   ];
 
   const jsonLd = generateProductJsonLd(product);
@@ -77,9 +66,9 @@ export default function ProductPage({ params }: Props) {
       {/* Product hero: gallery + info */}
       <div className="mt-6 grid gap-8 md:grid-cols-2">
         <ProductGallery
-          images={product.images}
-          videoUrl={product.video_url}
-          brand={product.brand}
+          images={product.images as string[]}
+          videoUrl={product.videoUrl}
+          brand={product.productLine?.brand || "ecokon"}
         />
         <ProductInfo product={product} />
       </div>
@@ -90,8 +79,12 @@ export default function ProductPage({ params }: Props) {
       </div>
 
       {/* Cross-sell & related */}
-      <CrossSell product={product} />
-      <RelatedProducts product={product} />
+      <Suspense>
+        <CrossSell product={product} />
+      </Suspense>
+      <Suspense>
+        <RelatedProducts product={product} />
+      </Suspense>
     </div>
   );
 }

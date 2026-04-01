@@ -1,9 +1,9 @@
 import { ProductCard } from "@/components/ProductCard";
 import { getRelatedProducts } from "@/lib/catalog";
-import type { Product } from "@/types/database";
+import type { ProductWithLine } from "@/types/database";
 
-export function RelatedProducts({ product }: { product: Product }) {
-  const items = getRelatedProducts(product, 4);
+export async function RelatedProducts({ product }: { product: ProductWithLine }) {
+  const items = await getRelatedProducts(product.id, product.categoryId, 4);
   if (items.length === 0) return null;
 
   return (

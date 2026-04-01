@@ -1,4 +1,4 @@
-import type { Json } from "@/types/database";
+import type { Prisma } from "@prisma/client";
 
 const labelMap: Record<string, string> = {
   weight: "Вес",
@@ -15,7 +15,7 @@ const labelMap: Record<string, string> = {
 };
 
 type Props = {
-  characteristics: Json;
+  characteristics: Prisma.JsonValue;
   compact?: boolean;
 };
 

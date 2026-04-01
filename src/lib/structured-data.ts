@@ -1,15 +1,16 @@
-import type { Product } from "@/types/database";
+import type { ProductWithLine } from "@/types/database";
 
-export function generateProductJsonLd(product: Product) {
+export function generateProductJsonLd(product: ProductWithLine) {
+  const brand = product.productLine?.brand || "ecokon";
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.short_description || product.description,
-    image: product.images.length > 0 ? product.images[0] : undefined,
+    description: product.shortDesc || product.fullDesc,
+    image: (product.images as string[]).length > 0 ? (product.images as string[])[0] : undefined,
     brand: {
       "@type": "Brand",
-      name: product.brand === "ecokon" ? "ЭКО Конь" : "Цветология",
+      name: brand === "ecokon" ? "ЭКО Конь" : "Цветология",
     },
     sku: product.slug,
     offers: {
@@ -21,11 +22,11 @@ export function generateProductJsonLd(product: Product) {
         : "https://schema.org/OutOfStock",
       url: `https://ecokon.ru/product/${product.slug}`,
     },
-    aggregateRating: product.reviews_count > 0
+    aggregateRating: product.reviewsCount > 0
       ? {
           "@type": "AggregateRating",
           ratingValue: product.rating,
-          reviewCount: product.reviews_count,
+          reviewCount: product.reviewsCount,
           bestRating: 5,
           worstRating: 1,
         }

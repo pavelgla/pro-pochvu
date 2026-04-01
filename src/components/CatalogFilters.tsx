@@ -1,30 +1,45 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { X, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import { getProductLines, getCategories } from "@/lib/catalog";
+
+type ProductLineData = { id: string; slug: string; name: string; brand: string };
+type CategoryData = { id: string; slug: string; name: string };
 
 export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [productLines, setProductLines] = useState<ProductLineData[]>([]);
+  const [categories, setCategories] = useState<CategoryData[]>([]);
 
-  const productLines = getProductLines();
   const selectedBrands = searchParams.get("brand")?.split(",").filter(Boolean) || [];
   const selectedCategory = searchParams.get("category") || "";
   const priceMin = searchParams.get("priceMin") || "";
   const priceMax = searchParams.get("priceMax") || "";
   const selectedRating = searchParams.get("rating") || "";
 
-  // Get categories relevant to selected filters
-  const activeProductLine = productLineSlug
-    ? productLines.find((l) => l.slug === productLineSlug)
-    : null;
-  const categories = getCategories(activeProductLine?.id);
+  useEffect(() => {
+    fetch("/api/catalog?action=productLines")
+      .then((res) => res.json())
+      .then(setProductLines);
+  }, []);
+
+  useEffect(() => {
+    const activeProductLine = productLineSlug
+      ? productLines.find((l) => l.slug === productLineSlug)
+      : null;
+    const params = new URLSearchParams();
+    params.set("action", "categories");
+    if (activeProductLine?.id) params.set("productLineId", activeProductLine.id);
+    fetch(`/api/catalog?${params.toString()}`)
+      .then((res) => res.json())
+      .then(setCategories);
+  }, [productLineSlug, productLines]);
 
   const updateParams = useCallback(
     (key: string, value: string) => {
@@ -34,7 +49,7 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
       } else {
         params.delete(key);
       }
-      params.delete("page"); // reset pagination on filter change
+      params.delete("page");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [router, pathname, searchParams]
