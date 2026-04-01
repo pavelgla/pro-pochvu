@@ -48,6 +48,9 @@ COPY --from=builder /app/prisma ./prisma
 # Entrypoint для автоматических миграций при старте
 COPY scripts/deploy-migrate.sh ./scripts/deploy-migrate.sh
 
+# Prisma CLI нужен доступ на запись к engines dir
+RUN chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma prisma
+
 USER nextjs
 EXPOSE 3002
 ENV PORT=3002
