@@ -43,8 +43,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 COPY --from=builder /app/prisma ./prisma
+
+# Entrypoint для автоматических миграций при старте
+COPY scripts/deploy-migrate.sh ./scripts/deploy-migrate.sh
 
 USER nextjs
 EXPOSE 3002
@@ -54,4 +56,4 @@ ENV HOSTNAME="0.0.0.0"
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3002/ || exit 1
 
-CMD ["node", "server.js"]
+CMD ["sh", "scripts/deploy-migrate.sh"]

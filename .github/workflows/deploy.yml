@@ -116,10 +116,7 @@ jobs:
             # Pull latest image
             docker compose -f docker-compose.prod.yml pull web
 
-            # Run Prisma migrations
-            docker compose -f docker-compose.prod.yml run --rm web npx prisma migrate deploy
-
-            # Restart services
+            # Restart services (migrations run automatically on container start)
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
             # Reload nginx (from pdnguard stack)
