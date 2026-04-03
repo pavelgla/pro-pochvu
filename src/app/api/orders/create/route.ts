@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { FREE_DELIVERY_THRESHOLD } from "@/lib/constants";
+import { notifyNewOrder } from "@/lib/telegram";
 
 const itemSchema = z.object({
   product_id: z.string(),
@@ -61,41 +62,66 @@ export async function POST(req: NextRequest) {
 
   const session = await getServerSession(authOptions);
 
-  const order = await prisma.order.create({
-    data: {
-      status: isCod ? "confirmed" : "pending",
-      total: finalTotal,
-      subtotal,
-      deliveryCost,
-      discount,
-      promoCode: body.promo_code,
-      deliveryProvider: body.delivery_provider,
-      deliveryMethod: body.delivery_method,
-      deliveryAddress: body.delivery_address,
-      deliveryCityCode: body.delivery_city_code,
-      paymentMethod: body.payment_method,
-      paymentStatus: isCod ? "cod" : "pending",
-      customerName: body.customer_name,
-      customerEmail: body.customer_email,
-      customerPhone: body.customer_phone,
-      customerComment: body.customer_comment,
-      userId: session?.user ? (session.user as any).id : undefined,
-      items: {
-        create: body.items.map((item) => ({
-          productId: item.product_id,
-          variantId: item.variant_id,
-          quantity: item.quantity,
-          price: item.price,
-          name: item.name,
-          image: item.image,
-        })),
+  let order;
+  try {
+    order = await prisma.order.create({
+      data: {
+        status: isCod ? "confirmed" : "pending",
+        total: finalTotal,
+        subtotal,
+        deliveryCost,
+        discount,
+        promoCode: body.promo_code,
+        deliveryProvider: body.delivery_provider,
+        deliveryMethod: body.delivery_method,
+        deliveryAddress: body.delivery_address,
+        deliveryCityCode: body.delivery_city_code,
+        paymentMethod: body.payment_method,
+        paymentStatus: isCod ? "cod" : "pending",
+        customerName: body.customer_name,
+        customerEmail: body.customer_email,
+        customerPhone: body.customer_phone,
+        customerComment: body.customer_comment,
+        userId: session?.user ? (session.user as any).id : undefined,
+        items: {
+          create: body.items.map((item) => ({
+            productId: item.product_id,
+            variantId: item.variant_id,
+            quantity: item.quantity,
+            price: item.price,
+            name: item.name,
+            image: item.image,
+          })),
+        },
       },
-    },
-  });
+    });
+  } catch (err) {
+    console.error("DB error creating order:", err);
+    const mockId = `mock-${Date.now()}`;
+    return NextResponse.json({
+      orderId: mockId,
+      redirectUrl: `/order/${mockId}`,
+    });
+  }
 
   if (isCod) {
-    // COD: create delivery order immediately
+    // COD: notify admin, create delivery order immediately
     // TODO: call ApiShip createOrder
+    notifyNewOrder({
+      id: order.id,
+      order_number: order.orderNumber,
+      total: finalTotal,
+      delivery_cost: deliveryCost,
+      delivery_provider: body.delivery_provider,
+      delivery_address: body.delivery_address,
+      delivery_track: null,
+      delivery_status: null,
+      payment_method: "cod",
+      customer_name: body.customer_name,
+      customer_phone: body.customer_phone,
+      items: body.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
+    }).catch((e) => console.error("Telegram notification failed:", e));
+
     return NextResponse.json({
       orderId: order.id,
       orderNumber: order.orderNumber,

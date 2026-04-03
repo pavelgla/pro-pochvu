@@ -10,28 +10,34 @@ export async function POST(req: NextRequest) {
   };
 
   if (!code) {
-    return NextResponse.json({ error: "Введите промокод" }, { status: 400 });
+    return NextResponse.json({ valid: false, error: "Введите промокод" }, { status: 400 });
   }
 
-  const promo = await prisma.promoCode.findFirst({
-    where: { code: { equals: code, mode: "insensitive" }, isActive: true },
-  });
+  let promo;
+  try {
+    promo = await prisma.promoCode.findFirst({
+      where: { code: { equals: code, mode: "insensitive" }, isActive: true },
+    });
+  } catch (err) {
+    console.error("DB error in promo validate:", err);
+    return NextResponse.json({ valid: false, error: "Сервис временно недоступен" }, { status: 503 });
+  }
 
   if (!promo) {
-    return NextResponse.json({ error: "Промокод не найден" }, { status: 404 });
+    return NextResponse.json({ valid: false, error: "Промокод не найден" }, { status: 404 });
   }
 
   // Check dates
   const now = new Date();
   if (promo.validFrom && now < promo.validFrom) {
     return NextResponse.json(
-      { error: "Промокод ещё не активен" },
+      { valid: false, error: "Промокод ещё не активен" },
       { status: 400 }
     );
   }
   if (promo.validUntil && now > promo.validUntil) {
     return NextResponse.json(
-      { error: "Промокод истёк" },
+      { valid: false, error: "Промокод истёк" },
       { status: 400 }
     );
   }
@@ -39,7 +45,7 @@ export async function POST(req: NextRequest) {
   // Check uses
   if (promo.usesLimit !== null && promo.usesCount >= promo.usesLimit) {
     return NextResponse.json(
-      { error: "Промокод больше не действует" },
+      { valid: false, error: "Промокод больше не действует" },
       { status: 400 }
     );
   }
@@ -48,6 +54,7 @@ export async function POST(req: NextRequest) {
   if (subtotal < promo.minOrderAmount) {
     return NextResponse.json(
       {
+        valid: false,
         error: `Минимальная сумма заказа для этого промокода — ${promo.minOrderAmount} ₽`,
       },
       { status: 400 }
@@ -62,7 +69,7 @@ export async function POST(req: NextRequest) {
     !brands.some((b) => applicableBrands.includes(b))
   ) {
     return NextResponse.json(
-      { error: "Промокод не применим к товарам в корзине" },
+      { valid: false, error: "Промокод не применим к товарам в корзине" },
       { status: 400 }
     );
   }
@@ -76,6 +83,7 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({
+    valid: true,
     code: promo.code,
     discount_type: promo.discountType,
     discount_value: promo.discountValue,
