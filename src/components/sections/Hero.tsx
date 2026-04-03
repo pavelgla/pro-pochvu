@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 
 export function Hero() {
@@ -26,10 +27,16 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Image placeholder */}
+        {/* Image */}
         <div className="flex items-center justify-center">
-          <div className="aspect-square w-full max-w-md rounded-3xl bg-brand-green/5 flex items-center justify-center">
-            <span className="text-6xl">🌿</span>
+          <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-3xl">
+            <Image
+              src="/images/ecokon/bio-chay-yantar-fosfor_0.jpg"
+              alt="Био-чай ЭКО Конь — органическое удобрение"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
         </div>
       </div>

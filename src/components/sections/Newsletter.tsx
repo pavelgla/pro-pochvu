@@ -8,25 +8,34 @@ export function Newsletter() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
-    // TODO: send to Brevo
+
+    try {
+      await fetch("/api/notifications/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    } catch {
+      // fallback: ignore network error
+    }
+
     setSubmitted(true);
   }
 
   return (
     <section className="bg-brand-cream">
       <div className="container-main section-padding text-center">
-        <h2>Подпишитесь на новинки и акции</h2>
+        <h2>Получайте советы по уходу за растениями</h2>
         <p className="mt-2 text-brand-gray-dark/60">
-          Скидка 10% на первый заказ по промокоду{" "}
-          <span className="font-bold text-brand-green">WELCOME10</span>
+          Только полезный контент: рецепты подкормок, сезонные советы, скидки для подписчиков
         </p>
 
         {submitted ? (
           <p className="mt-6 text-lg font-medium text-brand-green">
-            Спасибо! Проверьте почту 💌
+            Спасибо за подписку!
           </p>
         ) : (
           <form
