@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { CookieBanner } from "@/components/CookieBanner";
 import "./globals.css";
 
 const inter = Inter({
@@ -39,6 +40,7 @@ export default function RootLayout({
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
+          <CookieBanner />
         </AuthProvider>
       </body>
     </html>
