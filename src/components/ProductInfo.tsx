@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Heart, Minus, Plus, Package } from "lucide-react";
+import { Star, Heart, Minus, Plus, Package, Weight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
@@ -29,6 +29,8 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
       ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : null;
 
+  const inStock = product.stock > 0;
+
   function scrollToReviews() {
     document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" });
   }
@@ -42,16 +44,21 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
       <h1 className="text-2xl md:text-3xl">{product.name}</h1>
 
       {/* Rating — clickable */}
-      <button
-        onClick={scrollToReviews}
-        className="flex items-center gap-2 text-sm hover:underline"
-      >
-        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-        <span className="font-medium">{product.rating} из 5</span>
-        <span className="text-brand-gray-dark/50">
-          ({product.reviewsCount.toLocaleString("ru-RU")} отзывов)
-        </span>
-      </button>
+      {product.reviewsCount > 0 && (
+        <button
+          onClick={scrollToReviews}
+          className="flex items-center gap-2 text-sm hover:underline"
+        >
+          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+          <span className="font-medium">{product.rating} из 5</span>
+          <span className="text-brand-gray-dark/50">
+            ({product.reviewsCount.toLocaleString("ru-RU")} отзывов)
+          </span>
+          {product.badge && (
+            <Badge variant="sale" size="sm">{product.badge}</Badge>
+          )}
+        </button>
+      )}
 
       {/* Price */}
       <div className="flex items-baseline gap-3">
@@ -65,6 +72,32 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
           <Badge variant="sale" size="md">-{discountPercent}%</Badge>
         )}
       </div>
+
+      {/* Stock + Weight */}
+      <div className="flex items-center gap-4 text-sm">
+        <span
+          className={`font-medium ${
+            inStock ? "text-success" : "text-error"
+          }`}
+        >
+          {inStock ? "В наличии" : "Нет в наличии"}
+        </span>
+        {product.weightGrams > 0 && (
+          <span className="flex items-center gap-1 text-brand-gray-dark/50">
+            <Weight className="h-3.5 w-3.5" />
+            {product.weightGrams >= 1000
+              ? `${(product.weightGrams / 1000).toFixed(1)} кг`
+              : `${product.weightGrams} г`}
+          </span>
+        )}
+      </div>
+
+      {/* Short description */}
+      {product.shortDesc && (
+        <p className="text-sm leading-relaxed text-brand-gray-dark/70">
+          {product.shortDesc}
+        </p>
+      )}
 
       {/* Variants */}
       {hasVariants && (
@@ -108,9 +141,6 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
             <Plus className="h-4 w-4" />
           </button>
         </div>
-        <span className="text-xs text-brand-gray-dark/40">
-          В наличии: {product.stock} шт.
-        </span>
       </div>
 
       {/* CTA buttons */}
@@ -118,6 +148,7 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
         <Button
           size="lg"
           className="flex-1"
+          disabled={!inStock}
           onClick={() => {
             addItem({
               product_id: product.id,
@@ -132,7 +163,7 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
             });
           }}
         >
-          Добавить в корзину
+          В корзину
         </Button>
         <button
           onClick={() => {

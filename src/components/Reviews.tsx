@@ -1,28 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Star } from "lucide-react";
+import { Star, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-
-type ReviewData = {
-  id: string;
-  author: string;
-  rating: number;
-  text: string;
-  source: string;
-  isVerified: boolean;
-  createdAt: string;
-};
-
-// Mock reviews
-const mockReviews: ReviewData[] = [
-  { id: "r1", author: "Елена М.", rating: 5, text: "Отличное удобрение! Растения ожили буквально за неделю. Удобный формат стиков — просто заварить и полить. Рекомендую!", source: "Ozon", isVerified: true, createdAt: "2026-03-15" },
-  { id: "r2", author: "Алексей К.", rating: 5, text: "Заказываю уже третий раз. Монстера и фикус растут как на дрожжах. Состав натуральный, запах приятный.", source: "Wildberries", isVerified: true, createdAt: "2026-03-10" },
-  { id: "r3", author: "Ирина С.", rating: 4, text: "Хорошее удобрение, результат видно через пару недель. Единственный минус — хотелось бы упаковку побольше.", source: "Ozon", isVerified: true, createdAt: "2026-03-05" },
-  { id: "r4", author: "Дмитрий В.", rating: 5, text: "Перешёл с химических удобрений на Эко Конь. Разница заметна — растения выглядят здоровее, листья ярче.", source: "site", isVerified: false, createdAt: "2026-02-28" },
-  { id: "r5", author: "Марина Т.", rating: 5, text: "Купила для орхидей по совету подруги. Через месяц появились два новых цветоноса! Очень довольна.", source: "Ozon", isVerified: true, createdAt: "2026-02-20" },
-];
+import type { Review } from "@/types/database";
 
 function Stars({ count, size = "sm" }: { count: number; size?: "sm" | "md" }) {
   const s = size === "sm" ? "h-4 w-4" : "h-5 w-5";
@@ -121,33 +103,35 @@ function ReviewForm({ onSubmit }: { onSubmit: (data: ReviewFormState) => void })
 }
 
 type Props = {
+  reviews: Review[];
   productRating: number;
   reviewsCount: number;
 };
 
-export function Reviews({ productRating, reviewsCount }: Props) {
+export function Reviews({ reviews, productRating, reviewsCount }: Props) {
   const [showForm, setShowForm] = useState(false);
-  const reviews = mockReviews;
 
   return (
     <div id="reviews" className="space-y-8">
       {/* Summary */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="flex items-center gap-6">
-          <div className="text-center">
-            <span className="text-5xl font-bold">{productRating}</span>
-            <Stars count={Math.round(productRating)} size="md" />
+      {reviewsCount > 0 && (
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="flex items-center gap-6">
+            <div className="text-center">
+              <span className="text-5xl font-bold">{productRating}</span>
+              <Stars count={Math.round(productRating)} size="md" />
+            </div>
+            <div className="flex-1">
+              <RatingDistribution rating={productRating} total={reviewsCount} />
+            </div>
           </div>
-          <div className="flex-1">
-            <RatingDistribution rating={productRating} total={reviewsCount} />
+          <div className="flex items-start justify-end">
+            <Button variant="secondary" onClick={() => setShowForm(!showForm)}>
+              Оставить отзыв
+            </Button>
           </div>
         </div>
-        <div className="flex items-start justify-end">
-          <Button variant="secondary" onClick={() => setShowForm(!showForm)}>
-            Оставить отзыв
-          </Button>
-        </div>
-      </div>
+      )}
 
       {/* Review form */}
       {showForm && (
@@ -181,16 +165,24 @@ export function Reviews({ productRating, reviewsCount }: Props) {
               <div className="mt-2">
                 <Stars count={r.rating} />
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-brand-gray-dark/80">
-                {r.text}
-              </p>
+              {r.text && (
+                <p className="mt-2 text-sm leading-relaxed text-brand-gray-dark/80">
+                  {r.text}
+                </p>
+              )}
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-center text-brand-gray-dark/50">
-          Этот товар имеет {reviewsCount.toLocaleString("ru-RU")} отзывов на маркетплейсах
-        </p>
+        <div className="flex flex-col items-center gap-4 py-12 text-center">
+          <MessageSquare className="h-12 w-12 text-brand-gray-dark/20" />
+          <p className="text-brand-gray-dark/50">
+            Пока нет отзывов. Будьте первым!
+          </p>
+          <Button variant="secondary" onClick={() => setShowForm(true)}>
+            Оставить отзыв
+          </Button>
+        </div>
       )}
     </div>
   );
