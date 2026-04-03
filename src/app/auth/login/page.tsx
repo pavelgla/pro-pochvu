@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnUrl = searchParams.get("return") || "/account";
+  const returnUrl = searchParams.get("callbackUrl") || "/account";
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState("");
