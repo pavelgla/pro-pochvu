@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
@@ -44,9 +45,19 @@ export function ProductCard({ product }: { product: ProductWithLine }) {
       <Link href={`/product/${product.slug}`} className="flex flex-col flex-1">
         {/* Image */}
         <div className="relative aspect-square overflow-hidden rounded-t-xl bg-brand-gray-light">
-          <div className="flex h-full items-center justify-center text-5xl text-brand-gray-dark/15">
-            {brand === "ecokon" ? "🌿" : "🌱"}
-          </div>
+          {(product.images as string[])[0] ? (
+            <Image
+              src={(product.images as string[])[0]}
+              alt={product.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-5xl text-brand-gray-dark/15">
+              {brand === "ecokon" ? "🌿" : "🌱"}
+            </div>
+          )}
 
           {/* BrandLabel — top left */}
           <div className="absolute left-2 top-2">
