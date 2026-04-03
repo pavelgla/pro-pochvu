@@ -1,10 +1,12 @@
 "use client";
 
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { ConsentCheckbox } from "@/components/ui/ConsentCheckbox";
 
 const schema = z.object({
   name: z.string().min(2, "Минимум 2 символа"),
@@ -43,6 +45,7 @@ function formatPhone(raw: string): string {
 }
 
 export function PersonalStep({ data, onChange, onNext, onBack }: Props) {
+  const [consent, setConsent] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -104,6 +107,8 @@ export function PersonalStep({ data, onChange, onNext, onBack }: Props) {
           {...register("comment")}
         />
       </div>
+
+      <ConsentCheckbox checked={consent} onChange={setConsent} required />
 
       <div className="flex justify-between">
         <Button type="button" variant="ghost" onClick={onBack}>

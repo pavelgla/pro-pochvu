@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { useAuth } from "@/hooks/useAuth";
+import { ConsentCheckbox } from "@/components/ui/ConsentCheckbox";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -100,6 +102,8 @@ export default function SignUpPage() {
             error={confirm && password !== confirm ? "Пароли не совпадают" : undefined}
             required
           />
+
+          <ConsentCheckbox checked={consent} onChange={setConsent} required />
 
           <Button type="submit" size="lg" className="w-full" loading={loading}>
             Создать аккаунт

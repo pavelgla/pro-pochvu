@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { ConsentCheckbox } from "@/components/ui/ConsentCheckbox";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !consent) return;
 
     try {
       await fetch("/api/notifications/email", {
@@ -40,18 +42,21 @@ export function Newsletter() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row"
+            className="mx-auto mt-6 flex max-w-md flex-col gap-3"
           >
-            <div className="flex-1">
-              <Input
-                type="email"
-                placeholder="Ваш email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <Input
+                  type="email"
+                  placeholder="Ваш email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit">Подписаться</Button>
             </div>
-            <Button type="submit">Подписаться</Button>
+            <ConsentCheckbox checked={consent} onChange={setConsent} required />
           </form>
         )}
       </div>
