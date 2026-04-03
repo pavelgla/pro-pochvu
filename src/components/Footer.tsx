@@ -5,6 +5,7 @@ const buyerLinks = [
   { href: "/delivery", label: "Доставка и оплата" },
   { href: "/returns", label: "Возврат" },
   { href: "/contacts", label: "Контакты" },
+  { href: "/about", label: "О бренде" },
 ];
 
 const marketplaceLinks = [

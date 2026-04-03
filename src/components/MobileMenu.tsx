@@ -11,6 +11,7 @@ const menuLinks = [
   { href: "/catalog?brand=ecokon", label: "Удобрения" },
   { href: "/catalog?brand=tsvetologiya", label: "Фитомодули" },
   { href: "/about", label: "О бренде" },
+  { href: "/delivery", label: "Доставка и оплата" },
 ];
 
 type MobileMenuProps = {
