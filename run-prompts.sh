@@ -35,6 +35,13 @@ PROMPTS=(
   "10-auth|Auth: login, signup, личный кабинет, middleware"
   "11-order-seo|Order page + SEO: подтверждение заказа, sitemap, robots, manifest"
   "12-final-build|Final: финальная проверка сборки, TypeScript, зависимости"
+  "13-delivery-page|Page: Доставка и оплата — способы доставки, оплата, FAQ"
+  "14-returns-page|Page: Возврат товара — условия, 3 шага, гарантия фитомодулей"
+  "15-contacts-page|Page: Контакты — Telegram, каталог, маркетплейсы, юр.данные"
+  "16-about-page|Page: О бренде — история, цифры, торговые марки"
+  "17-reviews-seed|Seed: отзывы покупателей для 5 товаров (20 отзывов)"
+  "18-trademark|Trademark: ® в Footer, BrandLabel, мета, страница /legal"
+  "19-final-phase2|Final Phase 2: проверка всех страниц, навигация, TypeScript"
 )
 
 TOTAL=${#PROMPTS[@]}
