@@ -2,16 +2,15 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { X, User } from "lucide-react";
+import { X, User, LogIn } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 const menuLinks = [
-  { href: "/catalog/udobreniya", label: "Удобрения" },
-  { href: "/catalog/vertikalnoe-ozelenenie", label: "Вертикальное озеленение" },
-  { href: "/blog", label: "Блог" },
-  { href: "/about", label: "О компании" },
-  { href: "/delivery", label: "Доставка" },
-  { href: "/contacts", label: "Контакты" },
+  { href: "/catalog", label: "Каталог" },
+  { href: "/catalog?brand=ecokon", label: "Удобрения" },
+  { href: "/catalog?brand=tsvetologiya", label: "Фитомодули" },
+  { href: "/about", label: "О бренде" },
 ];
 
 type MobileMenuProps = {
@@ -20,6 +19,8 @@ type MobileMenuProps = {
 };
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const { data: session } = useSession();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -76,15 +77,26 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </nav>
 
         {/* Account */}
-        <div className="border-t border-brand-gray-light p-4">
-          <Link
-            href="/account"
-            onClick={onClose}
-            className="flex h-12 items-center gap-3 rounded-lg px-4 text-base font-medium text-brand-gray-dark transition-colors hover:bg-brand-gray-light"
-          >
-            <User className="h-5 w-5" />
-            Личный кабинет
-          </Link>
+        <div className="border-t border-brand-gray-light p-4 flex flex-col gap-1">
+          {session?.user ? (
+            <Link
+              href="/account"
+              onClick={onClose}
+              className="flex h-12 items-center gap-3 rounded-lg px-4 text-base font-medium text-brand-gray-dark transition-colors hover:bg-brand-gray-light"
+            >
+              <User className="h-5 w-5 text-brand-green" fill="currentColor" />
+              Личный кабинет
+            </Link>
+          ) : (
+            <Link
+              href="/auth/login"
+              onClick={onClose}
+              className="flex h-12 items-center gap-3 rounded-lg px-4 text-base font-medium text-brand-gray-dark transition-colors hover:bg-brand-gray-light"
+            >
+              <LogIn className="h-5 w-5" />
+              Войти
+            </Link>
+          )}
         </div>
       </div>
     </>

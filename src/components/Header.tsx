@@ -3,21 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, User, Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { MobileMenu } from "./MobileMenu";
-import { useCartCount } from "@/hooks/useCart";
-import { useAuth } from "@/hooks/useAuth";
+import { useCartStore } from "@/store/cartStore";
 
 const navLinks = [
-  { href: "/catalog/udobreniya", label: "Удобрения" },
-  { href: "/catalog/vertikalnoe-ozelenenie", label: "Вертикальное озеленение" },
-  { href: "/blog", label: "Блог" },
-  { href: "/about", label: "О компании" },
+  { href: "/catalog", label: "Каталог" },
+  { href: "/catalog?brand=ecokon", label: "Удобрения" },
+  { href: "/catalog?brand=tsvetologiya", label: "Фитомодули" },
+  { href: "/about", label: "О бренде" },
 ];
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const cartCount = useCartCount();
-  const { user } = useAuth();
+  const cartCount = useCartStore((s) => s.getItemCount());
+  const { data: session } = useSession();
+  const user = session?.user;
 
   return (
     <>
