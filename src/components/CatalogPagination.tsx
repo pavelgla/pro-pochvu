@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type PaginationProps = {
@@ -25,30 +26,44 @@ export function CatalogPagination({ page, totalPages }: PaginationProps) {
     router.push(`${pathname}?${params.toString()}`);
   }
 
-  const pages: number[] = [];
+  const pageNumbers: number[] = [];
   for (let i = 1; i <= totalPages; i++) {
     if (i === 1 || i === totalPages || (i >= page - 1 && i <= page + 1)) {
-      pages.push(i);
+      pageNumbers.push(i);
     }
   }
 
+  const btnBase =
+    "flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed";
+
   return (
     <div className="flex items-center justify-center gap-1">
-      {pages.map((p, i) => {
-        // Ellipsis
-        if (i > 0 && p - pages[i - 1] > 1) {
-          return (
+      {/* Prev */}
+      <button
+        onClick={() => goToPage(page - 1)}
+        disabled={page <= 1}
+        className={cn(btnBase, "hover:bg-brand-gray-light")}
+        aria-label="Предыдущая страница"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
+      {/* Pages with ellipsis */}
+      {pageNumbers.map((p, i) => {
+        const nodes = [];
+        if (i > 0 && p - pageNumbers[i - 1] > 1) {
+          nodes.push(
             <span key={`e-${p}`} className="px-2 text-brand-gray-dark/40">
               ...
             </span>
           );
         }
-        return (
+        nodes.push(
           <button
             key={p}
             onClick={() => goToPage(p)}
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors",
+              btnBase,
               p === page
                 ? "bg-brand-green text-white"
                 : "hover:bg-brand-gray-light"
@@ -57,7 +72,18 @@ export function CatalogPagination({ page, totalPages }: PaginationProps) {
             {p}
           </button>
         );
+        return nodes;
       })}
+
+      {/* Next */}
+      <button
+        onClick={() => goToPage(page + 1)}
+        disabled={page >= totalPages}
+        className={cn(btnBase, "hover:bg-brand-gray-light")}
+        aria-label="Следующая страница"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
     </div>
   );
 }
