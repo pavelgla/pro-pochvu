@@ -11,12 +11,20 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ecokon.ru"),
   title: {
     default: "Эко Конь — органические удобрения и вертикальные сады",
     template: "%s | Эко Конь",
   },
   description:
     "D2C экосистема КФХ «Ранчо Мушкино». Органические удобрения «ЭКО Конь» и фитомодули «Цветология» для вертикального озеленения.",
+  verification: {
+    yandex: "placeholder",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

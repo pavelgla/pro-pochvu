@@ -1,28 +1,48 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import {
-  CheckCircle,
-  Clock,
-} from "lucide-react";
+import { notFound } from "next/navigation";
+import { CheckCircle, Clock, CreditCard } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/Button";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { OrderTracker } from "@/components/OrderTracker";
 
 type Props = {
   params: { id: string };
+  searchParams: { redirectUrl?: string; payment?: string; status?: string };
 };
 
-export default function OrderPage({ params }: Props) {
-  const searchParams = useSearchParams();
-  const paymentStatus = searchParams.get("payment");
-  const status = searchParams.get("status");
+async function getOrder(id: string) {
+  if (id.includes("mock")) {
+    return {
+      id,
+      orderNumber: 999999,
+      total: 1490,
+      customerEmail: "test@example.com",
+      paymentStatus: "paid" as const,
+      paymentMethod: "online",
+      status: "confirmed",
+      createdAt: new Date(),
+    };
+  }
+  return prisma.order.findUnique({ where: { id } });
+}
 
-  const isSuccess = paymentStatus === "success" || status === "confirmed";
-  const orderId = params.id;
-  // Mock order number from ID
-  const orderNumber = orderId.slice(0, 6).toUpperCase();
+export default async function OrderPage({ params, searchParams }: Props) {
+  const order = await getOrder(params.id);
+
+  if (!order) notFound();
+
+  const isPending =
+    order.paymentStatus === "pending" && order.paymentMethod !== "cod";
+  const redirectUrl = searchParams.redirectUrl;
+  const isConfirmed =
+    order.paymentStatus === "paid" ||
+    order.paymentStatus === "cod" ||
+    order.status === "confirmed" ||
+    searchParams.payment === "success" ||
+    searchParams.status === "confirmed";
+
+  const orderNumber = String(order.orderNumber).padStart(6, "0");
 
   return (
     <div className="container-main section-padding">
@@ -34,9 +54,9 @@ export default function OrderPage({ params }: Props) {
       />
 
       <div className="mx-auto mt-8 max-w-2xl">
-        {/* Status */}
+        {/* Status header */}
         <div className="text-center">
-          {isSuccess ? (
+          {isConfirmed ? (
             <>
               <CheckCircle className="mx-auto h-16 w-16 text-success" />
               <h1 className="mt-4">Заказ оформлен!</h1>
@@ -65,19 +85,33 @@ export default function OrderPage({ params }: Props) {
                 <dd className="font-medium">#{orderNumber}</dd>
               </div>
               <div className="flex justify-between">
+                <dt className="text-brand-gray-dark/60">Сумма</dt>
+                <dd className="font-medium">
+                  {new Intl.NumberFormat("ru-RU").format(order.total)} ₽
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-brand-gray-dark/60">Email</dt>
+                <dd>{order.customerEmail}</dd>
+              </div>
+              <div className="flex justify-between">
                 <dt className="text-brand-gray-dark/60">Дата</dt>
-                <dd>{new Date().toLocaleDateString("ru-RU")}</dd>
+                <dd>
+                  {new Date(order.createdAt).toLocaleDateString("ru-RU")}
+                </dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-brand-gray-dark/60">Статус</dt>
                 <dd>
-                  {isSuccess ? (
+                  {isConfirmed ? (
                     <span className="rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
-                      {status === "confirmed" ? "Подтверждён" : "Оплачен"}
+                      {order.paymentMethod === "cod"
+                        ? "Наложенный платёж"
+                        : "Оплачен"}
                     </span>
                   ) : (
                     <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
-                      Ожидание
+                      Ожидание оплаты
                     </span>
                   )}
                 </dd>
@@ -89,10 +123,12 @@ export default function OrderPage({ params }: Props) {
           <div className="rounded-xl border border-brand-gray-light p-5">
             <h3 className="mb-4 text-base font-bold">Отслеживание</h3>
             <OrderTracker
-              currentStatus={isSuccess ? "paid" : "created"}
+              currentStatus={isConfirmed ? "paid" : "created"}
               dates={{
-                created: new Date().toISOString(),
-                ...(isSuccess ? { paid: new Date().toISOString() } : {}),
+                created: new Date(order.createdAt).toISOString(),
+                ...(isConfirmed
+                  ? { paid: new Date(order.createdAt).toISOString() }
+                  : {}),
               }}
             />
           </div>
@@ -100,7 +136,8 @@ export default function OrderPage({ params }: Props) {
           {/* Notification */}
           <div className="rounded-xl bg-brand-cream p-5 text-center text-sm">
             <p>
-              Подтверждение отправлено на вашу почту.
+              Подтверждение отправлено на{" "}
+              <span className="font-medium">{order.customerEmail}</span>.
               <br />
               Вы можете отслеживать статус заказа на этой странице.
             </p>
@@ -109,8 +146,18 @@ export default function OrderPage({ params }: Props) {
 
         {/* Actions */}
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          {isPending && redirectUrl && (
+            <a href={redirectUrl}>
+              <Button>
+                <CreditCard className="mr-2 h-4 w-4" />
+                Оплатить
+              </Button>
+            </a>
+          )}
           <Link href="/catalog">
-            <Button>Продолжить покупки</Button>
+            <Button variant={isPending && redirectUrl ? "secondary" : "primary"}>
+              Вернуться в каталог
+            </Button>
           </Link>
           <Link href="/account">
             <Button variant="secondary">Мои заказы</Button>
