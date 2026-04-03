@@ -42,6 +42,12 @@ PROMPTS=(
   "17-reviews-seed|Seed: отзывы покупателей для 5 товаров (20 отзывов)"
   "18-trademark|Trademark: ® в Footer, BrandLabel, мета, страница /legal"
   "19-final-phase2|Final Phase 2: проверка всех страниц, навигация, TypeScript"
+  "20-privacy-policy|Privacy: Политика обработки ПДн (152-ФЗ), ООО Цветология"
+  "21-cookie-banner|Cookie: баннер согласия, localStorage, анимация"
+  "22-consent-forms|Consent: чекбоксы ПДн в регистрации, checkout, рассылке"
+  "23-contacts-legal|Contacts: ООО Цветология + КФХ Мушкино во всех юр.блоках"
+  "24-terms-of-service|Terms: Пользовательское соглашение / оферта"
+  "25-final-pdn|Final Phase 3: чеклист 152-ФЗ, sitemap, TypeScript"
 )
 
 TOTAL=${#PROMPTS[@]}
