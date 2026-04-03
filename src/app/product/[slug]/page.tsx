@@ -21,10 +21,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return {};
 
   const title = product.seoTitle || product.name;
-  const description =
+  const baseDescript =
     product.seoDescription ||
     product.shortDesc ||
     `${product.name} — купить в интернет-магазине ecokon.ru`;
+  const brandSuffix =
+    product.productLine?.brand === "tsvetologiya"
+      ? " ® Торговая марка «Цветология» зарегистрирована."
+      : product.productLine?.brand === "ecokon"
+        ? " ® Торговая марка «ЭКО Конь» зарегистрирована."
+        : "";
+  const description = baseDescript + brandSuffix;
 
   return {
     title,

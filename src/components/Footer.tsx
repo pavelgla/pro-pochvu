@@ -69,13 +69,19 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="mt-10 border-t border-white/10 pt-6 flex flex-col items-center gap-2 sm:flex-row sm:justify-between text-xs text-white/40">
-          <span>© 2026 ЭКО Конь / Цветология. КФХ «Ранчо Мушкино»</span>
+          <div className="flex flex-col gap-1">
+            <span>© 2026 ЭКО Конь / Цветология. КФХ «Ранчо Мушкино»</span>
+            <span>® «ЭКО Конь» и «Цветология» — зарегистрированные торговые марки КФХ «Ранчо Мушкино»</span>
+          </div>
           <div className="flex gap-4">
             <Link href="/privacy" className="transition-colors hover:text-white">
               Политика конфиденциальности
             </Link>
             <Link href="/terms" className="transition-colors hover:text-white">
               Пользовательское соглашение
+            </Link>
+            <Link href="/legal" className="transition-colors hover:text-white">
+              Правовая информация
             </Link>
           </div>
         </div>
