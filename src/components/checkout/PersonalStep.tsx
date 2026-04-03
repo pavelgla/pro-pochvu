@@ -11,8 +11,13 @@ const schema = z.object({
   email: z.string().email("Введите корректный email"),
   phone: z
     .string()
-    .min(11, "Введите номер телефона")
-    .regex(/^\+?[78]\d{10}$/, "Формат: +7XXXXXXXXXX"),
+    .refine(
+      (v) => {
+        const digits = v.replace(/\D/g, "");
+        return digits.length === 11 && (digits.startsWith("7") || digits.startsWith("8"));
+      },
+      "Введите корректный номер телефона"
+    ),
   comment: z.string().optional(),
 });
 
@@ -25,6 +30,18 @@ type Props = {
   onBack: () => void;
 };
 
+function formatPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  const normalized = digits.startsWith("8") ? "7" + digits.slice(1) : digits;
+  const d = normalized.startsWith("7") ? normalized : "7" + normalized;
+  const n = d.slice(0, 11);
+  if (n.length <= 1) return n.length ? "+" + n : "";
+  if (n.length <= 4) return `+${n[0]} (${n.slice(1)}`;
+  if (n.length <= 7) return `+${n[0]} (${n.slice(1, 4)}) ${n.slice(4)}`;
+  if (n.length <= 9) return `+${n[0]} (${n.slice(1, 4)}) ${n.slice(4, 7)}-${n.slice(7)}`;
+  return `+${n[0]} (${n.slice(1, 4)}) ${n.slice(4, 7)}-${n.slice(7, 9)}-${n.slice(9)}`;
+}
+
 export function PersonalStep({ data, onChange, onNext, onBack }: Props) {
   const {
     register,
@@ -36,9 +53,13 @@ export function PersonalStep({ data, onChange, onNext, onBack }: Props) {
   });
 
   function onSubmit(values: PersonalData) {
-    onChange(values);
+    const digits = values.phone.replace(/\D/g, "");
+    const phone = "+" + (digits.startsWith("8") ? "7" + digits.slice(1) : digits);
+    onChange({ ...values, phone });
     onNext();
   }
+
+  const phoneField = register("phone");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -53,9 +74,14 @@ export function PersonalStep({ data, onChange, onNext, onBack }: Props) {
         />
         <Input
           label="Телефон"
-          placeholder="+79001234567"
+          placeholder="+7 (900) 123-45-67"
           error={errors.phone?.message}
-          {...register("phone")}
+          {...phoneField}
+          onChange={(e) => {
+            const formatted = formatPhone(e.target.value);
+            e.target.value = formatted;
+            phoneField.onChange(e);
+          }}
         />
       </div>
 
