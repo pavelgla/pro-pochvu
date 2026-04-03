@@ -496,6 +496,52 @@ async function main() {
   });
 
   console.log("Seeded 2 knowledge base articles");
+
+  // Reviews
+  const productYantar = await prisma.product.findUnique({ where: { slug: "bio-chay-yantar-fosfor" }, select: { id: true } });
+  const productListvennye = await prisma.product.findUnique({ where: { slug: "bio-chay-dekorativno-listvennye" }, select: { id: true } });
+  const productKornevaya = await prisma.product.findUnique({ where: { slug: "udobrenie-kornevaya" }, select: { id: true } });
+  const productFitomodul = await prisma.product.findUnique({ where: { slug: "fitomodul-50-4-white" }, select: { id: true } });
+  const productKolyshki = await prisma.product.findUnique({ where: { slug: "kolyshki-skoby-silikon" }, select: { id: true } });
+
+  if (productYantar && productListvennye && productKornevaya && productFitomodul && productKolyshki) {
+    const reviewsData = [
+      // bio-chay-yantar-fosfor
+      { id: "review-bio-chay-yantar-1", productId: productYantar.id, author: "Наталья К.", rating: 5, source: "ozon", isVerified: true, text: "Пользуюсь уже полгода — орхидеи просто расцвели! Раньше один цветонос в год, теперь три. Стики удобно дозировать, не пачкаешься. Запах специфический но терпимый. Заказала ещё 3 упаковки про запас.", createdAt: new Date("2025-08-15") },
+      { id: "review-bio-chay-yantar-2", productId: productYantar.id, author: "Марина В.", rating: 5, source: "ozon", isVerified: true, text: "Отличное удобрение! Фикус стоял грустный год, после месяца подкормки пошёл в рост и дал несколько новых листьев. Натуральный состав — это важно, дома дети и кошка. Рекомендую.", createdAt: new Date("2025-09-02") },
+      { id: "review-bio-chay-yantar-3", productId: productYantar.id, author: "Светлана П.", rating: 5, source: "wildberries", isVerified: true, text: "Брала с недоверием — казалось дорого. Но результат виден уже через 2 недели! Все мои 20+ растений ожили. Особенно хорошо сработало на монстере — три новых листа за месяц. Буду брать постоянно.", createdAt: new Date("2025-10-18") },
+      { id: "review-bio-chay-yantar-4", productId: productYantar.id, author: "Ольга Д.", rating: 5, source: "ozon", isVerified: false, text: "Моя находка этого года. Хойя цвела дважды, хлорофитум разросся в куст. Удобно что стики — просто воткнул и забыл. Расход экономный, хватает надолго.", createdAt: new Date("2025-11-05") },
+      { id: "review-bio-chay-yantar-5", productId: productYantar.id, author: "Татьяна М.", rating: 4, source: "ozon", isVerified: true, text: "Хорошее удобрение, результат есть. Минус один — хотелось бы больше инструкции на упаковке. Но для растений работает, фиалки зацвели активнее обычного.", createdAt: new Date("2025-12-10") },
+      // bio-chay-dekorativno-listvennye
+      { id: "review-bio-chay-listv-1", productId: productListvennye.id, author: "Ирина С.", rating: 5, source: "ozon", isVerified: true, text: "Специально взяла именно для декоративно-лиственных — не пожалела. Диффенбахия за месяц выдала 4 новых листа, каладиум стал ярче. Органика без резкого запаха, что для меня важно.", createdAt: new Date("2025-07-22") },
+      { id: "review-bio-chay-listv-2", productId: productListvennye.id, author: "Людмила Р.", rating: 5, source: "ozon", isVerified: true, text: "Беру уже третий раз. Все монстеры, фикусы и аглаонемы отлично реагируют. Главное не переусердствовать — одного стика на горшок 20 см хватает на месяц.", createdAt: new Date("2025-10-01") },
+      { id: "review-bio-chay-listv-3", productId: productListvennye.id, author: "Анна Г.", rating: 5, source: "wildberries", isVerified: true, text: "Подруга посоветовала. Теперь сама рекомендую всем кто любит растения. Сингониум после болезни полностью восстановился, даёт красивые пёстрые листья.", createdAt: new Date("2025-11-14") },
+      // udobrenie-kornevaya
+      { id: "review-kornevaya-1", productId: productKornevaya.id, author: "Елена Б.", rating: 5, source: "ozon", isVerified: true, text: "Спасла любимый фикус Бенджамина после пересадки — листья сыпались, я уже попрощалась. Полила с этим удобрением раз в неделю — через месяц пошёл в рост. Теперь покупаю регулярно.", createdAt: new Date("2025-06-30") },
+      { id: "review-kornevaya-2", productId: productKornevaya.id, author: "Валентина К.", rating: 5, source: "ozon", isVerified: true, text: "Очень понравилось. Орхидеи укрепили корни, замия дала новый побег. Использую как профилактику — раз в 2 месяца. Результат стабильный.", createdAt: new Date("2025-09-17") },
+      { id: "review-kornevaya-3", productId: productKornevaya.id, author: "Жанна Л.", rating: 4, source: "wildberries", isVerified: true, text: "Хорошее средство, корни у растений действительно стали крепче — видно при пересадке. Буду брать снова, хотя цена немного выросла.", createdAt: new Date("2025-12-03") },
+      // fitomodul-50-4-white
+      { id: "review-fitomodul-white-1", productId: productFitomodul.id, author: "Марина П.", rating: 5, source: "ozon", isVerified: true, text: "Сделала целую стену из цветов в гостиной — просто чудо! Модули крепкие, монтаж несложный, муж справился за час. Белый цвет идеально под интерьер. Уже докупила ещё 2 комплекта для спальни.", createdAt: new Date("2025-08-09") },
+      { id: "review-fitomodul-white-2", productId: productFitomodul.id, author: "Наталья Ф.", rating: 5, source: "ozon", isVerified: true, text: "Очень качественный товар. Пластик плотный, не гнётся, не желтеет. Живу с ними уже 8 месяцев — как новые. Под бегонии и традесканции подходит отлично.", createdAt: new Date("2025-10-22") },
+      { id: "review-fitomodul-white-3", productId: productFitomodul.id, author: "Екатерина В.", rating: 5, source: "ozon", isVerified: false, text: "Модули отличные! Взяла для офиса — сотрудники в восторге, посетители фотографируются. Растения держатся хорошо, ничего не падает. Гарантия 5 лет — это серьёзно.", createdAt: new Date("2025-11-30") },
+      // kolyshki-skoby-silikon
+      { id: "review-kolyshki-1", productId: productKolyshki.id, author: "Галина В.", rating: 5, source: "ozon", isVerified: true, text: "Мягкие, не травмируют стебли совсем. У меня хрупкие орхидеи — раньше всё пластиковыми прищепками крепила и оставляла следы. Эти силиконовые идеальны. Куплю ещё.", createdAt: new Date("2025-09-25") },
+      { id: "review-kolyshki-2", productId: productKolyshki.id, author: "Оксана Ш.", rating: 5, source: "ozon", isVerified: true, text: "Недорого и очень удобно. Скобы держат даже тяжёлые ветки томатов. Силикон не рвётся, можно переставлять много раз. Отличная покупка.", createdAt: new Date("2025-12-15") },
+    ];
+
+    for (const r of reviewsData) {
+      const { id, ...fields } = r;
+      await prisma.review.upsert({
+        where: { id },
+        update: {},
+        create: { id, ...fields, isVisible: true },
+      });
+    }
+
+    console.log(`Seeded ${reviewsData.length} reviews`);
+  } else {
+    console.warn("Some products not found, skipping reviews seed");
+  }
 }
 
 main()
