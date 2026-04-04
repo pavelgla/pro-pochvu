@@ -1337,6 +1337,227 @@ alternates.canonical: "https://ecokon.ru/terms"
 
 ---
 
+---
+
+## ПРОМПТ 26: Fix 404 — заглушки для blog, knowledge-base, admin
+
+```
+Ты работаешь в папке ~/Obsidian/ecokon.ru/ecokon — Next.js 14 + TypeScript + Tailwind.
+
+Задача: убрать 404 на страницах которые есть в Footer/меню но не имеют page.tsx.
+
+**1. Создай src/app/blog/page.tsx** — страница "Скоро":
+Metadata: title "Блог | ЭКО Конь", canonical "https://ecokon.ru/blog"
+Контент: заголовок "Блог", подзаголовок "Полезные статьи об уходе за растениями — скоро здесь", иконка 📝, кнопка "В каталог" → /catalog
+Баннер: "Подпишитесь на наш Telegram — публикуем советы там уже сейчас" → https://t.me/+7cAd9gatgP44MDcy
+
+**2. Создай src/app/knowledge-base/page.tsx** — страница "База знаний":
+Metadata: title "База знаний | ЭКО Конь", canonical "https://ecokon.ru/knowledge-base"
+Контент: заголовок "База знаний", 4 плейсхолдера-карточки (серые):
+- "Как применять удобрения ЭКО Конь" — скоро
+- "Конский навоз: польза и применение" — скоро
+- "Вертикальное озеленение: с чего начать" — скоро
+- "Уход за орхидеями: советы экспертов" — скоро
+Кнопка "В каталог" → /catalog
+
+**3. Создай src/app/admin/page.tsx** — минимальный page.tsx:
+```tsx
+export default function AdminPage() {
+  return <div className="container-main section-padding"><h1>Панель управления</h1><p>В разработке.</p></div>
+}
+```
+
+**4. Проверь src/app/legal/page.tsx** — если файл меньше 3000 байт (wc -c src/app/legal/page.tsx), перепиши:
+Добавь полный контент:
+- Блок "Оператор ПДн": ООО «Цветология», ИНН 3900034368, ОГРН 1243900014830, 236017 г. Калининград, пр-кт Победы д.3 лит.Б, info@ecokon.ru
+- Блок "Производитель и правообладатель": КФХ «Ранчо Мушкино», Гладышев Юрий Евгеньевич, Калининградская обл.
+- Блок "Торговые знаки": «ЭКО Конь» и «Цветология» зарегистрированы на территории РФ, принадлежат КФХ «Ранчо Мушкино». Несанкционированное использование запрещено.
+- Блок "Авторские права": все материалы сайта защищены.
+- Ссылки: /privacy, /terms
+
+После создания запусти npm run build.
+```
+
+---
+
+## ПРОМПТ 27: Изображения товаров — скачать с маркетплейсов
+
+```
+Ты работаешь в папке ~/Obsidian/ecokon.ru/ecokon — Next.js 14.
+
+Задача: скачать отсутствующие изображения для 5 товаров и обновить seed.ts.
+
+Следующие товары в seed.ts имеют пустые массивы images: []:
+- udobrenie-tsvetushchie
+- udobrenie-ovoshchi
+- udobrenie-tsitrusovye
+- fitomodul-50-4-green
+- fitomodul-15-6
+
+Шаг 1 — Скачай изображения через curl. Для каждого пробуй несколько источников:
+
+udobrenie-tsvetushchie:
+  curl -sL -o public/images/ecokon/udobrenie-tsvetushchie_0.jpg --max-time 10 -H "User-Agent: Mozilla/5.0" "https://ir.ozone.ru/s3/multimedia-1-j/wc1000/6800970331.jpg"
+  # Fallback если < 5KB:
+  cp public/images/ecokon/bio-chay-yantar-fosfor_1.jpg public/images/ecokon/udobrenie-tsvetushchie_0.jpg
+
+udobrenie-ovoshchi:
+  curl -sL -o public/images/ecokon/udobrenie-ovoshchi_0.jpg --max-time 10 -H "User-Agent: Mozilla/5.0" "https://ir.ozone.ru/s3/multimedia-q/wc1000/6800970266.jpg"
+  cp public/images/ecokon/bio-chay-dekorativno-listvennye_0.jpg public/images/ecokon/udobrenie-ovoshchi_0.jpg
+
+udobrenie-tsitrusovye:
+  curl -sL -o public/images/ecokon/udobrenie-tsitrusovye_0.jpg --max-time 10 -H "User-Agent: Mozilla/5.0" "https://ir.ozone.ru/s3/multimedia-1-3/wc1000/9133808727.jpg"
+  cp public/images/ecokon/bio-chay-orhidei_0.jpg public/images/ecokon/udobrenie-tsitrusovye_0.jpg
+
+fitomodul-50-4-green:
+  curl -sL -o public/images/tsvetologiya/fitomodul-50-4-green_0.jpg --max-time 10 -H "User-Agent: Mozilla/5.0" "https://ir.ozone.ru/s3/multimedia-1-t/wc1000/9133887989.jpg"
+  cp public/images/tsvetologiya/fitomodul-50-4-white_0.jpg public/images/tsvetologiya/fitomodul-50-4-green_0.jpg
+
+fitomodul-15-6:
+  curl -sL -o public/images/tsvetologiya/fitomodul-15-6_0.jpg --max-time 10 -H "User-Agent: Mozilla/5.0" "https://ir.ozone.ru/s3/multimedia-0/wc1000/6629411520.jpg"
+  cp public/images/tsvetologiya/kolyshki-skoby-silikon_0.jpg public/images/tsvetologiya/fitomodul-15-6_0.jpg
+
+Для каждого файла проверь размер: [ $(stat -c%s "файл") -gt 5000 ] || cp fallback destination
+
+Шаг 2 — Обнови prisma/seed.ts:
+Найди upsert каждого из 5 товаров и замени images: [] на images: ["/images/ecokon/..."] соответственно.
+
+Шаг 3 — Проверь ProductCard.tsx:
+Убедись что при наличии images[0] отображается <Image> через next/image, а не эмодзи-заглушка.
+Если в текущей реализации изображения игнорируются — исправь: добавь условный рендер:
+```tsx
+const firstImage = (product.images as string[])?.[0];
+// В JSX:
+{firstImage ? (
+  <Image src={firstImage} alt={product.name} fill className="object-cover" />
+) : (
+  <div className="flex h-full items-center justify-center text-5xl opacity-20">
+    {brand === "ecokon" ? "🌿" : "🌱"}
+  </div>
+)}
+```
+
+После всего запусти npm run build.
+```
+
+---
+
+## ПРОМПТ 28: Парсер отзывов WB (публичный API)
+
+```
+Ты работаешь в папке ~/Obsidian/ecokon.ru/ecokon — Next.js 14 + Prisma + TypeScript.
+
+Задача: создать скрипт синхронизации отзывов с Wildberries через ПУБЛИЧНЫЙ бесплатный API.
+
+WB Feedbacks API (официально публичный, без авторизации):
+GET https://feedbacks2.wb.ru/feedbacks/v1/{nmId}?take=30&skip=0&order=dateDesc
+Ответ: { "feedbacks": [{ "id": "uuid", "text": "...", "productValuation": 5, "createdDate": "2025-11-15T...", "userName": "Наталья" }] }
+
+Создай файл scripts/sync-wb-reviews.ts со следующей логикой:
+
+1. Маппинг nmId → slug:
+const WB_PRODUCT_MAP = {
+  "138576640": "bio-chay-yantar-fosfor",
+  "138576638": "bio-chay-dekorativno-listvennye",
+  "138576639": "udobrenie-ovoshchi",
+  "163686285": "udobrenie-kornevaya",
+  "177867849": "bio-chay-orhidei",
+};
+
+2. Функция fetchWbFeedbacks(nmId, take=100):
+   - fetch с User-Agent header
+   - Возвращает массив feedbacks или []
+   - Обрабатывает ошибки (сеть, 404, неверный JSON)
+
+3. Функция syncProduct(nmId, slug):
+   - Находит product.id по slug
+   - Для каждого feedback с непустым text >= 10 символов:
+     prisma.review.upsert({ where: { id: "wb-{fb.id}" }, update: {}, create: { id, productId, source: "wildberries", author: fb.userName || "Покупатель", rating: fb.productValuation, text, isVerified: true, isVisible: true, createdAt: new Date(fb.createdDate) } })
+   - Пауза 1500ms между товарами
+
+4. main(): обходит все записи WB_PRODUCT_MAP, логирует прогресс
+
+Добавь в package.json:
+"sync:reviews:wb": "npx tsx scripts/sync-wb-reviews.ts"
+
+Создай deploy/crontab.example:
+# Запуск каждое воскресенье в 3:00 МСК
+0 0 * * 0 cd ~/ecokon && npm run sync:reviews:wb >> logs/wb-sync.log 2>&1
+
+Создай директорию logs/ с файлом .gitkeep.
+
+Запусти npm run build и npx tsc --noEmit для проверки типов.
+```
+
+---
+
+## ПРОМПТ 29: Отображение отзывов на странице товара
+
+```
+Ты работаешь в папке ~/Obsidian/ecokon.ru/ecokon — Next.js 14 + TypeScript + Tailwind.
+
+Прочитай src/components/Reviews.tsx и src/lib/catalog.ts.
+
+Задача: полноценное отображение отзывов с разбивкой по источникам.
+
+**Обнови Reviews.tsx:**
+
+1. Props: product (с полями reviews, rating, reviewsCount)
+
+2. Шапка секции (id="reviews"):
+   - Крупный рейтинг (например "4.9") + 5 звёзд + "(9 762 отзыва)"
+   - Мелкий текст: "Включает отзывы с Wildberries, Ozon и нашего сайта"
+   - Прогресс-бары по звёздам (5★→1★): считай из reviews[] или покажи условно
+
+3. Каждый отзыв — белая карточка с тенью:
+   - Строка 1: имя автора (font-medium) + дата (text-sm text-gray, формат "15 ноября 2025")
+   - Строка 2: N жёлтых звёзд
+   - Строка 3: текст отзыва
+   - Строка 4 (бейджи): source=="wildberries" → синий "WB", source=="ozon" → зелёный "Ozon", иначе серый "Сайт"; если isVerified → зелёный "✓ Подтверждённая покупка"
+
+4. Показывать 10 отзывов, кнопка "Показать ещё N" (стейт offset)
+
+5. Empty state: "Отзывы загружаются. На Wildberries и Ozon этот товар имеет {product.reviewsCount.toLocaleString('ru-RU')} отзывов с рейтингом {product.rating}★"
+
+**Обнови getProductBySlug в catalog.ts:**
+take: 50 вместо 10 для reviews.
+
+**Обнови ProductInfo.tsx:**
+Кнопка/ссылка на количество отзывов: onClick → document.getElementById("reviews")?.scrollIntoView({behavior:"smooth"})
+
+После всего запусти npm run build.
+```
+
+---
+
+## ПРОМПТ 30: Финальная проверка Phase 4
+
+```
+Ты работаешь в папке ~/Obsidian/ecokon.ru/ecokon — Next.js 14.
+
+Финальная проверка всех изменений Phase 4.
+
+1. npm run build — без ошибок.
+
+2. Проверь что 404-страниц больше нет — все роуты из build output существуют:
+   Должны быть: /blog, /knowledge-base, /admin
+
+3. Проверь изображения:
+   ls -la public/images/ecokon/ | grep -E "tsvetushchie|ovoshchi|tsitrusovye"
+   ls -la public/images/tsvetologiya/ | grep -E "green|15-6"
+
+4. Проверь что scripts/sync-wb-reviews.ts компилируется:
+   npx tsc --noEmit --project tsconfig.json
+
+5. Проверь sitemap.ts — добавь /blog, /knowledge-base если нет.
+
+6. Запусти npx tsc --noEmit — 0 ошибок.
+
+7. Итоговый отчёт: список всех страниц сайта (из build output).
+```
+
+---
+
 ## Порядок запуска
 
 ```bash
@@ -1348,12 +1569,15 @@ git init && git add -A && git commit -m "Initial state before MVP Phase 1"
 # Запустить все промпты автоматически:
 ./run-prompts.sh
 
-# Или начать с конкретного:
-./run-prompts.sh 3
+# Phase 1 — MVP (seed, UI, checkout, auth):
+./run-prompts.sh 1 12
 
-# Запустить только Phase 2 (страницы):
+# Phase 2 — Статические страницы:
 ./run-prompts.sh 13 19
 
-# Запустить только Phase 3 (ПДн-compliance):
+# Phase 3 — ПДн-compliance:
 ./run-prompts.sh 20 25
+
+# Phase 4 — Фиксы, изображения, отзывы WB:
+./run-prompts.sh 26 30
 ```

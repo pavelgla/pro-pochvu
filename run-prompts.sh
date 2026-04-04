@@ -48,6 +48,11 @@ PROMPTS=(
   "23-contacts-legal|Contacts: ООО Цветология + КФХ Мушкино во всех юр.блоках"
   "24-terms-of-service|Terms: Пользовательское соглашение / оферта"
   "25-final-pdn|Final Phase 3: чеклист 152-ФЗ, sitemap, TypeScript"
+  "26-fix-404|Fix 404: blog, knowledge-base, admin страницы + legal контент"
+  "27-product-images|Images: скачать фото для 5 товаров + fix ProductCard"
+  "28-wb-reviews-sync|WB Sync: парсер отзывов через публичный feedbacks API"
+  "29-reviews-display|Reviews: отображение с бейджами WB/Ozon, пагинация"
+  "30-final-phase4|Final Phase 4: 404 проверка, изображения, TypeScript"
 )
 
 TOTAL=${#PROMPTS[@]}
