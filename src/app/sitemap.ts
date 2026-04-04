@@ -74,6 +74,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     },
     {
+      url: "https://ecokon.ru/blog",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: "https://ecokon.ru/knowledge-base",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: "https://ecokon.ru/auth/login",
       lastModified: new Date(),
       changeFrequency: "monthly",
