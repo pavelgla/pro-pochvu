@@ -41,11 +41,7 @@ export function ProductTabs({ product }: { product: ProductWithRelations }) {
         )}
 
         {activeTab === "reviews" && (
-          <Reviews
-            reviews={product.reviews}
-            productRating={product.rating}
-            reviewsCount={product.reviewsCount}
-          />
+          <Reviews product={product} />
         )}
       </div>
     </div>

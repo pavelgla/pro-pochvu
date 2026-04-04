@@ -23,18 +23,52 @@ function Stars({ count, size = "sm" }: { count: number; size?: "sm" | "md" }) {
   );
 }
 
-function RatingDistribution({ rating, total }: { rating: number; total: number }) {
-  const dist = [
-    { stars: 5, pct: rating >= 4.8 ? 85 : rating >= 4.5 ? 70 : 55 },
-    { stars: 4, pct: rating >= 4.8 ? 10 : 20 },
-    { stars: 3, pct: 3 },
-    { stars: 2, pct: 1 },
-    { stars: 1, pct: 1 },
-  ];
+function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function SourceBadge({ source }: { source: string }) {
+  if (source === "wildberries") {
+    return (
+      <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+        WB
+      </span>
+    );
+  }
+  if (source === "ozon") {
+    return (
+      <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+        Ozon
+      </span>
+    );
+  }
+  return (
+    <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+      Сайт
+    </span>
+  );
+}
+
+function RatingDistribution({ reviews, rating, total }: { reviews: Review[]; rating: number; total: number }) {
+  const counts = [5, 4, 3, 2, 1].map((stars) => {
+    const count = reviews.length > 0
+      ? reviews.filter((r) => r.rating === stars).length
+      : 0;
+    const pct = reviews.length > 0
+      ? Math.round((count / reviews.length) * 100)
+      : stars === 5
+        ? rating >= 4.8 ? 85 : rating >= 4.5 ? 70 : 55
+        : stars === 4 ? (rating >= 4.8 ? 10 : 20) : stars === 3 ? 3 : 1;
+    return { stars, pct };
+  });
 
   return (
     <div className="space-y-1.5">
-      {dist.map((d) => (
+      {counts.map((d) => (
         <div key={d.stars} className="flex items-center gap-2 text-sm">
           <span className="w-3 text-right">{d.stars}</span>
           <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
@@ -102,36 +136,56 @@ function ReviewForm({ onSubmit }: { onSubmit: (data: ReviewFormState) => void })
   );
 }
 
+const PAGE_SIZE = 10;
+
 type Props = {
-  reviews: Review[];
-  productRating: number;
-  reviewsCount: number;
+  product: {
+    reviews: Review[];
+    rating: number;
+    reviewsCount: number;
+  };
 };
 
-export function Reviews({ reviews, productRating, reviewsCount }: Props) {
+export function Reviews({ product }: Props) {
+  const { reviews, rating, reviewsCount } = product;
+  const [offset, setOffset] = useState(PAGE_SIZE);
   const [showForm, setShowForm] = useState(false);
+
+  const visible = reviews.slice(0, offset);
+  const remaining = reviews.length - offset;
+
+  const sources = Array.from(new Set(reviews.map((r) => r.source)));
+  const sourceLabels = sources.map((s) =>
+    s === "wildberries" ? "Wildberries" : s === "ozon" ? "Ozon" : "нашего сайта"
+  );
 
   return (
     <div id="reviews" className="space-y-8">
-      {/* Summary */}
-      {reviewsCount > 0 && (
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="flex items-center gap-6">
-            <div className="text-center">
-              <span className="text-5xl font-bold">{productRating}</span>
-              <Stars count={Math.round(productRating)} size="md" />
-            </div>
-            <div className="flex-1">
-              <RatingDistribution rating={productRating} total={reviewsCount} />
+      {/* Header */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-3">
+          <div className="flex items-center gap-4">
+            <span className="text-5xl font-bold">{rating}</span>
+            <div className="space-y-1">
+              <Stars count={Math.round(rating)} size="md" />
+              <p className="text-sm text-brand-gray-dark/70">
+                ({reviewsCount.toLocaleString("ru-RU")} отзыва)
+              </p>
             </div>
           </div>
-          <div className="flex items-start justify-end">
-            <Button variant="secondary" onClick={() => setShowForm(!showForm)}>
-              Оставить отзыв
-            </Button>
-          </div>
+          {sourceLabels.length > 0 && (
+            <p className="text-xs text-brand-gray-dark/50">
+              Включает отзывы с {sourceLabels.join(", ")}
+            </p>
+          )}
+          <RatingDistribution reviews={reviews} rating={rating} total={reviewsCount} />
         </div>
-      )}
+        <div className="flex items-start justify-end">
+          <Button variant="secondary" onClick={() => setShowForm(!showForm)}>
+            Оставить отзыв
+          </Button>
+        </div>
+      </div>
 
       {/* Review form */}
       {showForm && (
@@ -146,38 +200,52 @@ export function Reviews({ reviews, productRating, reviewsCount }: Props) {
       {/* Reviews list */}
       {reviews.length > 0 ? (
         <div className="space-y-4">
-          {reviews.map((r) => (
-            <div key={r.id} className="rounded-xl border border-brand-gray-light p-5">
+          {visible.map((r) => (
+            <div key={r.id} className="rounded-xl bg-white p-5 shadow-sm border border-brand-gray-light/50">
+              {/* Row 1: author + date */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="font-medium">{r.author}</span>
-                  {r.isVerified && (
-                    <span className="rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
-                      Проверенная покупка
-                    </span>
-                  )}
-                </div>
-                <span className="text-xs text-brand-gray-dark/40">
-                  {r.source !== "site" ? r.source : "Сайт"} •{" "}
-                  {new Date(r.createdAt).toLocaleDateString("ru-RU")}
+                <span className="font-medium">{r.author}</span>
+                <span className="text-sm text-brand-gray-dark/50">
+                  {formatDate(r.createdAt)}
                 </span>
               </div>
-              <div className="mt-2">
+              {/* Row 2: stars */}
+              <div className="mt-1.5">
                 <Stars count={r.rating} />
               </div>
+              {/* Row 3: text */}
               {r.text && (
                 <p className="mt-2 text-sm leading-relaxed text-brand-gray-dark/80">
                   {r.text}
                 </p>
               )}
+              {/* Row 4: badges */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <SourceBadge source={r.source} />
+                {r.isVerified && (
+                  <span className="rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
+                    ✓ Подтверждённая покупка
+                  </span>
+                )}
+              </div>
             </div>
           ))}
+
+          {remaining > 0 && (
+            <div className="pt-2 text-center">
+              <Button variant="secondary" onClick={() => setOffset(offset + PAGE_SIZE)}>
+                Показать ещё {remaining}
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4 py-12 text-center">
           <MessageSquare className="h-12 w-12 text-brand-gray-dark/20" />
           <p className="text-brand-gray-dark/50">
-            Пока нет отзывов. Будьте первым!
+            Отзывы загружаются. На Wildberries и Ozon этот товар имеет{" "}
+            <span className="font-medium">{reviewsCount.toLocaleString("ru-RU")}</span>{" "}
+            отзывов с рейтингом <span className="font-medium">{rating}★</span>
           </p>
           <Button variant="secondary" onClick={() => setShowForm(true)}>
             Оставить отзыв
