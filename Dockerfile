@@ -27,6 +27,10 @@ ENV NEXT_PUBLIC_VK_PIXEL_ID=${NEXT_PUBLIC_VK_PIXEL_ID}
 
 RUN npm run build
 
+# Compile WB sync script to plain JS (tsx not available in production)
+RUN npx esbuild scripts/sync-wb-reviews.ts --bundle --platform=node --target=node20 \
+    --external:@prisma/client --external:.prisma --outfile=scripts/sync-wb-reviews.js
+
 # Stage 3: Production
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -46,11 +50,14 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/prisma ./prisma
 
+# WB sync script (compiled to JS)
+COPY --from=builder /app/scripts/sync-wb-reviews.js ./scripts/sync-wb-reviews.js
+
 # Entrypoint для автоматических миграций при старте
 COPY scripts/deploy-migrate.sh ./scripts/deploy-migrate.sh
 
 # Prisma CLI нужен доступ на запись к engines dir
-RUN chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma prisma
+RUN chown -R nextjs:nodejs node_modules/.prisma node_modules/@prisma node_modules/prisma prisma scripts
 
 USER nextjs
 EXPOSE 3002
