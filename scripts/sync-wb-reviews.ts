@@ -17,14 +17,21 @@ const WB_PRODUCT_MAP: Record<number, string> = {
 const WB_API_KEY = process.env.WB_API_KEY ?? "";
 const MAX_FEEDBACKS = 5000;
 
+interface WbProductDetails {
+  nmId: number;
+  productName?: string;
+}
+
 interface WbFeedback {
   id: string;
-  nmId: number;
-  text: string;
+  text?: string;
+  pros?: string;
+  cons?: string;
   productValuation: number;
   createdDate: string;
   userName?: string;
   wasPurchased?: boolean;
+  productDetails?: WbProductDetails;
 }
 
 interface WbFeedbacksResponse {
@@ -87,7 +94,9 @@ async function main() {
   // Group by slug
   const bySlug: Record<string, WbFeedback[]> = {};
   for (const fb of allFeedbacks) {
-    const slug = WB_PRODUCT_MAP[fb.nmId];
+    const nmId = fb.productDetails?.nmId;
+    if (!nmId) continue;
+    const slug = WB_PRODUCT_MAP[nmId];
     if (!slug) continue;
     if (!bySlug[slug]) bySlug[slug] = [];
     bySlug[slug].push(fb);
@@ -105,7 +114,11 @@ async function main() {
     let skipped = 0;
 
     for (const fb of feedbacks) {
-      const text = fb.text?.trim() ?? "";
+      // Combine text, pros, cons into one review text
+      const parts = [fb.text, fb.pros, fb.cons]
+        .map((s) => s?.trim() ?? "")
+        .filter((s) => s.length > 0);
+      const text = parts.join(" | ");
       if (text.length < 10) {
         skipped++;
         continue;
