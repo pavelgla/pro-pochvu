@@ -52,6 +52,10 @@ services:
       OZON2_API_KEY: ${OZON2_API_KEY:-}
       WB_API_KEY: ${WB_API_KEY:-}
       WB2_API_KEY: ${WB2_API_KEY:-}
+      WB_STATS_KEY: ${WB_STATS_KEY:-}
+      WB2_STATS_KEY: ${WB2_STATS_KEY:-}
+      WB_PRICES_KEY: ${WB_PRICES_KEY:-}
+      WB2_PRICES_KEY: ${WB2_PRICES_KEY:-}
     networks:
       - webproxy
       - internal

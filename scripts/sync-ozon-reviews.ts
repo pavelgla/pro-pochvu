@@ -7,7 +7,8 @@ const OZON_SKU_MAP: Record<string, string> = {
   "818346437": "bio-chay-yantar-fosfor",
   "821338829": "bio-chay-dekorativno-listvennye",
   "818348560": "udobrenie-ovoshchi",
-  "818351720": "udobrenie-rassada",
+  "818351720": "udobrenie-rassada", // старый SKU (может быть неактивен)
+  "3520881009": "udobrenie-rassada", // новый/текущий SKU
   "1010076465": "udobrenie-kornevaya",
   "1198624077": "bio-chay-orhidei",
   "1694995657": "udobrenie-tsitrusovye",

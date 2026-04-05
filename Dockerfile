@@ -34,6 +34,12 @@ RUN npx esbuild scripts/sync-ozon-reviews.ts --bundle --platform=node --target=n
     --external:@prisma/client --external:.prisma --outfile=scripts/sync-ozon-reviews.js
 RUN npx esbuild scripts/sync-ozon2-reviews.ts --bundle --platform=node --target=node20 \
     --external:@prisma/client --external:.prisma --outfile=scripts/sync-ozon2-reviews.js
+RUN npx esbuild scripts/sync-wb-content.ts --bundle --platform=node --target=node20 \
+    --external:@prisma/client --external:.prisma --outfile=scripts/sync-wb-content.js
+RUN npx esbuild scripts/sync-ozon-prices.ts --bundle --platform=node --target=node20 \
+    --external:@prisma/client --external:.prisma --outfile=scripts/sync-ozon-prices.js
+RUN npx esbuild scripts/sync-wb-prices.ts --bundle --platform=node --target=node20 \
+    --external:@prisma/client --external:.prisma --outfile=scripts/sync-wb-prices.js
 
 # Stage 3: Production
 FROM node:20-alpine AS runner
