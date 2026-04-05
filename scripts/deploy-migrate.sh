@@ -7,8 +7,11 @@ node node_modules/prisma/build/index.js migrate deploy
 echo "Syncing WB reviews..."
 node scripts/sync-wb-reviews.js || echo "WB sync failed (non-fatal), continuing..."
 
-echo "Syncing Ozon reviews..."
+echo "Syncing Ozon reviews (account 1 — ЭКО Конь удобрения)..."
 node scripts/sync-ozon-reviews.js || echo "Ozon sync failed (non-fatal), continuing..."
+
+echo "Syncing Ozon reviews (account 2 — Цветология + Грунт)..."
+node scripts/sync-ozon2-reviews.js || echo "Ozon2 sync failed (non-fatal), continuing..."
 
 echo "Starting application..."
 exec node server.js

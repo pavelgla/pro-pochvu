@@ -32,6 +32,8 @@ RUN npx esbuild scripts/sync-wb-reviews.ts --bundle --platform=node --target=nod
     --external:@prisma/client --external:.prisma --outfile=scripts/sync-wb-reviews.js
 RUN npx esbuild scripts/sync-ozon-reviews.ts --bundle --platform=node --target=node20 \
     --external:@prisma/client --external:.prisma --outfile=scripts/sync-ozon-reviews.js
+RUN npx esbuild scripts/sync-ozon2-reviews.ts --bundle --platform=node --target=node20 \
+    --external:@prisma/client --external:.prisma --outfile=scripts/sync-ozon2-reviews.js
 
 # Stage 3: Production
 FROM node:20-alpine AS runner
@@ -55,6 +57,7 @@ COPY --from=builder /app/prisma ./prisma
 # WB sync script (compiled to JS)
 COPY --from=builder /app/scripts/sync-wb-reviews.js ./scripts/sync-wb-reviews.js
 COPY --from=builder /app/scripts/sync-ozon-reviews.js ./scripts/sync-ozon-reviews.js
+COPY --from=builder /app/scripts/sync-ozon2-reviews.js ./scripts/sync-ozon2-reviews.js
 
 # Entrypoint для автоматических миграций при старте
 COPY scripts/deploy-migrate.sh ./scripts/deploy-migrate.sh

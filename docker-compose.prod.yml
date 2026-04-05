@@ -48,6 +48,8 @@ services:
       BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@ecokon.ru}
       OZON_CLIENT_ID: ${OZON_CLIENT_ID:-}
       OZON_API_KEY: ${OZON_API_KEY:-}
+      OZON2_CLIENT_ID: ${OZON2_CLIENT_ID:-}
+      OZON2_API_KEY: ${OZON2_API_KEY:-}
     networks:
       - webproxy
       - internal
