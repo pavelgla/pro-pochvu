@@ -103,7 +103,8 @@ async function syncWbPrices(
 
     await prisma.product.update({
       where: { id: product.id },
-      data: { marketplaceIds: { ...currentIds, [priceKey]: price } },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: { marketplaceIds: { ...currentIds, [priceKey]: price } as any },
     });
 
     console.log(`[WB-PRICES] ${slug}: ${priceKey}=${price} ₽`);

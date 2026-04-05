@@ -131,7 +131,8 @@ async function syncPrices(
     await prisma.product.update({
       where: { id: product.id },
       data: {
-        marketplaceIds: { ...currentIds, [priceKey]: price },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        marketplaceIds: { ...currentIds, [priceKey]: price } as any,
       },
     });
 
