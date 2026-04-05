@@ -2,54 +2,63 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const WB_PRODUCT_MAP: Record<string, string> = {
-  "138576640": "bio-chay-yantar-fosfor",
-  "138576638": "bio-chay-dekorativno-listvennye",
-  "138576639": "udobrenie-ovoshchi",
-  "163686285": "udobrenie-kornevaya",
-  "177867849": "bio-chay-orhidei",
-  "262136598": "udobrenie-tsitrusovye",
-  "820054512": "udobrenie-rassada",
-  "819695619": "udobrenie-tsvetushchie",
+// WB nmId → product slug (account ecokon, oid: 154039)
+const WB_PRODUCT_MAP: Record<number, string> = {
+  138576640: "bio-chay-yantar-fosfor",
+  138576638: "bio-chay-dekorativno-listvennye",
+  138576639: "udobrenie-ovoshchi",
+  163686285: "udobrenie-kornevaya",
+  177867849: "bio-chay-orhidei",
+  262136598: "udobrenie-tsitrusovye",
+  820054512: "udobrenie-rassada",
+  819695619: "udobrenie-tsvetushchie",
 };
+
+const WB_API_KEY = process.env.WB_API_KEY ?? "";
+const MAX_FEEDBACKS = 5000;
 
 interface WbFeedback {
   id: string;
+  nmId: number;
   text: string;
   productValuation: number;
   createdDate: string;
   userName?: string;
+  wasPurchased?: boolean;
 }
 
-interface WbResponse {
-  feedbacks: WbFeedback[];
+interface WbFeedbacksResponse {
+  data?: {
+    feedbacks: WbFeedback[] | null;
+  };
+  error?: boolean;
+  errorText?: string;
 }
 
-async function fetchWbFeedbacks(nmId: string): Promise<WbFeedback[]> {
+async function fetchFeedbacks(isAnswered: boolean): Promise<WbFeedback[]> {
   const all: WbFeedback[] = [];
   let skip = 0;
   const take = 100;
 
-  while (true) {
-    const url = `https://feedbacks2.wb.ru/feedbacks/v1/${nmId}?take=${take}&skip=${skip}&order=dateDesc`;
+  while (all.length < MAX_FEEDBACKS) {
+    const url = `https://feedbacks-api.wildberries.ru/api/v1/feedbacks?isAnswered=${isAnswered}&take=${take}&skip=${skip}&order=dateDesc`;
     try {
       const res = await fetch(url, {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; EcokonBot/1.0; +https://ecokon.ru)",
-        },
+        headers: { Authorization: `Bearer ${WB_API_KEY}` },
       });
       if (!res.ok) {
-        console.warn(`[WB] nmId=${nmId} HTTP ${res.status}`);
+        const text = await res.text();
+        console.warn(`[WB] isAnswered=${isAnswered} HTTP ${res.status}: ${text.slice(0, 200)}`);
         break;
       }
-      const data = (await res.json()) as WbResponse;
-      const batch = data.feedbacks ?? [];
+      const data = (await res.json()) as WbFeedbacksResponse;
+      const batch = data.data?.feedbacks ?? [];
       all.push(...batch);
       if (batch.length < take) break;
       skip += take;
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 300));
     } catch (err) {
-      console.error(`[WB] nmId=${nmId} fetch error:`, err);
+      console.error(`[WB] fetch error:`, err);
       break;
     }
   }
@@ -57,76 +66,88 @@ async function fetchWbFeedbacks(nmId: string): Promise<WbFeedback[]> {
   return all;
 }
 
-async function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function syncProduct(nmId: string, slug: string) {
-  const product = await prisma.product.findUnique({ where: { slug } });
-  if (!product) {
-    console.warn(`[SKIP] Product not found: slug=${slug}`);
+async function main() {
+  if (!WB_API_KEY) {
+    console.error("[WB-SYNC] Не задан WB_API_KEY — пропускаем");
     return;
   }
 
-  const feedbacks = await fetchWbFeedbacks(nmId);
-  console.log(`[WB] nmId=${nmId} (${slug}): ${feedbacks.length} отзывов`);
+  console.log(`[WB-SYNC] Старт: ${new Date().toISOString()}`);
 
-  let created = 0;
-  let skipped = 0;
+  // Fetch both answered and unanswered feedbacks
+  const [unanswered, answered] = await Promise.all([
+    fetchFeedbacks(false),
+    fetchFeedbacks(true),
+  ]);
+  const allFeedbacks = [...unanswered, ...answered];
+  console.log(
+    `[WB-SYNC] Всего: ${allFeedbacks.length} (${unanswered.length} без ответа, ${answered.length} с ответом)`
+  );
 
-  for (const fb of feedbacks) {
-    const text = fb.text?.trim() ?? "";
-    if (text.length < 10) {
-      skipped++;
+  // Group by slug
+  const bySlug: Record<string, WbFeedback[]> = {};
+  for (const fb of allFeedbacks) {
+    const slug = WB_PRODUCT_MAP[fb.nmId];
+    if (!slug) continue;
+    if (!bySlug[slug]) bySlug[slug] = [];
+    bySlug[slug].push(fb);
+  }
+
+  // Save per product
+  for (const [slug, feedbacks] of Object.entries(bySlug)) {
+    const product = await prisma.product.findUnique({ where: { slug } });
+    if (!product) {
+      console.warn(`[SKIP] Товар не найден: slug=${slug}`);
       continue;
     }
 
-    const id = `wb-${fb.id}`;
-    await prisma.review.upsert({
-      where: { id },
-      update: {},
-      create: {
-        id,
-        productId: product.id,
-        source: "wildberries",
-        author: fb.userName || "Покупатель",
-        rating: fb.productValuation,
-        text,
-        isVerified: true,
-        isVisible: true,
-        createdAt: new Date(fb.createdDate),
+    let created = 0;
+    let skipped = 0;
+
+    for (const fb of feedbacks) {
+      const text = fb.text?.trim() ?? "";
+      if (text.length < 10) {
+        skipped++;
+        continue;
+      }
+
+      await prisma.review.upsert({
+        where: { id: `wb-${fb.id}` },
+        update: {},
+        create: {
+          id: `wb-${fb.id}`,
+          productId: product.id,
+          source: "wildberries",
+          author: fb.userName || "Покупатель",
+          rating: fb.productValuation,
+          text,
+          isVerified: fb.wasPurchased ?? true,
+          isVisible: true,
+          createdAt: new Date(fb.createdDate),
+        },
+      });
+      created++;
+    }
+
+    console.log(`[WB] ${slug}: +${created} сохранено, ${skipped} пропущено`);
+
+    const stats = await prisma.review.aggregate({
+      where: { productId: product.id, isVisible: true },
+      _count: true,
+      _avg: { rating: true },
+    });
+    await prisma.product.update({
+      where: { id: product.id },
+      data: {
+        reviewsCount: stats._count,
+        rating: stats._avg.rating
+          ? Math.round(stats._avg.rating * 10) / 10
+          : product.rating,
       },
     });
-    created++;
-  }
-
-  console.log(`[WB] ${slug}: +${created} сохранено, ${skipped} пропущено`);
-
-  // Update product reviewsCount and rating
-  const stats = await prisma.review.aggregate({
-    where: { productId: product.id, isVisible: true },
-    _count: true,
-    _avg: { rating: true },
-  });
-  await prisma.product.update({
-    where: { id: product.id },
-    data: {
-      reviewsCount: stats._count,
-      rating: stats._avg.rating ? Math.round(stats._avg.rating * 10) / 10 : product.rating,
-    },
-  });
-  console.log(`[WB] ${slug}: stats → ${stats._count} отзывов, рейтинг ${stats._avg.rating?.toFixed(1)}`);
-}
-
-async function main() {
-  console.log(`[WB-SYNC] Старт: ${new Date().toISOString()}`);
-
-  const entries = Object.entries(WB_PRODUCT_MAP);
-  for (let i = 0; i < entries.length; i++) {
-    const [nmId, slug] = entries[i];
-    console.log(`[WB-SYNC] ${i + 1}/${entries.length} — nmId=${nmId}`);
-    await syncProduct(nmId, slug);
-    if (i < entries.length - 1) await sleep(1500);
+    console.log(
+      `[WB] ${slug}: stats → ${stats._count} отзывов, рейтинг ${stats._avg.rating?.toFixed(1)}`
+    );
   }
 
   console.log(`[WB-SYNC] Готово: ${new Date().toISOString()}`);
