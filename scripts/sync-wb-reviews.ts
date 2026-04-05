@@ -8,6 +8,9 @@ const WB_PRODUCT_MAP: Record<string, string> = {
   "138576639": "udobrenie-ovoshchi",
   "163686285": "udobrenie-kornevaya",
   "177867849": "bio-chay-orhidei",
+  "262136598": "udobrenie-tsitrusovye",
+  "820054512": "udobrenie-rassada",
+  "819695619": "udobrenie-tsvetushchie",
 };
 
 interface WbFeedback {

@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync:reviews:wb": "npx tsx scripts/sync-wb-reviews.ts"
+    "sync:reviews:wb": "npx tsx scripts/sync-wb-reviews.ts",
+    "sync:reviews:ozon": "npx tsx scripts/sync-ozon-reviews.ts",
+    "sync:reviews:all": "npm run sync:reviews:wb && npm run sync:reviews:ozon",
+    "download:images:wb": "npx tsx scripts/download-wb-images.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

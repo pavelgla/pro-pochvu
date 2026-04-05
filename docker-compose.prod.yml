@@ -46,6 +46,8 @@ services:
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
       BREVO_API_KEY: ${BREVO_API_KEY}
       BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@ecokon.ru}
+      OZON_CLIENT_ID: ${OZON_CLIENT_ID:-}
+      OZON_API_KEY: ${OZON_API_KEY:-}
     networks:
       - webproxy
       - internal
