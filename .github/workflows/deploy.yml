@@ -121,8 +121,8 @@ jobs:
             set_env "OZON_API_KEY" "${{ secrets.OZON_API_KEY }}"
             set_env "OZON2_CLIENT_ID" "${{ secrets.OZON2_CLIENT_ID }}"
             set_env "OZON2_API_KEY" "${{ secrets.OZON2_API_KEY }}"
-            set_env "WB_API_KEY" "${{ secrets.WB_API_KEY }}"
-            set_env "WB2_API_KEY" "${{ secrets.WB2_API_KEY }}"
+            set_env "WB_API_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTcyODQwLCJpZCI6IjAxOWQ1ZTVmLWY2MzMtNzg5Mi04NzA2LWU3MTFmYWNmNDkwYSIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MTU0MDM5LCJzIjo2NzIsInNpZCI6IjA0N2ZhZmI3LWQzMWQtNGQ0MS04NGE4LWY2N2FiYzI3MDgyYyIsInQiOmZhbHNlLCJ1aWQiOjUzNjkyMjExfQ.Sl7mGYoSMfgXT4lPvEEd5ISGoAC3bW2oHJfmF4BGcdYxQ-AwaNXOWnSwOe3yyZA_75h_xcFYQnQ7rCya1_j4WQ"
+            set_env "WB2_API_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTcyNzMzLCJpZCI6IjAxOWQ1ZTVlLTUzNTctNzc4ZC04NDljLTk2ODNmMzg3ZmFiMyIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MjUwMDAxNzMzLCJzIjo2NzIsInNpZCI6IjYyMzkwYzVlLTFkNDItNDE4NS1hYjcyLTAwZmFkMTdjMDJlZSIsInQiOmZhbHNlLCJ1aWQiOjUzNjkyMjExfQ.0SPgEppmx3IQPJd7KOOewBJsPqYt-5g1436foLBqZhiLGmPIXQ6EpTfN7EDfc14f1qwjvINanER0UXVLab4jCQ"
 
             # Login to GHCR
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
