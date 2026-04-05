@@ -10,6 +10,8 @@ const OZON2_SKU_MAP: Record<string, string> = {
   "2825417652": "kolyshki-skoby-silikon",
   "2209878912": "fitomodul-15-6",
   "1902553919": "grunt-ecokon-20l",
+  "1902567457": "grunt-ecokon-ovoshchi",
+  "1928618714": "grunt-ecokon-organicheskiy",
 };
 
 const OZON_CLIENT_ID = process.env.OZON2_CLIENT_ID ?? "";
