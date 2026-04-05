@@ -79,7 +79,7 @@ export function MarketplaceLeadModal({
       {step === "form" ? (
         <form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-sm text-brand-gray-dark/60">
-            Оставьте данные и получите промокод <strong>ECOKON15</strong> на скидку 15%
+            Оставьте данные и получите промокод на скидку 15%
             при покупке «{productName}» на {mpLabel}.
           </p>
 
@@ -158,17 +158,16 @@ export function MarketplaceLeadModal({
 
           <p className="text-xs text-brand-gray-dark/40">Скидка 15% на ваш заказ</p>
 
-          <Button
-            size="lg"
-            className="w-full gap-2"
-            onClick={() => {
-              window.open(marketplaceUrl, "_blank", "noopener,noreferrer");
-              reset();
-            }}
+          <a
+            href={marketplaceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={reset}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-3 text-sm font-medium text-white hover:bg-brand-green/90 transition-colors"
           >
             Перейти на {mpLabel}
             <ExternalLink className="h-4 w-4" />
-          </Button>
+          </a>
         </div>
       )}
     </Modal>
