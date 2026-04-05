@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Heart, Minus, Plus, Package, Weight } from "lucide-react";
+import { Star, Heart, Minus, Plus, Package, Weight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
 import { VariantSelector } from "@/components/VariantSelector";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
+import { MarketplaceLeadModal } from "@/components/MarketplaceLeadModal";
+import { getMarketplaceLinks } from "@/lib/marketplace-map";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
@@ -17,6 +19,8 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [leadModal, setLeadModal] = useState<{ marketplace: "wb" | "ozon"; url: string } | null>(null);
+  const links = getMarketplaceLinks(product.slug);
   const addItem = useCartStore((s) => s.addItem);
   const { user } = useAuth();
   const router = useRouter();
@@ -147,21 +151,9 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
       <div className="flex gap-3">
         <Button
           size="lg"
-          className="flex-1"
-          disabled={!inStock}
-          onClick={() => {
-            addItem({
-              product_id: product.id,
-              variant_id: selectedVariant || undefined,
-              name: product.name,
-              brand,
-              price: product.price,
-              quantity,
-              image: (product.images as string[])[0] || "",
-              slug: product.slug,
-              weight_grams: product.weightGrams,
-            });
-          }}
+          className="flex-1 opacity-60 cursor-not-allowed"
+          disabled
+          title="Скоро будет доставка с нашего сайта"
         >
           В корзину
         </Button>
@@ -184,9 +176,45 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
         </button>
       </div>
 
-      <Button variant="secondary" className="w-full">
-        Купить в 1 клик
-      </Button>
+      {/* Marketplace buttons */}
+      {(links.wb || links.ozon) && (
+        <div className="flex flex-col gap-2">
+          {links.wb && (
+            <Button
+              variant="secondary"
+              size="lg"
+              className="w-full gap-2 border-[#CB11AB] text-[#CB11AB] hover:bg-[#CB11AB]/5"
+              onClick={() => setLeadModal({ marketplace: "wb", url: links.wb! })}
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Купить на WB со скидкой
+            </Button>
+          )}
+          {links.ozon && (
+            <Button
+              variant="secondary"
+              size="lg"
+              className="w-full gap-2 border-[#005BFF] text-[#005BFF] hover:bg-[#005BFF]/5"
+              onClick={() => setLeadModal({ marketplace: "ozon", url: links.ozon! })}
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Купить на Ozon со скидкой
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* Lead modal */}
+      {leadModal && (
+        <MarketplaceLeadModal
+          isOpen
+          onClose={() => setLeadModal(null)}
+          productSlug={product.slug}
+          marketplace={leadModal.marketplace}
+          marketplaceUrl={leadModal.url}
+          productName={product.name}
+        />
+      )}
 
       {/* Delivery info */}
       <div className="flex items-start gap-3 rounded-xl bg-brand-gray-light/50 p-4">

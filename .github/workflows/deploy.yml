@@ -129,6 +129,8 @@ jobs:
             # WB Prices keys (Цены и скидки — discounts-prices-api.wb.ru)
             set_env "WB_PRICES_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTc3MTE3LCJpZCI6IjAxOWQ1ZWExLTM5NzAtNzVhYi1hMmE5LTU1OWYxMTdiZDVhOCIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MTU0MDM5LCJzIjo4LCJzaWQiOiIwNDdmYWZiNy1kMzFkLTRkNDEtODRhOC1mNjdhYmMyNzA4MmMiLCJ0IjpmYWxzZSwidWlkIjo1MzY5MjIxMX0.5yAXxrgdXt7svwaJ0aaO8depU_0YqTF7mcgoZQ4JSCuO2RdFgjTgeABrh1LxT_IVf4RCNSZLLhdjo453XUEhnw"
             set_env "WB2_PRICES_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTc3MTc0LCJpZCI6IjAxOWQ1ZWEyLTE4ZTctNzA1OC04ZDU3LTEwMGIyOWYzOTgyOSIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MjUwMDAxNzMzLCJzIjoxMDMyLCJzaWQiOiI2MjM5MGM1ZS0xZDQyLTQxODUtYWI3Mi0wMGZhZDE3YzAyZWUiLCJ0IjpmYWxzZSwidWlkIjo1MzY5MjIxMX0.sGgqTj51uLVS1AiQYxGeu9_en_g49k96yyXNQYPGt0SeXbnaARE-oIkp6QacHlPuCxUeS1cdx-KG0SagnF99Vg"
+            set_env "TELEGRAM_BOT_TOKEN" "8479125268:AAFv4UxT2DkMn0kHnam8bXVMsfbSCzJh054"
+            set_env "TELEGRAM_CHAT_ID" "134445625"
 
             # Login to GHCR
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

@@ -224,6 +224,21 @@ model PromoCode {
   @@map("promo_codes")
 }
 
+// === ЛИДЫ (маркетплейс-скидки) ===
+
+model Lead {
+  id          String   @id @default(cuid())
+  name        String
+  birthdate   String
+  email       String
+  phone       String
+  productSlug String
+  marketplace String
+  createdAt   DateTime @default(now())
+
+  @@map("leads")
+}
+
 // === ОТЗЫВЫ ===
 
 model Review {

@@ -56,6 +56,8 @@ services:
       WB2_STATS_KEY: ${WB2_STATS_KEY:-}
       WB_PRICES_KEY: ${WB_PRICES_KEY:-}
       WB2_PRICES_KEY: ${WB2_PRICES_KEY:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
     networks:
       - webproxy
       - internal
