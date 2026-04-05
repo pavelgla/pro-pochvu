@@ -25,28 +25,36 @@ interface WbResponse {
   feedbacks: WbFeedback[];
 }
 
-async function fetchWbFeedbacks(
-  nmId: string,
-  take = 100
-): Promise<WbFeedback[]> {
-  const url = `https://feedbacks2.wb.ru/feedbacks/v1/${nmId}?take=${take}&skip=0&order=dateDesc`;
-  try {
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (compatible; EcokonBot/1.0; +https://ecokon.ru)",
-      },
-    });
-    if (!res.ok) {
-      console.warn(`[WB] nmId=${nmId} HTTP ${res.status}`);
-      return [];
+async function fetchWbFeedbacks(nmId: string): Promise<WbFeedback[]> {
+  const all: WbFeedback[] = [];
+  let skip = 0;
+  const take = 100;
+
+  while (true) {
+    const url = `https://feedbacks2.wb.ru/feedbacks/v1/${nmId}?take=${take}&skip=${skip}&order=dateDesc`;
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (compatible; EcokonBot/1.0; +https://ecokon.ru)",
+        },
+      });
+      if (!res.ok) {
+        console.warn(`[WB] nmId=${nmId} HTTP ${res.status}`);
+        break;
+      }
+      const data = (await res.json()) as WbResponse;
+      const batch = data.feedbacks ?? [];
+      all.push(...batch);
+      if (batch.length < take) break;
+      skip += take;
+      await new Promise((r) => setTimeout(r, 500));
+    } catch (err) {
+      console.error(`[WB] nmId=${nmId} fetch error:`, err);
+      break;
     }
-    const data = (await res.json()) as WbResponse;
-    return data.feedbacks ?? [];
-  } catch (err) {
-    console.error(`[WB] nmId=${nmId} fetch error:`, err);
-    return [];
   }
+
+  return all;
 }
 
 async function sleep(ms: number) {
@@ -92,9 +100,22 @@ async function syncProduct(nmId: string, slug: string) {
     created++;
   }
 
-  console.log(
-    `[WB] ${slug}: +${created} сохранено, ${skipped} пропущено (короткий текст)`
-  );
+  console.log(`[WB] ${slug}: +${created} сохранено, ${skipped} пропущено`);
+
+  // Update product reviewsCount and rating
+  const stats = await prisma.review.aggregate({
+    where: { productId: product.id, isVisible: true },
+    _count: true,
+    _avg: { rating: true },
+  });
+  await prisma.product.update({
+    where: { id: product.id },
+    data: {
+      reviewsCount: stats._count,
+      rating: stats._avg.rating ? Math.round(stats._avg.rating * 10) / 10 : product.rating,
+    },
+  });
+  console.log(`[WB] ${slug}: stats → ${stats._count} отзывов, рейтинг ${stats._avg.rating?.toFixed(1)}`);
 }
 
 async function main() {

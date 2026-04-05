@@ -110,7 +110,7 @@ export async function getProductBySlug(slug: string) {
       reviews: {
         where: { isVisible: true },
         orderBy: { createdAt: "desc" },
-        take: 50,
+        take: 20,
       },
     },
   });

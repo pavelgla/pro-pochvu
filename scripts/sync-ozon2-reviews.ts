@@ -121,6 +121,21 @@ async function syncProduct(sku: string, slug: string) {
   }
 
   console.log(`[OZON2] ${slug}: +${created} сохранено, ${skipped} пропущено`);
+
+  // Update product reviewsCount and rating
+  const stats = await prisma.review.aggregate({
+    where: { productId: product.id, isVisible: true },
+    _count: true,
+    _avg: { rating: true },
+  });
+  await prisma.product.update({
+    where: { id: product.id },
+    data: {
+      reviewsCount: stats._count,
+      rating: stats._avg.rating ? Math.round(stats._avg.rating * 10) / 10 : product.rating,
+    },
+  });
+  console.log(`[OZON2] ${slug}: stats → ${stats._count} отзывов, рейтинг ${stats._avg.rating?.toFixed(1)}`);
 }
 
 async function main() {

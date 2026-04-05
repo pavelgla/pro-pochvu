@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Star, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -136,23 +136,52 @@ function ReviewForm({ onSubmit }: { onSubmit: (data: ReviewFormState) => void })
   );
 }
 
-const PAGE_SIZE = 10;
-
 type Props = {
   product: {
+    id: string;
     reviews: Review[];
     rating: number;
     reviewsCount: number;
   };
 };
 
+type SortOption = "newest" | "rating";
+
+const PAGE_SIZE = 20;
+
 export function Reviews({ product }: Props) {
-  const { reviews, rating, reviewsCount } = product;
-  const [offset, setOffset] = useState(PAGE_SIZE);
+  const { id: productId, reviews: initialReviews, rating, reviewsCount } = product;
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const [sort, setSort] = useState<SortOption>("newest");
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(initialReviews.length < reviewsCount);
   const [showForm, setShowForm] = useState(false);
 
-  const visible = reviews.slice(0, offset);
-  const remaining = reviews.length - offset;
+  const fetchReviews = useCallback(
+    async (newSort: SortOption, replace: boolean) => {
+      const offset = replace ? 0 : reviews.length;
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `/api/reviews?productId=${productId}&offset=${offset}&limit=${PAGE_SIZE}&sort=${newSort}`
+        );
+        const data = await res.json();
+        setReviews((prev) => (replace ? data.reviews : [...prev, ...data.reviews]));
+        setHasMore(data.hasMore);
+      } catch {
+        // silent
+      } finally {
+        setLoading(false);
+      }
+    },
+    [productId, reviews.length]
+  );
+
+  function handleSortChange(newSort: SortOption) {
+    if (newSort === sort) return;
+    setSort(newSort);
+    fetchReviews(newSort, true);
+  }
 
   const sources = Array.from(new Set(reviews.map((r) => r.source)));
   const sourceLabels = sources.map((s) =>
@@ -200,7 +229,34 @@ export function Reviews({ product }: Props) {
       {/* Reviews list */}
       {reviews.length > 0 ? (
         <div className="space-y-4">
-          {visible.map((r) => (
+          {/* Sort controls */}
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-brand-gray-dark/60">Сортировка:</span>
+            <button
+              onClick={() => handleSortChange("newest")}
+              className={cn(
+                "rounded-full px-3 py-1 transition-colors",
+                sort === "newest"
+                  ? "bg-brand-green text-white"
+                  : "bg-brand-gray-light text-brand-gray-dark/70 hover:bg-brand-gray-light/80"
+              )}
+            >
+              Сначала новые
+            </button>
+            <button
+              onClick={() => handleSortChange("rating")}
+              className={cn(
+                "rounded-full px-3 py-1 transition-colors",
+                sort === "rating"
+                  ? "bg-brand-green text-white"
+                  : "bg-brand-gray-light text-brand-gray-dark/70 hover:bg-brand-gray-light/80"
+              )}
+            >
+              По рейтингу
+            </button>
+          </div>
+
+          {reviews.map((r) => (
             <div key={r.id} className="rounded-xl bg-white p-5 shadow-sm border border-brand-gray-light/50">
               {/* Row 1: author + date */}
               <div className="flex items-center justify-between">
@@ -231,10 +287,14 @@ export function Reviews({ product }: Props) {
             </div>
           ))}
 
-          {remaining > 0 && (
+          {hasMore && (
             <div className="pt-2 text-center">
-              <Button variant="secondary" onClick={() => setOffset(offset + PAGE_SIZE)}>
-                Показать ещё {remaining}
+              <Button
+                variant="secondary"
+                onClick={() => fetchReviews(sort, false)}
+                disabled={loading}
+              >
+                {loading ? "Загрузка..." : `Показать ещё (${reviewsCount - reviews.length})`}
               </Button>
             </div>
           )}
