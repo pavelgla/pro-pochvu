@@ -142,7 +142,7 @@ jobs:
             docker compose -f docker-compose.prod.yml pull web
 
             # Restart services (migrations run automatically on container start)
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans --force-recreate
 
             # Reload nginx (from pdnguard stack)
             docker exec pdnguard-nginx nginx -s reload 2>/dev/null || true
