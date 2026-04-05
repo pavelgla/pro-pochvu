@@ -51,6 +51,7 @@ services:
       OZON2_CLIENT_ID: ${OZON2_CLIENT_ID:-}
       OZON2_API_KEY: ${OZON2_API_KEY:-}
       WB_API_KEY: ${WB_API_KEY:-}
+      WB2_API_KEY: ${WB2_API_KEY:-}
     networks:
       - webproxy
       - internal
