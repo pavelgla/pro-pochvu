@@ -2,10 +2,8 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// Ozon Seller API SKU → product slug
-// SKUs from api-seller.ozon.ru/v3/product/info/list (not URL product IDs!)
+// Ozon Seller API SKU → product slug (account Client-Id: 98587 — ЭКО Конь удобрения)
 const OZON_SKU_MAP: Record<string, string> = {
-  // ЭКО Конь удобрения (seller Client-Id: 98587)
   "818346437": "bio-chay-yantar-fosfor",
   "821338829": "bio-chay-dekorativno-listvennye",
   "818348560": "udobrenie-ovoshchi",
@@ -18,6 +16,8 @@ const OZON_SKU_MAP: Record<string, string> = {
 
 const OZON_CLIENT_ID = process.env.OZON_CLIENT_ID ?? "";
 const OZON_API_KEY = process.env.OZON_API_KEY ?? "";
+
+const MAX_REVIEWS = 5000;
 
 interface OzonReview {
   id: string;
@@ -34,13 +34,16 @@ interface OzonReviewListResponse {
   last_id?: string;
 }
 
-async function fetchOzonReviews(sku: string): Promise<OzonReview[]> {
+async function fetchAllReviews(): Promise<OzonReview[]> {
   const url = "https://api-seller.ozon.ru/v1/review/list";
   const all: OzonReview[] = [];
-  let pageNumber = 1;
+  let lastId: string | undefined;
 
-  while (true) {
+  while (all.length < MAX_REVIEWS) {
     try {
+      const body: Record<string, unknown> = { sort_dir: "DESC", limit: 100 };
+      if (lastId) body.last_id = lastId;
+
       const res = await fetch(url, {
         method: "POST",
         headers: {
@@ -48,21 +51,12 @@ async function fetchOzonReviews(sku: string): Promise<OzonReview[]> {
           "Api-Key": OZON_API_KEY,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          sku: [parseInt(sku)],
-          sort_dir: "DESC",
-          page_number: pageNumber,
-          limit: 100,
-        }),
+        body: JSON.stringify(body),
       });
 
-      if (res.status === 401 || res.status === 403) {
-        console.error(`[OZON] Ошибка авторизации`);
-        break;
-      }
       if (!res.ok) {
         const text = await res.text();
-        console.warn(`[OZON] sku=${sku} HTTP ${res.status}: ${text.slice(0, 200)}`);
+        console.warn(`[OZON] HTTP ${res.status}: ${text.slice(0, 200)}`);
         break;
       }
 
@@ -70,79 +64,16 @@ async function fetchOzonReviews(sku: string): Promise<OzonReview[]> {
       const batch = data.reviews ?? [];
       all.push(...batch);
 
-      if (!data.has_next || batch.length < 100) break;
-      pageNumber++;
-      await new Promise((r) => setTimeout(r, 500));
+      if (!data.has_next || !data.last_id || batch.length === 0) break;
+      lastId = data.last_id;
+      await new Promise((r) => setTimeout(r, 300));
     } catch (err) {
-      console.error(`[OZON] sku=${sku} fetch error:`, err);
+      console.error(`[OZON] fetch error:`, err);
       break;
     }
   }
 
   return all;
-}
-
-async function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-async function syncProduct(sku: string, slug: string) {
-  const product = await prisma.product.findUnique({ where: { slug } });
-  if (!product) {
-    console.warn(`[SKIP] Товар не найден: slug=${slug}`);
-    return;
-  }
-
-  const reviews = await fetchOzonReviews(sku);
-  console.log(`[OZON] sku=${sku} (${slug}): ${reviews.length} отзывов`);
-
-  let created = 0;
-  let skipped = 0;
-
-  for (const rv of reviews) {
-    if (rv.status && rv.status !== "published") continue;
-
-    const text = rv.text?.trim() ?? "";
-    if (text.length < 10) {
-      skipped++;
-      continue;
-    }
-
-    const id = `ozon-${rv.id}`;
-    await prisma.review.upsert({
-      where: { id },
-      update: {},
-      create: {
-        id,
-        productId: product.id,
-        source: "ozon",
-        author: "Покупатель",
-        rating: rv.rating,
-        text,
-        isVerified: true,
-        isVisible: true,
-        createdAt: rv.published_at ? new Date(rv.published_at) : new Date(),
-      },
-    });
-    created++;
-  }
-
-  console.log(`[OZON] ${slug}: +${created} сохранено, ${skipped} пропущено`);
-
-  // Update product reviewsCount and rating
-  const stats = await prisma.review.aggregate({
-    where: { productId: product.id, isVisible: true },
-    _count: true,
-    _avg: { rating: true },
-  });
-  await prisma.product.update({
-    where: { id: product.id },
-    data: {
-      reviewsCount: stats._count,
-      rating: stats._avg.rating ? Math.round(stats._avg.rating * 10) / 10 : product.rating,
-    },
-  });
-  console.log(`[OZON] ${slug}: stats → ${stats._count} отзывов, рейтинг ${stats._avg.rating?.toFixed(1)}`);
 }
 
 async function main() {
@@ -153,12 +84,70 @@ async function main() {
 
   console.log(`[OZON-SYNC] Старт: ${new Date().toISOString()}`);
 
-  const entries = Object.entries(OZON_SKU_MAP);
-  for (let i = 0; i < entries.length; i++) {
-    const [sku, slug] = entries[i];
-    console.log(`[OZON-SYNC] ${i + 1}/${entries.length} — sku=${sku}`);
-    await syncProduct(sku, slug);
-    if (i < entries.length - 1) await sleep(1500);
+  // Fetch all reviews for the account at once (cursor pagination)
+  const allReviews = await fetchAllReviews();
+  console.log(`[OZON-SYNC] Всего получено: ${allReviews.length} отзывов`);
+
+  // Group by slug
+  const bySlug = new Map<string, OzonReview[]>();
+  for (const rv of allReviews) {
+    const slug = OZON_SKU_MAP[String(rv.sku)];
+    if (!slug) continue;
+    if (!bySlug.has(slug)) bySlug.set(slug, []);
+    bySlug.get(slug)!.push(rv);
+  }
+
+  // Save per product
+  for (const [slug, reviews] of bySlug) {
+    const product = await prisma.product.findUnique({ where: { slug } });
+    if (!product) {
+      console.warn(`[SKIP] Товар не найден: slug=${slug}`);
+      continue;
+    }
+
+    let created = 0;
+    let skipped = 0;
+
+    for (const rv of reviews) {
+      const text = rv.text?.trim() ?? "";
+      if (text.length < 10) {
+        skipped++;
+        continue;
+      }
+
+      await prisma.review.upsert({
+        where: { id: `ozon-${rv.id}` },
+        update: {},
+        create: {
+          id: `ozon-${rv.id}`,
+          productId: product.id,
+          source: "ozon",
+          author: "Покупатель",
+          rating: rv.rating,
+          text,
+          isVerified: true,
+          isVisible: true,
+          createdAt: rv.published_at ? new Date(rv.published_at) : new Date(),
+        },
+      });
+      created++;
+    }
+
+    console.log(`[OZON] ${slug}: +${created} сохранено, ${skipped} пропущено`);
+
+    const stats = await prisma.review.aggregate({
+      where: { productId: product.id, isVisible: true },
+      _count: true,
+      _avg: { rating: true },
+    });
+    await prisma.product.update({
+      where: { id: product.id },
+      data: {
+        reviewsCount: stats._count,
+        rating: stats._avg.rating ? Math.round(stats._avg.rating * 10) / 10 : product.rating,
+      },
+    });
+    console.log(`[OZON] ${slug}: stats → ${stats._count} отзывов, рейтинг ${stats._avg.rating?.toFixed(1)}`);
   }
 
   console.log(`[OZON-SYNC] Готово: ${new Date().toISOString()}`);
