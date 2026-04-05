@@ -89,16 +89,16 @@ async function main() {
   console.log(`[OZON-SYNC] Всего получено: ${allReviews.length} отзывов`);
 
   // Group by slug
-  const bySlug = new Map<string, OzonReview[]>();
+  const bySlug: Record<string, OzonReview[]> = {};
   for (const rv of allReviews) {
     const slug = OZON_SKU_MAP[String(rv.sku)];
     if (!slug) continue;
-    if (!bySlug.has(slug)) bySlug.set(slug, []);
-    bySlug.get(slug)!.push(rv);
+    if (!bySlug[slug]) bySlug[slug] = [];
+    bySlug[slug].push(rv);
   }
 
   // Save per product
-  for (const [slug, reviews] of bySlug) {
+  for (const [slug, reviews] of Object.entries(bySlug)) {
     const product = await prisma.product.findUnique({ where: { slug } });
     if (!product) {
       console.warn(`[SKIP] Товар не найден: slug=${slug}`);
