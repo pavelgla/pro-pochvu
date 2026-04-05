@@ -107,6 +107,19 @@ jobs:
           script: |
             cd ~/ecokon
 
+            # Inject secrets into .env (create or update without duplicates)
+            set_env() {
+              key="$1"; val="$2"; file=".env"
+              touch "$file"
+              if grep -q "^${key}=" "$file" 2>/dev/null; then
+                sed -i "s|^${key}=.*|${key}=${val}|" "$file"
+              else
+                echo "${key}=${val}" >> "$file"
+              fi
+            }
+            set_env "OZON_CLIENT_ID" "${{ secrets.OZON_CLIENT_ID }}"
+            set_env "OZON_API_KEY" "${{ secrets.OZON_API_KEY }}"
+
             # Login to GHCR
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
