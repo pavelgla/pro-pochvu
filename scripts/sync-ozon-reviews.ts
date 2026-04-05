@@ -2,14 +2,18 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// Ozon product ID → product slug
-// IDs taken from Ozon product URLs: /product/...XXXXXXX/
-const OZON_PRODUCT_MAP: Record<string, string> = {
-  "2825417652": "kolyshki-skoby-silikon",
-  "2209878912": "fitomodul-15-6",
-  "1856412162": "fitomodul-50-4-white",
-  "2081828814": "fitomodul-50-4-black",
-  "2439041908": "fitomodul-50-4-green",
+// Ozon Seller API SKU → product slug
+// SKUs from api-seller.ozon.ru/v3/product/info/list (not URL product IDs!)
+const OZON_SKU_MAP: Record<string, string> = {
+  // ЭКО Конь удобрения (seller Client-Id: 98587)
+  "818346437": "bio-chay-yantar-fosfor",
+  "821338829": "bio-chay-dekorativno-listvennye",
+  "818348560": "udobrenie-ovoshchi",
+  "818351720": "udobrenie-rassada",
+  "1010076465": "udobrenie-kornevaya",
+  "1198624077": "bio-chay-orhidei",
+  "1694995657": "udobrenie-tsitrusovye",
+  "3385802107": "udobrenie-tsvetushchie",
 };
 
 const OZON_CLIENT_ID = process.env.OZON_CLIENT_ID ?? "";
@@ -18,70 +22,79 @@ const OZON_API_KEY = process.env.OZON_API_KEY ?? "";
 interface OzonReview {
   id: string;
   sku: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  reviewer_name?: string;
   text?: string;
+  published_at?: string;
   rating: number;
-  is_verified_purchase?: boolean;
+  status?: string;
 }
 
 interface OzonReviewListResponse {
   reviews?: OzonReview[];
-  items?: OzonReview[];
-  total?: number;
+  has_next?: boolean;
+  last_id?: string;
 }
 
-async function fetchOzonReviews(productId: string, page = 1, pageSize = 100): Promise<OzonReview[]> {
+async function fetchOzonReviews(sku: string): Promise<OzonReview[]> {
   const url = "https://api-seller.ozon.ru/v1/review/list";
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Client-Id": OZON_CLIENT_ID,
-        "Api-Key": OZON_API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        sku: parseInt(productId),
-        sort_dir: "DESC",
-        page,
-        page_size: pageSize,
-      }),
-    });
+  const all: OzonReview[] = [];
+  let pageNumber = 1;
 
-    if (res.status === 401 || res.status === 403) {
-      console.error(`[OZON] Ошибка авторизации. Проверь OZON_CLIENT_ID и OZON_API_KEY`);
-      return [];
-    }
-    if (!res.ok) {
-      const text = await res.text();
-      console.warn(`[OZON] productId=${productId} HTTP ${res.status}: ${text.slice(0, 200)}`);
-      return [];
-    }
+  while (true) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Client-Id": OZON_CLIENT_ID,
+          "Api-Key": OZON_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sku: [parseInt(sku)],
+          sort_dir: "DESC",
+          page_number: pageNumber,
+          limit: 100,
+        }),
+      });
 
-    const data = (await res.json()) as OzonReviewListResponse;
-    return data.reviews ?? data.items ?? [];
-  } catch (err) {
-    console.error(`[OZON] productId=${productId} fetch error:`, err);
-    return [];
+      if (res.status === 401 || res.status === 403) {
+        console.error(`[OZON] Ошибка авторизации`);
+        break;
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        console.warn(`[OZON] sku=${sku} HTTP ${res.status}: ${text.slice(0, 200)}`);
+        break;
+      }
+
+      const data = (await res.json()) as OzonReviewListResponse;
+      const batch = data.reviews ?? [];
+      all.push(...batch);
+
+      if (!data.has_next || batch.length < 100) break;
+      pageNumber++;
+      await new Promise((r) => setTimeout(r, 500));
+    } catch (err) {
+      console.error(`[OZON] sku=${sku} fetch error:`, err);
+      break;
+    }
   }
+
+  return all;
 }
 
 async function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-async function syncProduct(productId: string, slug: string) {
+async function syncProduct(sku: string, slug: string) {
   const product = await prisma.product.findUnique({ where: { slug } });
   if (!product) {
     console.warn(`[SKIP] Товар не найден: slug=${slug}`);
     return;
   }
 
-  const reviews = await fetchOzonReviews(productId);
-  console.log(`[OZON] productId=${productId} (${slug}): ${reviews.length} отзывов`);
+  const reviews = await fetchOzonReviews(sku);
+  console.log(`[OZON] sku=${sku} (${slug}): ${reviews.length} отзывов`);
 
   let created = 0;
   let skipped = 0;
@@ -103,12 +116,12 @@ async function syncProduct(productId: string, slug: string) {
         id,
         productId: product.id,
         source: "ozon",
-        author: rv.reviewer_name || "Покупатель",
+        author: "Покупатель",
         rating: rv.rating,
         text,
-        isVerified: rv.is_verified_purchase ?? false,
+        isVerified: true,
         isVisible: true,
-        createdAt: new Date(rv.created_at),
+        createdAt: rv.published_at ? new Date(rv.published_at) : new Date(),
       },
     });
     created++;
@@ -119,18 +132,17 @@ async function syncProduct(productId: string, slug: string) {
 
 async function main() {
   if (!OZON_CLIENT_ID || !OZON_API_KEY) {
-    console.error("[OZON-SYNC] Не заданы OZON_CLIENT_ID и OZON_API_KEY в переменных окружения");
-    console.error("  Добавь в .env и docker-compose.prod.yml");
+    console.error("[OZON-SYNC] Не заданы OZON_CLIENT_ID и OZON_API_KEY");
     process.exit(1);
   }
 
   console.log(`[OZON-SYNC] Старт: ${new Date().toISOString()}`);
 
-  const entries = Object.entries(OZON_PRODUCT_MAP);
+  const entries = Object.entries(OZON_SKU_MAP);
   for (let i = 0; i < entries.length; i++) {
-    const [productId, slug] = entries[i];
-    console.log(`[OZON-SYNC] ${i + 1}/${entries.length} — productId=${productId}`);
-    await syncProduct(productId, slug);
+    const [sku, slug] = entries[i];
+    console.log(`[OZON-SYNC] ${i + 1}/${entries.length} — sku=${sku}`);
+    await syncProduct(sku, slug);
     if (i < entries.length - 1) await sleep(1500);
   }
 
