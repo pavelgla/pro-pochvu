@@ -1,3 +1,21 @@
+-- Ensure product line and category exist (seed data, needed for fresh CI DB)
+INSERT INTO product_lines (id, slug, name, brand, description, "sortOrder", "isActive", "updatedAt")
+VALUES (
+  'a1000000-0000-0000-0000-000000000005',
+  'grunty', 'Грунты', 'ecokon',
+  'Специализированные грунты для растений (планируется)',
+  5, false, NOW()
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO categories (id, slug, name, "productLineId", description, "sortOrder", "isActive", "updatedAt")
+VALUES (
+  'b1000000-0000-0000-0000-000000000008',
+  'grunty-substraty', 'Грунты и субстраты',
+  'a1000000-0000-0000-0000-000000000005',
+  'Готовые почвосмеси и субстраты',
+  8, true, NOW()
+) ON CONFLICT (id) DO NOTHING;
+
 -- Add Грунт ЭКО Конь 20л product
 INSERT INTO products (
   id, slug, name, price, "oldPrice", rating, "reviewsCount", badge,
