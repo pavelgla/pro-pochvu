@@ -24,14 +24,15 @@ export function Header() {
     <>
       <header className="sticky top-0 z-50 border-b border-brand-gray-light bg-white/95 backdrop-blur">
         <div className="container-main flex h-16 items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-lg font-bold"
-          >
-            <span className="text-ecokon">ЭКО Конь</span>
+          <div className="flex items-center gap-1.5 text-lg font-bold">
+            <Link href="/" className="text-ecokon hover:opacity-80 transition-opacity">
+              ЭКО Конь
+            </Link>
             <span className="text-brand-gray-dark/30">|</span>
-            <span className="text-tsvetologiya">Цветология</span>
-          </Link>
+            <Link href="/catalog?brand=tsvetologiya" className="text-tsvetologiya hover:opacity-80 transition-opacity">
+              Цветология
+            </Link>
+          </div>
 
           <nav className="hidden items-center gap-6 md:flex">
             {navLinks.map((link) => (

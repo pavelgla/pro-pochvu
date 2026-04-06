@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 
 const lines = [
@@ -8,7 +9,7 @@ const lines = [
       "Органические удобрения на основе конского навоза. Для комнатных, садовых и огородных растений.",
     href: "/catalog?brand=ecokon",
     bg: "bg-green-50",
-    emoji: "🌿",
+    image: "/images/ozon/bio-chay-yantar-fosfor_2.jpg",
     buttonLabel: "Смотреть удобрения",
   },
   {
@@ -17,7 +18,7 @@ const lines = [
       "Модульные системы вертикального озеленения. Для дома, офиса, ресторана.",
     href: "/catalog?brand=tsvetologiya",
     bg: "bg-slate-50",
-    emoji: "🌱",
+    image: "/images/ozon/fitomodul-50-4-white_1.jpg",
     buttonLabel: "Смотреть фитомодули",
   },
 ];
@@ -34,8 +35,14 @@ export function ProductLines() {
               key={line.title}
               className={`rounded-2xl ${line.bg} p-6 md:p-8`}
             >
-              <div className="mb-6 flex h-48 items-center justify-center rounded-xl bg-white/60">
-                <span className="text-7xl">{line.emoji}</span>
+              <div className="mb-6 overflow-hidden rounded-xl bg-white/60 h-48 relative">
+                <Image
+                  src={line.image}
+                  alt={line.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
 
               <h3 className="text-brand-gray-dark">{line.title}</h3>

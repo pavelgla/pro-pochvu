@@ -40,7 +40,6 @@ const OZON2: Record<string, number> = {
   "fitomodul-50-4-black":         2081828814,
   "fitomodul-50-4-green":         2439041908,
   "kolyshki-skoby-silikon":       2825417652,
-  "fitomodul-15-6":               2209878912,
   "grunt-ecokon-20l":             1902553919,
   "grunt-ecokon-ovoshchi":        1902567457,
   "grunt-ecokon-organicheskiy":   1928618714,
