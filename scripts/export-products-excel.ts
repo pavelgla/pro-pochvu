@@ -61,14 +61,14 @@ async function fetchWbPrices(apiKey: string): Promise<Record<number, number>> {
   if (!apiKey) return {};
   try {
     const res = await fetch(
-      "https://discounts-prices-api.wb.ru/api/v2/list/goods/filter?limit=1000&offset=0",
+      "https://discounts-prices-api.wildberries.ru/api/v2/list/goods/filter?limit=1000&offset=0",
       { headers: { Authorization: `Bearer ${apiKey}` } }
     );
     if (!res.ok) return {};
-    const data = await res.json() as { data?: { listGoods: Array<{ nmId: number; sizes: Array<{ discountedPrice: number; price: number }> }> } };
+    const data = await res.json() as { data?: { listGoods: Array<{ nmID: number; sizes: Array<{ discountedPrice: number; price: number }> }> } };
     const map: Record<number, number> = {};
     for (const g of data.data?.listGoods ?? []) {
-      map[g.nmId] = g.sizes?.[0]?.discountedPrice ?? g.sizes?.[0]?.price ?? 0;
+      map[g.nmID] = g.sizes?.[0]?.discountedPrice ?? g.sizes?.[0]?.price ?? 0;
     }
     return map;
   } catch {
