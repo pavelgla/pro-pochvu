@@ -27,7 +27,7 @@ services:
         NEXT_PUBLIC_YMAPS_API_KEY: ${NEXT_PUBLIC_YMAPS_API_KEY:-}
         NEXT_PUBLIC_METRIKA_ID: ${NEXT_PUBLIC_METRIKA_ID:-}
         NEXT_PUBLIC_VK_PIXEL_ID: ${NEXT_PUBLIC_VK_PIXEL_ID:-}
-        NEXT_PUBLIC_SHOW_TSVETOLOGIYA: "false"
+        NEXT_PUBLIC_SHOW_TSVETOLOGIYA: "true"
     container_name: ecokon-web
     restart: always
     depends_on:
