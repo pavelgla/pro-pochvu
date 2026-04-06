@@ -6,11 +6,14 @@ import { ShoppingCart, User, Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { MobileMenu } from "./MobileMenu";
 import { useCartStore } from "@/store/cartStore";
+import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
 const navLinks = [
   { href: "/catalog", label: "Каталог" },
   { href: "/catalog?brand=ecokon", label: "Удобрения" },
-  { href: "/catalog?brand=tsvetologiya", label: "Фитомодули" },
+  ...(SHOW_TSVETOLOGIYA
+    ? [{ href: "/catalog?brand=tsvetologiya", label: "Фитомодули" }]
+    : []),
   { href: "/about", label: "О бренде" },
 ];
 
@@ -28,10 +31,14 @@ export function Header() {
             <Link href="/" className="text-ecokon hover:opacity-80 transition-opacity">
               ЭКО Конь
             </Link>
-            <span className="text-brand-gray-dark/30">|</span>
-            <Link href="/catalog?brand=tsvetologiya" className="text-tsvetologiya hover:opacity-80 transition-opacity">
-              Цветология
-            </Link>
+            {SHOW_TSVETOLOGIYA && (
+              <>
+                <span className="text-brand-gray-dark/30">|</span>
+                <Link href="/catalog?brand=tsvetologiya" className="text-tsvetologiya hover:opacity-80 transition-opacity">
+                  Цветология
+                </Link>
+              </>
+            )}
           </div>
 
           <nav className="hidden items-center gap-6 md:flex">

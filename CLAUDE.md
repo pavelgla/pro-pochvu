@@ -22,3 +22,31 @@
 ## Env
 - NEXT_PUBLIC_* — зашиваются при build (Docker build-args)
 - Серверные — передаются через environment в docker-compose
+
+## Включение/выключение бренда Цветология
+
+Управляется флагом `NEXT_PUBLIC_SHOW_TSVETOLOGIYA` в `docker-compose.prod.yml` (build args).
+Флаг зашивается в бандл при сборке — нужен **редеплой** при смене.
+
+**Выключить** (скрыть с сайта, данные в БД остаются):
+```yaml
+# docker-compose.prod.yml → services.web.build.args:
+NEXT_PUBLIC_SHOW_TSVETOLOGIYA: "false"
+```
+Затем: `git push` → CI/CD пересоберёт образ → задеплоит автоматически.
+
+**Включить** (вернуть Цветологию):
+```yaml
+NEXT_PUBLIC_SHOW_TSVETOLOGIYA: "true"
+```
+Или удалить строку — по умолчанию `true`.
+
+**Что скрывается при `false`:**
+- Логотип «Цветология» в шапке
+- Пункт «Фитомодули» в меню (desktop + mobile)
+- Секция «Цветология» на главной (ProductLines)
+- Чекбокс бренда в фильтрах каталога
+- URL `/catalog/fitmoduli` и все tsvetologiya-линейки → 404
+- Cross-sell блоки с фитомодулями на карточках товаров ЭКО Конь
+
+**Данные в БД** (товары, заказы, отзывы) не трогаются.

@@ -5,11 +5,14 @@ import Link from "next/link";
 import { X, User, LogIn } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
 const menuLinks = [
   { href: "/catalog", label: "Каталог" },
   { href: "/catalog?brand=ecokon", label: "Удобрения" },
-  { href: "/catalog?brand=tsvetologiya", label: "Фитомодули" },
+  ...(SHOW_TSVETOLOGIYA
+    ? [{ href: "/catalog?brand=tsvetologiya", label: "Фитомодули" }]
+    : []),
   { href: "/about", label: "О бренде" },
   { href: "/delivery", label: "Доставка и оплата" },
 ];

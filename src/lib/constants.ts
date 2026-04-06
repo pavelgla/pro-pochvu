@@ -1,5 +1,8 @@
 export const SITE_NAME = "Эко Конь | Цветология";
 
+export const SHOW_TSVETOLOGIYA =
+  process.env.NEXT_PUBLIC_SHOW_TSVETOLOGIYA !== "false";
+
 export const BRANDS = {
   ecokon: { name: "ЭКО Конь", color: "#2D5016" },
   tsvetologiya: { name: "Цветология", color: "#4A5568" },

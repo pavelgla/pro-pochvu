@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
+import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
 const lines = [
   {
@@ -30,7 +31,7 @@ export function ProductLines() {
         <h2 className="mb-8 text-center">Наши продукты</h2>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {lines.map((line) => (
+          {lines.filter((line) => SHOW_TSVETOLOGIYA || line.title !== "Цветология").map((line) => (
             <div
               key={line.title}
               className={`rounded-2xl ${line.bg} p-6 md:p-8`}

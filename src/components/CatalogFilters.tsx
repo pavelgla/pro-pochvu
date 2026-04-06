@@ -5,6 +5,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { X, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
 type ProductLineData = { id: string; slug: string; name: string; brand: string };
 type CategoryData = { id: string; slug: string; name: string };
@@ -80,7 +81,7 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
           <div className="space-y-2">
             {[
               { value: "ecokon", label: "ЭКО Конь" },
-              { value: "tsvetologiya", label: "Цветология" },
+              ...(SHOW_TSVETOLOGIYA ? [{ value: "tsvetologiya", label: "Цветология" }] : []),
             ].map((b) => (
               <label
                 key={b.value}

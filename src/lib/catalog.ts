@@ -142,6 +142,9 @@ export async function getRelatedProducts(productId: string, categoryId: string, 
 
 export async function getCrossSellProducts(productLineBrand: string, excludeProductId: string, limit = 4) {
   const otherBrand = productLineBrand === "ecokon" ? "tsvetologiya" : "ecokon";
+  if (process.env.NEXT_PUBLIC_SHOW_TSVETOLOGIYA === "false" && otherBrand === "tsvetologiya") {
+    return [];
+  }
   return prisma.product.findMany({
     where: { isActive: true, productLine: { brand: otherBrand }, id: { not: excludeProductId } },
     include: { productLine: true, category: true },

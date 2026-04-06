@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/Button";
 import { CatalogContent } from "../CatalogContent";
 import { getProductLineBySlug, getProductLines } from "@/lib/catalog";
+import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
 type Props = {
   params: { "product-line": string };
@@ -72,7 +73,9 @@ export default async function ProductLinePage({ params }: Props) {
   const pl = await getProductLineBySlug(params["product-line"]);
   if (!pl) notFound();
 
-  const cross = crossSell[pl.brand];
+  if (!SHOW_TSVETOLOGIYA && pl.brand === "tsvetologiya") notFound();
+
+  const cross = !SHOW_TSVETOLOGIYA ? null : crossSell[pl.brand];
   const reasons = whyChoose[pl.slug] || whyChoose["bio-chay"];
 
   return (
