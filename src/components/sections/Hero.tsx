@@ -16,10 +16,10 @@ export function Hero() {
             Более 45 000 довольных клиентов. Доставка по всей России от 99&nbsp;₽
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/catalog/udobreniya">
+            <Link href="/catalog?brand=ecokon">
               <Button size="lg">Удобрения →</Button>
             </Link>
-            <Link href="/catalog/vertikalnoe-ozelenenie">
+            <Link href="/catalog?brand=tsvetologiya">
               <Button variant="secondary" size="lg">
                 Фитомодули →
               </Button>
