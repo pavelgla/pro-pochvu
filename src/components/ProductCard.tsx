@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { BrandLabel } from "@/components/BrandLabel";
+
 import { formatPrice } from "@/lib/catalog";
 import type { ProductWithLine } from "@/types/database";
 
@@ -15,8 +15,6 @@ const badgeMap: Record<string, { variant: "bestseller" | "new" | "sale"; label: 
 };
 
 export function ProductCard({ product }: { product: ProductWithLine }) {
-  const brand = product.productLine?.brand || "ecokon";
-
   const discountPercent =
     product.oldPrice && product.oldPrice > product.price
       ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
@@ -34,19 +32,14 @@ export function ProductCard({ product }: { product: ProductWithLine }) {
             src={(product.images as string[])[0]}
             alt={product.name}
             fill
-            className="object-cover"
+            className="object-contain"
             sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 16vw"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-4xl text-brand-gray-dark/15">
-            {brand === "ecokon" ? "🌿" : "🌱"}
+            🌿
           </div>
         )}
-
-        {/* BrandLabel — top left */}
-        <div className="absolute left-1.5 top-1.5">
-          <BrandLabel brand={brand as "ecokon" | "tsvetologiya"} />
-        </div>
 
         {/* Badge — top right */}
         <div className="absolute right-1.5 top-1.5 flex flex-col gap-0.5">
