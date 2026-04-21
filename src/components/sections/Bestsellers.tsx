@@ -106,7 +106,7 @@ export async function Bestsellers() {
       <div className="container-main">
         <h2 className="mb-8 text-center">Бестселлеры</h2>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

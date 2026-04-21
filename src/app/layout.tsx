@@ -14,8 +14,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://pro-pochvu.ru"),
   title: {
-    default: "Эко Конь — органические удобрения и вертикальные сады",
-    template: "%s | Эко Конь",
+    default: "Пропочву — органические удобрения и вертикальные сады",
+    template: "%s | Пропочву",
   },
   description:
     "D2C экосистема КФХ «Ранчо Мушкино». Органические удобрения «ЭКО Конь» и фитомодули «Цветология» для вертикального озеленения.",

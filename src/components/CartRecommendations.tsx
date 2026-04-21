@@ -23,7 +23,7 @@ export function CartRecommendations() {
   return (
     <section className="mt-12">
       <h2 className="mb-6">С этим товаром берут</h2>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {recommendations.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}

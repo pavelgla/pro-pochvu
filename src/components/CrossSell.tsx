@@ -10,7 +10,7 @@ export async function CrossSell({ product }: { product: ProductWithLine }) {
   return (
     <section className="mt-16">
       <h2 className="mb-6">С этим покупают</h2>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {items.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}
