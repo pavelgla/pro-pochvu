@@ -1,4 +1,4 @@
-export const SITE_NAME = "Эко Конь | Цветология";
+export const SITE_NAME = "Пропочву";
 
 export const SHOW_TSVETOLOGIYA =
   process.env.NEXT_PUBLIC_SHOW_TSVETOLOGIYA !== "false";
