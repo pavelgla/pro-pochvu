@@ -40,9 +40,14 @@ export function ProductTabs({ product }: { product: ProductWithRelations }) {
             {product.videoUrl && (
               <VideoPlayer src={product.videoUrl} title={`${product.name} — инструкция по применению`} />
             )}
-            <div className="prose prose-sm max-w-none text-brand-gray-dark/80 leading-relaxed whitespace-pre-line">
-              {usage || "Инструкция по применению скоро появится."}
-            </div>
+            {usage && (
+              <div className="prose prose-sm max-w-none text-brand-gray-dark/80 leading-relaxed whitespace-pre-line">
+                {usage}
+              </div>
+            )}
+            {!product.videoUrl && !usage && (
+              <p className="text-brand-gray-dark/60">Инструкция по применению скоро появится.</p>
+            )}
           </div>
         )}
 

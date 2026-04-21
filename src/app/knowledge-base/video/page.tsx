@@ -88,11 +88,11 @@ export default function VideoInstructionsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {videos.map((video) => (
-          <div key={video.src} className="space-y-3">
+          <div key={video.src} className="space-y-2">
             <VideoPlayer src={video.src} title={video.title} />
-            <h2 className="text-base font-semibold text-gray-900">
+            <h2 className="text-sm font-semibold text-gray-900">
               {video.title}
             </h2>
             {video.description && (
