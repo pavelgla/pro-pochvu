@@ -36,9 +36,11 @@ export function ProductTabs({ product }: { product: ProductWithRelations }) {
         )}
 
         {activeTab === "howto" && (
-          <div className="space-y-6">
+          <div className={product.videoUrl && usage ? "flex flex-col md:flex-row md:items-start gap-6" : "space-y-6"}>
             {product.videoUrl && (
-              <VideoPlayer src={product.videoUrl} title={`${product.name} — инструкция по применению`} />
+              <div className={usage ? "md:w-1/2 shrink-0" : ""}>
+                <VideoPlayer src={product.videoUrl} title={`${product.name} — инструкция по применению`} />
+              </div>
             )}
             {usage && (
               <div className="prose prose-sm max-w-none text-brand-gray-dark/80 leading-relaxed whitespace-pre-line">
