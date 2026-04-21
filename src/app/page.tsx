@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Hero } from "@/components/sections/Hero";
-import { ProductLines } from "@/components/sections/ProductLines";
+
 import { Bestsellers } from "@/components/sections/Bestsellers";
 import { Benefits } from "@/components/sections/Benefits";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -27,7 +27,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <ProductLines />
       <Suspense>
         <Bestsellers />
       </Suspense>
