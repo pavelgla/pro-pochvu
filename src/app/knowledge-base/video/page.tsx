@@ -52,6 +52,12 @@ const videos = [
     productSlug: "udobrenie-ovoshchi",
     productName: "Удобрение для овощей",
   },
+  {
+    title: "Фитомодули Цветология — инструкция по установке",
+    src: "/videos/fitomodul-instruction.mp4",
+    productSlug: "fitomodul-50-4-green",
+    productName: "Фитомодуль Цветология",
+  },
 ];
 
 export default function VideoInstructionsPage() {
@@ -62,7 +68,7 @@ export default function VideoInstructionsPage() {
           Видеоинструкции
         </h1>
         <p className="text-lg text-gray-500">
-          Как правильно применять удобрения ЭКО Конь — смотрите наши видеоруководства
+          Как правильно применять удобрения и фитомодули — смотрите наши видеоруководства
         </p>
       </div>
 
