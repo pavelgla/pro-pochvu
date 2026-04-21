@@ -64,7 +64,13 @@ export async function getProducts(filters: CatalogFilters = {}): Promise<Catalog
   const [products, total] = await Promise.all([
     prisma.product.findMany({
       where,
-      include: { productLine: true, category: true },
+      select: {
+        id: true, slug: true, name: true, shortDesc: true,
+        price: true, oldPrice: true, images: true, badge: true,
+        rating: true, reviewsCount: true, stock: true, isActive: true,
+        productLine: { select: { id: true, slug: true, name: true, brand: true, image: true } },
+        category: { select: { id: true, slug: true, name: true } },
+      },
       orderBy,
       take: limit,
       skip,
@@ -96,7 +102,10 @@ export async function getCategories(productLineId?: string) {
       isActive: true,
       ...(productLineId && { productLineId }),
     },
-    include: { productLine: true },
+    select: {
+      id: true, slug: true, name: true, description: true, image: true, sortOrder: true,
+      productLine: { select: { id: true, slug: true, name: true, brand: true } },
+    },
     orderBy: { sortOrder: "asc" },
   });
 }
@@ -119,7 +128,13 @@ export async function getProductBySlug(slug: string) {
 export async function getProductById(id: string) {
   return prisma.product.findUnique({
     where: { id },
-    include: { productLine: true, category: true },
+    select: {
+      id: true, slug: true, name: true, shortDesc: true, price: true, oldPrice: true,
+      images: true, badge: true, rating: true, reviewsCount: true, stock: true,
+      weightGrams: true, dimensions: true, isActive: true, productLineId: true, categoryId: true,
+      productLine: { select: { id: true, slug: true, name: true, brand: true, image: true } },
+      category: { select: { id: true, slug: true, name: true } },
+    },
   });
 }
 

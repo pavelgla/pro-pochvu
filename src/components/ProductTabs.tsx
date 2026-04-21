@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Tabs } from "@/components/ui/Tabs";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
 import { Reviews } from "@/components/Reviews";
+import { VideoPlayer } from "@/components/VideoPlayer";
 import type { ProductWithRelations } from "@/types/database";
 
 export function ProductTabs({ product }: { product: ProductWithRelations }) {
@@ -35,8 +36,13 @@ export function ProductTabs({ product }: { product: ProductWithRelations }) {
         )}
 
         {activeTab === "howto" && (
-          <div className="prose prose-sm max-w-none text-brand-gray-dark/80 leading-relaxed whitespace-pre-line">
-            {usage || "Инструкция по применению скоро появится."}
+          <div className="space-y-6">
+            {product.videoUrl && (
+              <VideoPlayer src={product.videoUrl} title={`${product.name} — инструкция по применению`} />
+            )}
+            <div className="prose prose-sm max-w-none text-brand-gray-dark/80 leading-relaxed whitespace-pre-line">
+              {usage || "Инструкция по применению скоро появится."}
+            </div>
           </div>
         )}
 

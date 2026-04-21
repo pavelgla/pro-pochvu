@@ -1,6 +1,17 @@
-import type { ProductWithLine } from "@/types/database";
+type JsonLdProduct = {
+  name: string;
+  slug: string;
+  shortDesc?: string | null;
+  fullDesc?: string | null;
+  images: unknown;
+  price: number;
+  stock: number;
+  rating: number;
+  reviewsCount: number;
+  productLine?: { brand: string } | null;
+};
 
-export function generateProductJsonLd(product: ProductWithLine) {
+export function generateProductJsonLd(product: JsonLdProduct) {
   const brand = product.productLine?.brand || "ecokon";
   return {
     "@context": "https://schema.org",
