@@ -13,6 +13,7 @@ const menuLinks = [
   ...(SHOW_TSVETOLOGIYA
     ? [{ href: "/catalog?brand=tsvetologiya", label: "Фитомодули" }]
     : []),
+  { href: "/knowledge-base/video", label: "Видеоинструкции" },
   { href: "/about", label: "О бренде" },
   { href: "/delivery", label: "Доставка и оплата" },
 ];

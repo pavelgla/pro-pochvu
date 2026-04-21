@@ -14,6 +14,7 @@ const navLinks = [
   ...(SHOW_TSVETOLOGIYA
     ? [{ href: "/catalog?brand=tsvetologiya", label: "Фитомодули" }]
     : []),
+  { href: "/knowledge-base/video", label: "Видеоинструкции" },
   { href: "/about", label: "О бренде" },
 ];
 
