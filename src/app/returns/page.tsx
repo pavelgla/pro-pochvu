@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Возврат товара | ЭКО Конь",
   description:
     "Условия возврата товара. 14 дней на возврат. Возвращаем деньги в течение 10 дней.",
-  alternates: { canonical: "https://ecokon.ru/returns" },
+  alternates: { canonical: "https://pro-pochvu.ru/returns" },
 };
 
 const TELEGRAM_URL = "https://t.me/+7cAd9gatgP44MDcy";

@@ -19,12 +19,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!pl) return {};
 
   const title = `${pl.name} — ${pl.brand === "ecokon" ? "ЭКО Конь" : "Цветология"}`;
-  const description = pl.description || `${pl.name} — купить в интернет-магазине ecokon.ru`;
+  const description = pl.description || `${pl.name} — купить в интернет-магазине pro-pochvu.ru`;
 
   return {
     title,
     description,
-    alternates: { canonical: `https://ecokon.ru/catalog/${pl.slug}` },
+    alternates: { canonical: `https://pro-pochvu.ru/catalog/${pl.slug}` },
     openGraph: { title, description, type: "website" },
   };
 }

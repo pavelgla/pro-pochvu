@@ -73,7 +73,7 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
           build-args: |
-            NEXT_PUBLIC_SITE_URL=https://ecokon.ru
+            NEXT_PUBLIC_SITE_URL=https://pro-pochvu.ru
             NEXT_PUBLIC_YMAPS_API_KEY=${{ secrets.NEXT_PUBLIC_YMAPS_API_KEY }}
             NEXT_PUBLIC_METRIKA_ID=${{ secrets.NEXT_PUBLIC_METRIKA_ID }}
             NEXT_PUBLIC_VK_PIXEL_ID=${{ secrets.NEXT_PUBLIC_VK_PIXEL_ID }}
@@ -144,6 +144,12 @@ jobs:
 
             # Restart services (migrations run automatically on container start)
             docker compose -f docker-compose.prod.yml up -d --remove-orphans --force-recreate
+
+            # Update pdnguard nginx to use pro-pochvu.conf instead of ecokon.conf
+            if grep -q 'ecokon\.conf' ~/pdnguard/docker-compose.prod.yml 2>/dev/null; then
+              sed -i 's|~/ecokon/deploy/nginx/ecokon.conf:/etc/nginx/conf.d/ecokon.conf|~/ecokon/deploy/nginx/pro-pochvu.conf:/etc/nginx/conf.d/pro-pochvu.conf|' ~/pdnguard/docker-compose.prod.yml
+              cd ~/pdnguard && docker compose -f docker-compose.prod.yml up -d nginx && cd ~/ecokon
+            fi
 
             # Reload nginx (from pdnguard stack)
             docker exec pdnguard-nginx nginx -s reload 2>/dev/null || true

@@ -9,10 +9,10 @@ import type {
 const API_URL = "https://api.yookassa.ru/v3";
 const SHOP_ID = process.env.YOOKASSA_SHOP_ID;
 const SECRET_KEY = process.env.YOOKASSA_SECRET_KEY;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ecokon.ru";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pro-pochvu.ru";
 
 function isMockMode() {
-  return !SHOP_ID || !SECRET_KEY;
+  return process.env.NODE_ENV === "development" && (!SHOP_ID || !SECRET_KEY);
 }
 
 function authHeader() {
@@ -100,7 +100,7 @@ export async function createPayment(
       return_url: `${SITE_URL}/order/${data.orderId}?payment=success`,
     },
     capture: true,
-    description: `Заказ #${data.orderNumber} на ecokon.ru`,
+    description: `Заказ #${data.orderNumber} на pro-pochvu.ru`,
     metadata: {
       order_id: data.orderId,
       order_number: data.orderNumber,
@@ -146,6 +146,6 @@ const YOOKASSA_IPS = [
 ];
 
 export function isYooKassaIp(ip: string): boolean {
-  if (isMockMode()) return true;
+  if (process.env.NODE_ENV === "development") return true;
   return YOOKASSA_IPS.some((range) => ip.startsWith(range));
 }

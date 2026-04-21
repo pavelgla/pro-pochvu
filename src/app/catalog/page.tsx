@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Каталог товаров",
   description:
     "Органические удобрения ЭКО Конь и фитомодули Цветология. Био-чай, специализированные удобрения, модули для вертикального озеленения.",
-  alternates: { canonical: "https://ecokon.ru/catalog" },
+  alternates: { canonical: "https://pro-pochvu.ru/catalog" },
 };
 
 export default function CatalogPage() {

@@ -1,4 +1,4 @@
-# Ecokon.ru — D2C экосистема
+# pro-pochvu.ru — D2C экосистема (ранее ecokon.ru)
 
 ## Стек
 - Next.js 14 (App Router) + TypeScript + Tailwind CSS

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Блог | ЭКО Конь",
-  alternates: { canonical: "https://ecokon.ru/blog" },
+  alternates: { canonical: "https://pro-pochvu.ru/blog" },
 };
 
 export default function BlogPage() {

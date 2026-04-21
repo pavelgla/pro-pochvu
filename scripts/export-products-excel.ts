@@ -164,7 +164,7 @@ async function main() {
 
   const rows = products.map((p) => {
     const slug = p.slug;
-    const siteUrl = `https://ecokon.ru/product/${slug}`;
+    const siteUrl = `https://pro-pochvu.ru/product/${slug}`;
 
     const wbNmId = slugToWbNmId[slug] ?? null;
     const ozon1Skus = slugToOzon1Skus[slug] ?? [];

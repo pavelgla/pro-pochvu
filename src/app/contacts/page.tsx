@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Контакты | ЭКО Конь и Цветология",
   description:
     "Свяжитесь с нами через Telegram. Ответим в течение 1 часа в рабочее время.",
-  alternates: { canonical: "https://ecokon.ru/contacts" },
+  alternates: { canonical: "https://pro-pochvu.ru/contacts" },
 };
 
 const faq = [
@@ -80,7 +80,7 @@ export default function ContactsPage() {
             </p>
           </div>
           <a
-            href="https://ecokon.ru/catalog"
+            href="https://pro-pochvu.ru/catalog"
             className="mt-auto inline-flex items-center gap-2 border border-gray-200 hover:border-green-500 hover:text-green-700 text-gray-700 font-medium text-sm px-5 py-2.5 rounded-xl transition-colors w-fit"
           >
             <ShoppingBag className="w-4 h-4" />

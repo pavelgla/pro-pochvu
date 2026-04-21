@@ -1,7 +1,7 @@
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const FROM_EMAIL = process.env.EMAIL_FROM || "shop@ecokon.ru";
+const FROM_EMAIL = process.env.EMAIL_FROM || "shop@pro-pochvu.ru";
 const FROM_NAME = process.env.EMAIL_FROM_NAME || "Эко Конь | Цветология";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ecokon.ru";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pro-pochvu.ru";
 
 function isMockMode() {
   return !BREVO_API_KEY;
@@ -91,7 +91,7 @@ function wrapLayout(title: string, body: string) {
   </td></tr>
   <!-- Footer -->
   <tr><td style="padding:16px 32px;background:#f5f3ef;text-align:center;font-size:12px;color:#888">
-    <a href="${SITE_URL}" style="color:#2D5016;text-decoration:none">ecokon.ru</a> — органические удобрения и фитомодули
+    <a href="${SITE_URL}" style="color:#2D5016;text-decoration:none">pro-pochvu.ru</a> — органические удобрения и фитомодули
   </td></tr>
 </table>
 </td></tr>

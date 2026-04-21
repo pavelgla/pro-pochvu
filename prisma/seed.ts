@@ -418,10 +418,10 @@ async function main() {
   // Admin user
   const passwordHash = await bcrypt.hash("admin123", 12);
   await prisma.user.upsert({
-    where: { email: "admin@ecokon.ru" },
+    where: { email: "admin@pro-pochvu.ru" },
     update: {},
     create: {
-      email: "admin@ecokon.ru",
+      email: "admin@pro-pochvu.ru",
       name: "Администратор",
       passwordHash,
       role: "admin",
@@ -429,7 +429,7 @@ async function main() {
     },
   });
 
-  console.log("Seeded admin user (admin@ecokon.ru / admin123)");
+  console.log("Seeded admin user (admin@pro-pochvu.ru / admin123)");
 
   // Blog posts
   await prisma.blogPost.upsert({

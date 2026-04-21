@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "База знаний | ЭКО Конь",
-  alternates: { canonical: "https://ecokon.ru/knowledge-base" },
+  alternates: { canonical: "https://pro-pochvu.ru/knowledge-base" },
 };
 
 const articles = [

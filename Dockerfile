@@ -15,7 +15,7 @@ COPY . .
 RUN npx prisma generate
 
 # Build args для клиентских env
-ARG NEXT_PUBLIC_SITE_URL=https://ecokon.ru
+ARG NEXT_PUBLIC_SITE_URL=https://pro-pochvu.ru
 ARG NEXT_PUBLIC_YMAPS_API_KEY
 ARG NEXT_PUBLIC_METRIKA_ID
 ARG NEXT_PUBLIC_VK_PIXEL_ID

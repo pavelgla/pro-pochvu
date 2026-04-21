@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const baseDescript =
     product.seoDescription ||
     product.shortDesc ||
-    `${product.name} — купить в интернет-магазине ecokon.ru`;
+    `${product.name} — купить в интернет-магазине pro-pochvu.ru`;
   const brandSuffix =
     product.productLine?.brand === "tsvetologiya"
       ? " ® Торговая марка «Цветология» зарегистрирована."
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: `https://ecokon.ru/product/${product.slug}` },
+    alternates: { canonical: `https://pro-pochvu.ru/product/${product.slug}` },
     openGraph: {
       title,
       description,

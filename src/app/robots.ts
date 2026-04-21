@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin/", "/api/", "/account/"],
     },
-    sitemap: "https://ecokon.ru/sitemap.xml",
+    sitemap: "https://pro-pochvu.ru/sitemap.xml",
   };
 }

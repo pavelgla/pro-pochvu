@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Правовая информация | ЭКО Конь",
-  alternates: { canonical: "https://ecokon.ru/legal" },
+  alternates: { canonical: "https://pro-pochvu.ru/legal" },
 };
 
 export default function LegalPage() {
@@ -13,7 +13,7 @@ export default function LegalPage() {
       <section className="mb-8">
         <h2 className="mb-3 text-xl font-semibold">Правообладатель</h2>
         <p className="text-gray-700 leading-relaxed">
-          Интернет-магазин ecokon.ru принадлежит и управляется КФХ «Ранчо Мушкино».
+          Интернет-магазин pro-pochvu.ru принадлежит и управляется КФХ «Ранчо Мушкино».
         </p>
         <p className="mt-2 text-gray-700 leading-relaxed">
           Глава КФХ: Гладышев Юрий Евгеньевич

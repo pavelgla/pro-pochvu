@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Политика обработки персональных данных | ЭКО Конь",
   description:
     "Политика обработки персональных данных ООО «Цветология». Как мы собираем, используем и защищаем ваши данные.",
-  alternates: { canonical: "https://ecokon.ru/privacy" },
+  alternates: { canonical: "https://pro-pochvu.ru/privacy" },
 };
 
 export default function PrivacyPage() {
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
             Настоящая Политика обработки персональных данных (далее — Политика)
             разработана в соответствии с Федеральным законом от 27.07.2006 №&nbsp;152-ФЗ
             «О персональных данных» и определяет порядок обработки персональных данных
-            пользователей сайта ecokon.ru.
+            пользователей сайта pro-pochvu.ru.
           </p>
           <p className="mb-3">
             Оператором персональных данных является ООО «Цветология» (ИНН&nbsp;3900034368,
@@ -44,7 +44,7 @@ export default function PrivacyPage() {
             пр-кт Победы, д.&nbsp;3, помещ. литер Б.
           </p>
           <p>
-            Используя сайт ecokon.ru, вы подтверждаете, что ознакомились с настоящей
+            Используя сайт pro-pochvu.ru, вы подтверждаете, что ознакомились с настоящей
             Политикой и даёте согласие на обработку персональных данных на условиях,
             изложенных в ней.
           </p>
@@ -240,10 +240,10 @@ export default function PrivacyPage() {
           <p>
             Для реализации прав направьте запрос на:{" "}
             <a
-              href="mailto:info@ecokon.ru"
+              href="mailto:info@pro-pochvu.ru"
               className="text-green-700 hover:underline"
             >
-              info@ecokon.ru
+              info@pro-pochvu.ru
             </a>
             . Мы ответим в течение 30 дней.
           </p>
@@ -281,8 +281,8 @@ export default function PrivacyPage() {
             Мы вправе изменять Политику. При существенных изменениях уведомим по
             email или через уведомление на сайте. Актуальная версия всегда доступна
             по адресу:{" "}
-            <a href="https://ecokon.ru/privacy" className="text-green-700 hover:underline">
-              https://ecokon.ru/privacy
+            <a href="https://pro-pochvu.ru/privacy" className="text-green-700 hover:underline">
+              https://pro-pochvu.ru/privacy
             </a>
           </p>
         </section>
@@ -310,14 +310,14 @@ export default function PrivacyPage() {
             </p>
             <p>
               <span className="font-medium">Email:</span>{" "}
-              <a href="mailto:info@ecokon.ru" className="text-green-700 hover:underline">
-                info@ecokon.ru
+              <a href="mailto:info@pro-pochvu.ru" className="text-green-700 hover:underline">
+                info@pro-pochvu.ru
               </a>
             </p>
             <p>
               <span className="font-medium">Сайт:</span>{" "}
-              <a href="https://ecokon.ru" className="text-green-700 hover:underline">
-                https://ecokon.ru
+              <a href="https://pro-pochvu.ru" className="text-green-700 hover:underline">
+                https://pro-pochvu.ru
               </a>
             </p>
           </div>

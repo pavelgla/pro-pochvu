@@ -1,6 +1,6 @@
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_CHAT_ID = process.env.TELEGRAM_ADMIN_CHAT_ID;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ecokon.ru";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pro-pochvu.ru";
 
 function isMockMode() {
   return !BOT_TOKEN || !ADMIN_CHAT_ID;

@@ -14,7 +14,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      ...(item.href ? { item: `https://ecokon.ru${item.href}` } : {}),
+      ...(item.href ? { item: `https://pro-pochvu.ru${item.href}` } : {}),
     })),
   };
 

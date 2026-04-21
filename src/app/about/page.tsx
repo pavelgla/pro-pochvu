@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "О бренде ЭКО Конь и Цветология | КФХ «Ранчо Мушкино»",
   description:
     "История бренда органических удобрений ЭКО Конь и систем вертикального озеленения Цветология. КФХ «Ранчо Мушкино», Калининградская область.",
-  alternates: { canonical: "https://ecokon.ru/about" },
+  alternates: { canonical: "https://pro-pochvu.ru/about" },
 };
 
 const stats = [

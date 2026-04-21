@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Доставка и оплата | ЭКО Конь",
   description:
     "Доставка по всей России: СДЭК, Boxberry, 5Post, Почта России. Оплата картой, СБП, наличными.",
-  alternates: { canonical: "https://ecokon.ru/delivery" },
+  alternates: { canonical: "https://pro-pochvu.ru/delivery" },
 };
 
 const deliveryMethods = [

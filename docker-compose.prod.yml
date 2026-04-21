@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_SITE_URL: https://ecokon.ru
+        NEXT_PUBLIC_SITE_URL: https://pro-pochvu.ru
         NEXT_PUBLIC_YMAPS_API_KEY: ${NEXT_PUBLIC_YMAPS_API_KEY:-}
         NEXT_PUBLIC_METRIKA_ID: ${NEXT_PUBLIC_METRIKA_ID:-}
         NEXT_PUBLIC_VK_PIXEL_ID: ${NEXT_PUBLIC_VK_PIXEL_ID:-}
@@ -36,7 +36,7 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://${POSTGRES_USER:-ecokon}:${POSTGRES_PASSWORD}@ecokon-db:5432/${POSTGRES_DB:-ecokon}
-      NEXTAUTH_URL: https://ecokon.ru
+      NEXTAUTH_URL: https://pro-pochvu.ru
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       YOOKASSA_SHOP_ID: ${YOOKASSA_SHOP_ID}
       YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY}
@@ -46,7 +46,7 @@ services:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
       BREVO_API_KEY: ${BREVO_API_KEY}
-      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@ecokon.ru}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@pro-pochvu.ru}
       OZON_CLIENT_ID: ${OZON_CLIENT_ID:-}
       OZON_API_KEY: ${OZON_API_KEY:-}
       OZON2_CLIENT_ID: ${OZON2_CLIENT_ID:-}

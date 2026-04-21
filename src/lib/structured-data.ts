@@ -20,7 +20,7 @@ export function generateProductJsonLd(product: ProductWithLine) {
       availability: product.stock > 0
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
-      url: `https://ecokon.ru/product/${product.slug}`,
+      url: `https://pro-pochvu.ru/product/${product.slug}`,
     },
     aggregateRating: product.reviewsCount > 0
       ? {
@@ -44,7 +44,7 @@ export function generateBreadcrumbJsonLd(
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      ...(item.href ? { item: `https://ecokon.ru${item.href}` } : {}),
+      ...(item.href ? { item: `https://pro-pochvu.ru${item.href}` } : {}),
     })),
   };
 }

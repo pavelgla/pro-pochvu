@@ -4,8 +4,8 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Пользовательское соглашение | ЭКО Конь",
   description:
-    "Условия использования интернет-магазина ecokon.ru. Договор оферты.",
-  alternates: { canonical: "https://ecokon.ru/terms" },
+    "Условия использования интернет-магазина pro-pochvu.ru. Договор оферты.",
+  alternates: { canonical: "https://pro-pochvu.ru/terms" },
 };
 
 export default function TermsPage() {
@@ -37,7 +37,7 @@ export default function TermsPage() {
           <p>
             Настоящее соглашение регулирует отношения между ООО «Цветология»
             (далее — Продавец) и физическим лицом (далее — Покупатель),
-            использующим сайт ecokon.ru для приобретения товаров. Совершение
+            использующим сайт pro-pochvu.ru для приобретения товаров. Совершение
             заказа означает принятие условий настоящего соглашения.
           </p>
         </section>
@@ -48,7 +48,7 @@ export default function TermsPage() {
             2. Условия заказа и оплаты
           </h2>
           <ul className="list-disc space-y-2 pl-6">
-            <li>Заказ оформляется через сайт ecokon.ru</li>
+            <li>Заказ оформляется через сайт pro-pochvu.ru</li>
             <li>Цены указаны в рублях РФ, включая НДС</li>
             <li>Оплата: банковская карта, СБП, наличные при получении</li>
             <li>Заказ считается принятым после подтверждения по email</li>
@@ -102,10 +102,10 @@ export default function TermsPage() {
             <li>
               Для возврата: написать на{" "}
               <a
-                href="mailto:info@ecokon.ru"
+                href="mailto:info@pro-pochvu.ru"
                 className="text-green-700 hover:underline"
               >
-                info@ecokon.ru
+                info@pro-pochvu.ru
               </a>{" "}
               или в Telegram
             </li>
@@ -194,10 +194,10 @@ export default function TermsPage() {
             <p>
               <span className="font-medium">Email:</span>{" "}
               <a
-                href="mailto:info@ecokon.ru"
+                href="mailto:info@pro-pochvu.ru"
                 className="text-green-700 hover:underline"
               >
-                info@ecokon.ru
+                info@pro-pochvu.ru
               </a>
             </p>
           </div>
