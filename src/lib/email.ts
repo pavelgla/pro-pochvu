@@ -1,11 +1,25 @@
-const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const FROM_EMAIL = process.env.EMAIL_FROM || "shop@pro-pochvu.ru";
-const FROM_NAME = process.env.EMAIL_FROM_NAME || "Эко Конь | Цветология";
+import * as nodemailer from "nodemailer";
+
+const SMTP_HOST = process.env.EMAIL_SMTP_HOST;
+const SMTP_PORT = Number(process.env.EMAIL_SMTP_PORT) || 465;
+const SMTP_USER = process.env.EMAIL_SMTP_USER;
+const SMTP_PASS = process.env.EMAIL_SMTP_PASS;
+const SMTP_SECURE = process.env.EMAIL_SMTP_SECURE !== "false";
+const FROM_ADDRESS = process.env.EMAIL_SMTP_FROM || "Эко Конь <noreply@pro-pochvu.ru>";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pro-pochvu.ru";
 
 function isMockMode() {
-  return !BREVO_API_KEY;
+  return !SMTP_HOST || !SMTP_USER || !SMTP_PASS;
 }
+
+const transporter = !isMockMode()
+  ? nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: SMTP_SECURE,
+      auth: { user: SMTP_USER, pass: SMTP_PASS },
+    })
+  : null;
 
 type SendEmailOptions = {
   to: string;
@@ -15,33 +29,23 @@ type SendEmailOptions = {
 };
 
 async function sendTransactional({ to, toName, subject, htmlContent }: SendEmailOptions) {
-  if (isMockMode()) {
+  if (isMockMode() || !transporter) {
     console.log(`[Email mock] → ${to}: ${subject}`);
     return { ok: true, mock: true };
   }
 
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "api-key": BREVO_API_KEY!,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      sender: { name: FROM_NAME, email: FROM_EMAIL },
-      to: [{ email: to, name: toName || to }],
+  try {
+    await transporter.sendMail({
+      from: FROM_ADDRESS,
+      to: toName ? `"${toName}" <${to}>` : to,
       subject,
-      htmlContent,
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    console.error(`Brevo API error: ${err}`);
-    return { ok: false, error: err };
+      html: htmlContent,
+    });
+    return { ok: true };
+  } catch (err) {
+    console.error(`SMTP error: ${err}`);
+    return { ok: false, error: String(err) };
   }
-
-  return { ok: true };
 }
 
 // =============================================

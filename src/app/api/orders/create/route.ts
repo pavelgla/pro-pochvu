@@ -50,7 +50,32 @@ export async function POST(req: NextRequest) {
     (sum, i) => sum + i.price * i.quantity,
     0
   );
-  const discount = body.promo_discount || 0;
+
+  // Fetch promo from DB — never trust client-supplied discount
+  let promoRecord: Awaited<ReturnType<typeof prisma.promoCode.findFirst>> = null;
+  let discount = 0;
+  if (body.promo_code) {
+    promoRecord = await prisma.promoCode.findFirst({
+      where: { code: { equals: body.promo_code, mode: "insensitive" }, isActive: true },
+    });
+    if (promoRecord) {
+      const now = new Date();
+      const isValid =
+        (!promoRecord.validFrom || now >= promoRecord.validFrom) &&
+        (!promoRecord.validUntil || now <= promoRecord.validUntil) &&
+        (promoRecord.usesLimit === null || promoRecord.usesCount < promoRecord.usesLimit) &&
+        subtotal >= promoRecord.minOrderAmount;
+      if (isValid) {
+        discount =
+          promoRecord.discountType === "percent"
+            ? Math.round(subtotal * (promoRecord.discountValue / 100))
+            : Math.min(promoRecord.discountValue, subtotal);
+      } else {
+        promoRecord = null; // invalid — don't increment
+      }
+    }
+  }
+
   const deliveryCost =
     subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : body.delivery_cost;
   const total = subtotal - discount + deliveryCost;
@@ -64,44 +89,49 @@ export async function POST(req: NextRequest) {
 
   let order;
   try {
-    order = await prisma.order.create({
-      data: {
-        status: isCod ? "confirmed" : "pending",
-        total: finalTotal,
-        subtotal,
-        deliveryCost,
-        discount,
-        promoCode: body.promo_code,
-        deliveryProvider: body.delivery_provider,
-        deliveryMethod: body.delivery_method,
-        deliveryAddress: body.delivery_address,
-        deliveryCityCode: body.delivery_city_code,
-        paymentMethod: body.payment_method,
-        paymentStatus: isCod ? "cod" : "pending",
-        customerName: body.customer_name,
-        customerEmail: body.customer_email,
-        customerPhone: body.customer_phone,
-        customerComment: body.customer_comment,
-        userId: session?.user ? (session.user as any).id : undefined,
-        items: {
-          create: body.items.map((item) => ({
-            productId: item.product_id,
-            variantId: item.variant_id,
-            quantity: item.quantity,
-            price: item.price,
-            name: item.name,
-            image: item.image,
-          })),
+    order = await prisma.$transaction(async (tx) => {
+      const created = await tx.order.create({
+        data: {
+          status: isCod ? "confirmed" : "pending",
+          total: finalTotal,
+          subtotal,
+          deliveryCost,
+          discount,
+          promoCode: body.promo_code,
+          deliveryProvider: body.delivery_provider,
+          deliveryMethod: body.delivery_method,
+          deliveryAddress: body.delivery_address,
+          deliveryCityCode: body.delivery_city_code,
+          paymentMethod: body.payment_method,
+          paymentStatus: isCod ? "cod" : "pending",
+          customerName: body.customer_name,
+          customerEmail: body.customer_email,
+          customerPhone: body.customer_phone,
+          customerComment: body.customer_comment,
+          userId: session?.user ? (session.user as any).id : undefined,
+          items: {
+            create: body.items.map((item) => ({
+              productId: item.product_id,
+              variantId: item.variant_id,
+              quantity: item.quantity,
+              price: item.price,
+              name: item.name,
+              image: item.image,
+            })),
+          },
         },
-      },
+      });
+      if (promoRecord) {
+        await tx.promoCode.update({
+          where: { id: promoRecord.id },
+          data: { usesCount: { increment: 1 } },
+        });
+      }
+      return created;
     });
   } catch (err) {
     console.error("DB error creating order:", err);
-    const mockId = `mock-${Date.now()}`;
-    return NextResponse.json({
-      orderId: mockId,
-      redirectUrl: `/order/${mockId}`,
-    });
+    return NextResponse.json({ error: "Не удалось создать заказ. Попробуйте ещё раз." }, { status: 500 });
   }
 
   if (isCod) {

@@ -19,7 +19,7 @@ function headers() {
 }
 
 function isMockMode() {
-  return !API_KEY;
+  return process.env.NODE_ENV === "development" && !API_KEY;
 }
 
 // =============================================

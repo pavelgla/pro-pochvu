@@ -1,17 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { notifyStatusChange } from "@/lib/telegram";
 import { sendShippingNotification, sendDeliveryConfirmation } from "@/lib/email";
 
+const webhookSchema = z.object({
+  orderId: z.string(),
+  status: z.string(),
+  trackNumber: z.string().optional(),
+});
+
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { orderId, status, trackNumber } = body;
-
-  console.log("ApiShip webhook:", JSON.stringify(body));
-
-  if (!orderId) {
-    return NextResponse.json({ ok: true });
+  const token = req.headers.get("x-webhook-secret");
+  if (token !== process.env.APISHIP_WEBHOOK_SECRET) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
+
+  const rawBody = await req.json();
+  const parsed = webhookSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid payload", details: parsed.error.flatten() }, { status: 400 });
+  }
+
+  const { orderId, status, trackNumber } = parsed.data;
+  console.log("[delivery/webhook]", { orderId, status });
 
   const order = await prisma.order.update({
     where: { id: orderId },

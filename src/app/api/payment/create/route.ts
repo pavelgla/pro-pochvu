@@ -1,34 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { createPayment } from "@/lib/yookassa";
 import { prisma } from "@/lib/prisma";
 import type { PaymentMethod } from "@/types/yookassa";
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  const session = await getServerSession(authOptions);
 
-  const {
-    orderId,
-    orderNumber,
-    total,
-    items,
-    deliveryCost,
-    customerEmail,
-    customerPhone,
-    paymentMethod,
-  } = body as {
+  const body = await req.json();
+  const { orderId, paymentMethod } = body as {
     orderId: string;
-    orderNumber: number;
-    total: number;
-    items: { name: string; price: number; quantity: number }[];
-    deliveryCost: number;
-    customerEmail: string;
-    customerPhone?: string;
     paymentMethod?: PaymentMethod;
   };
 
-  if (!orderId || !total || !items?.length || !customerEmail) {
+  if (!orderId) {
+    return NextResponse.json({ error: "orderId is required" }, { status: 400 });
+  }
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    select: {
+      total: true,
+      status: true,
+      userId: true,
+      orderNumber: true,
+      customerEmail: true,
+      customerPhone: true,
+      deliveryCost: true,
+      items: { select: { name: true, price: true, quantity: true } },
+    },
+  });
+
+  if (!order) {
+    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+  }
+
+  if (order.userId !== (session?.user as { id?: string } | undefined)?.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  if (order.status !== "pending") {
     return NextResponse.json(
-      { error: "Missing required fields" },
+      { error: "Order is not in pending state" },
       { status: 400 }
     );
   }
@@ -36,12 +50,12 @@ export async function POST(req: NextRequest) {
   try {
     const { paymentId, confirmationUrl } = await createPayment({
       orderId,
-      orderNumber,
-      total,
-      items,
-      deliveryCost: deliveryCost || 0,
-      customerEmail,
-      customerPhone,
+      orderNumber: order.orderNumber,
+      total: order.total,
+      items: order.items,
+      deliveryCost: order.deliveryCost,
+      customerEmail: order.customerEmail,
+      customerPhone: order.customerPhone,
       paymentMethod,
     });
 

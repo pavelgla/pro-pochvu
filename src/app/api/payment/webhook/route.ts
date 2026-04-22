@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
         }
       });
 
-      console.log(`Payment succeeded for order ${orderId}, payment ${payment.id}`);
+      console.log("[payment/webhook] succeeded", { orderId });
       break;
     }
 
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
         data: { status: "cancelled", paymentStatus: "cancelled" },
       });
 
-      console.log(`Payment canceled for order ${orderId}, payment ${payment.id}`);
+      console.log("[payment/webhook] canceled", { orderId });
       break;
     }
 

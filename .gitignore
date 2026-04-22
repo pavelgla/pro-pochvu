@@ -47,3 +47,12 @@ docker-compose.yml
 
 # credentials
 .proda
+
+# data exports
+*.xlsx
+
+# archived designs
+v1-final/
+
+# audit docs & logs
+docs/
