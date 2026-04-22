@@ -59,7 +59,7 @@ export function Footer() {
               производителей.
             </p>
             <p className="mt-5 text-[11px] font-medium text-accent-light">
-              Основано в&nbsp;2026 г.
+              Основано в&nbsp;2014 г.
             </p>
           </div>
 
@@ -99,7 +99,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="flex flex-col items-center gap-4 border-t border-cream/10 pt-6 text-[11px] tracking-[0.06em] text-cream/50 sm:flex-row sm:justify-between">
           <span>
-            © 2026 КФХ «РАНЧО МУШКИНО» · «ЭКО КОНЬ» И «ЦВЕТОЛОГИЯ» —
+            © ООО «ЦВЕТОЛОГИЯ» · «ЭКО-КОНЬ» И «ЦВЕТОЛОГИЯ» —
             ЗАРЕГИСТРИРОВАННЫЕ ТМ
           </span>
           <div className="flex gap-4">

@@ -29,7 +29,7 @@ export function Hero() {
           <p className="mt-8 max-w-[520px] text-[17px] leading-relaxed text-ink-2">
             Удобрения, грунты и фитомодули от&nbsp;калининградских
             предпринимателей. Бренды «ЭКО&nbsp;Конь» и&nbsp;«Цветология» —
-            с&nbsp;2012 года, более 45 000 довольных клиентов.
+            с&nbsp;2014 года, более 500 000 довольных клиентов.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
@@ -47,9 +47,9 @@ export function Hero() {
           <div className="mt-12 flex flex-wrap gap-8 border-t border-line pt-7 text-[13px] text-mute">
             <div>
               <span className="block font-serif text-[22px] font-semibold text-ink">
-                45 000+
+                500К+
               </span>
-              <span className="mt-0.5 block text-[11px]">клиентов с 2012</span>
+              <span className="mt-0.5 block text-[11px]">довольных клиентов</span>
             </div>
             <div className="hidden h-8 w-px bg-line sm:block" />
             <div>
