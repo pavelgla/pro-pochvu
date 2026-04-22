@@ -41,7 +41,7 @@ export default function AboutPage() {
           <span>О НАС</span>
         </div>
         <h1 className="section-heading text-4xl md:text-5xl lg:text-6xl">
-          Органика с фермы —<br />��рямо <span className="text-accent">к вам.</span>
+          Органика с фермы —<br />прямо <span className="text-accent">к вам.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-ink-2 leading-relaxed">
           КФХ «Ранчо Мушкино» производит удобрения на основе конского навоза и

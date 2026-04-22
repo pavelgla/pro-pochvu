@@ -21,7 +21,7 @@ const brands = [
     description:
       "Живые картины из растений — каждый модуль собираем вручную, подбираем растения под ваш интерьер и уровень освещения.",
     href: "/catalog?brand=tsvetologiya",
-    image: "/images/ecokon/bio-chay-yantar-fosfor_0.jpg",
+    image: "/images/tsvetologiya/fitomodul-50-4-white_0.jpg",
     fromPrice: "890",
     brandKey: "tsvetologiya" as const,
   },
@@ -50,15 +50,11 @@ export function BrandSplit() {
                 src={b.image}
                 alt={b.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-contain transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,32,24,0.85)] via-[rgba(28,32,24,0.3)] to-transparent" />
 
-              <div className="relative z-10 flex flex-1 flex-col justify-between p-8 text-bg lg:p-10">
-                <span className="self-start rounded-full bg-white/15 px-3 py-1.5 text-[10px] tracking-[0.18em] backdrop-blur-[10px]">
-                  {b.tag.toUpperCase()}
-                </span>
-
+              <div className="relative z-10 flex flex-1 flex-col justify-end p-8 text-bg lg:p-10">
                 <div>
                   <div className="font-serif text-4xl font-medium tracking-tight lg:text-[56px] lg:leading-none">
                     {b.name}

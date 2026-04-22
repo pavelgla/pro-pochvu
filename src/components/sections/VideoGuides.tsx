@@ -46,7 +46,7 @@ export function VideoGuides() {
           <h2 className="section-heading">
             Видео-инструкции
             <br />
-            от <span className="text-accent">агронома фермы</span>
+            от <span className="text-accent">профессионалов</span>
           </h2>
         </div>
 
@@ -75,7 +75,7 @@ export function VideoGuides() {
                   </div>
                 </div>
                 {/* Tag */}
-                <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] tracking-[0.1em]">
+                <span className="absolute left-3 bottom-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] tracking-[0.1em]">
                   {v.tag.toUpperCase()}
                 </span>
                 {/* Duration */}

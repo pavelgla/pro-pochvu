@@ -3,8 +3,7 @@ import { Ornament } from "@/components/ui/Ornament";
 
 const stats = [
   { value: "2012", label: "год основания" },
-  { value: "45 000+", label: "клиентов" },
-  { value: "20", label: "SKU в каталоге" },
+  { value: "45К+", label: "клиентов" },
   { value: "4.9★", label: "средняя оценка" },
 ];
 
@@ -43,24 +42,23 @@ export function StoryBlock() {
           </div>
 
           <h2 className="section-heading">
-            Семья Мушкиных
-            <br />и одна <span className="text-accent">идея.</span>
+            Ранчо <span className="text-accent">Мушкино</span>
           </h2>
 
-          <blockquote className="mt-7 max-w-[620px] font-serif text-2xl leading-relaxed text-ink">
-            «В 2012 мы подумали — что если из того, что обычно пропадает
-            на&nbsp;ферме, сделать лучшее удобрение страны?»
-          </blockquote>
+          <p className="mt-5 max-w-[620px] font-serif text-2xl leading-relaxed text-ink">
+            Как проблема превратилась в&nbsp;бизнес-идею
+          </p>
 
           <p className="mt-6 max-w-[620px] text-base leading-relaxed text-ink-2">
-            Через год — первая партия био-чая на Ozon. Через двенадцать — два
-            бренда, 45 000 постоянных клиентов и собственные фитостены
-            в&nbsp;сотне интерьеров. Мы по-прежнему фасуем руками и знаем каждую
-            партию.
+            В 2012 мы подумали — что если из того, что обычно пропадает
+            на&nbsp;ферме, сделать лучшее удобрение страны? Через год — первая
+            партия био-чая на Ozon. Через двенадцать — два бренда, 45 000
+            постоянных клиентов и собственные фитостены в&nbsp;сотне интерьеров.
+            Мы по-прежнему фасуем руками и знаем каждую партию.
           </p>
 
           {/* Stats */}
-          <div className="mt-10 grid grid-cols-2 gap-6 border-t border-line pt-8 lg:grid-cols-4">
+          <div className="mt-10 grid grid-cols-3 gap-6 border-t border-line pt-8">
             {stats.map((s) => (
               <div key={s.label}>
                 <div className="font-serif text-[40px] font-medium leading-none tracking-tight text-accent">
