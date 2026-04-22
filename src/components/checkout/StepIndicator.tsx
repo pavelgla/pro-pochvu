@@ -28,7 +28,7 @@ export function StepIndicator({ current, onStepClick }: Props) {
               <div
                 className={cn(
                   "hidden h-px w-8 sm:block",
-                  done ? "bg-brand-green" : "bg-brand-gray-light"
+                  done ? "bg-accent" : "bg-bg-soft"
                 )}
               />
             )}
@@ -38,9 +38,9 @@ export function StepIndicator({ current, onStepClick }: Props) {
               onClick={() => clickable && onStepClick(step.id)}
               className={cn(
                 "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
-                done && "text-brand-green cursor-pointer hover:bg-brand-green/5",
-                active && "bg-brand-green text-white",
-                !done && !active && "text-brand-gray-dark/40"
+                done && "text-accent cursor-pointer hover:bg-accent/5",
+                active && "bg-accent text-bg",
+                !done && !active && "text-mute/60"
               )}
             >
               {done ? (
@@ -51,7 +51,7 @@ export function StepIndicator({ current, onStepClick }: Props) {
                     "flex h-5 w-5 items-center justify-center rounded-full text-xs",
                     active
                       ? "bg-white/20"
-                      : "bg-brand-gray-light text-brand-gray-dark/40"
+                      : "bg-bg-soft text-mute/60"
                   )}
                 >
                   {step.id}

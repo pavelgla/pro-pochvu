@@ -33,15 +33,15 @@ export function ProductCharacteristics({ characteristics, compact = false }: Pro
   const display = compact ? entries.slice(0, 4) : entries;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-brand-gray-light">
+    <div className="overflow-hidden rounded-xl border border-line">
       <table className="w-full text-sm">
         <tbody>
           {display.map(([key, value], i) => (
             <tr
               key={key}
-              className={i % 2 === 0 ? "bg-brand-gray-light/30" : "bg-white"}
+              className={i % 2 === 0 ? "bg-bg-soft/30" : "bg-bg"}
             >
-              <td className="px-4 py-2.5 font-medium text-brand-gray-dark/70 w-1/3">
+              <td className="px-4 py-2.5 font-medium text-ink-2 w-1/3">
                 {labelMap[key] || key}
               </td>
               <td className="px-4 py-2.5">{String(value)}</td>

@@ -20,7 +20,7 @@ export default function AccountPage() {
     <div className="space-y-8">
       <div>
         <h2>Привет, {name}!</h2>
-        <p className="mt-1 text-sm text-brand-gray-dark/60">
+        <p className="mt-1 text-sm text-mute">
           Добро пожаловать в личный кабинет
         </p>
       </div>
@@ -30,14 +30,14 @@ export default function AccountPage() {
           <Link
             key={href}
             href={href}
-            className="flex items-center gap-4 rounded-xl border border-brand-gray-light p-4 hover:border-brand-green/40 hover:bg-brand-green/5 transition-colors"
+            className="flex items-center gap-4 rounded-xl border border-line p-4 hover:border-accent/40 hover:bg-accent/5 transition-colors"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-green/10">
-              <Icon className="h-5 w-5 text-brand-green" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10">
+              <Icon className="h-5 w-5 text-accent" />
             </div>
             <div>
               <p className="font-medium">{label}</p>
-              <p className="text-xs text-brand-gray-dark/50">{desc}</p>
+              <p className="text-xs text-mute">{desc}</p>
             </div>
           </Link>
         ))}

@@ -30,7 +30,7 @@ export function CatalogSort() {
     <select
       value={current}
       onChange={(e) => handleChange(e.target.value)}
-      className="h-10 rounded-xl border border-brand-gray-light bg-white px-3 pr-8 text-sm focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20"
+      className="h-10 rounded-full border border-line bg-bg px-4 pr-8 text-sm focus:border-accent focus:outline-none"
     >
       {sortOptions.map((o) => (
         <option key={o.value} value={o.value}>

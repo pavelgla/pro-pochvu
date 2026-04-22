@@ -21,7 +21,7 @@ export default function AccountLayout({ children }: { children: ReactNode }) {
   if (loading) {
     return (
       <div className="container-main section-padding flex justify-center py-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-gray-light border-t-brand-green" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-accent" />
       </div>
     );
   }
@@ -50,8 +50,8 @@ export default function AccountLayout({ children }: { children: ReactNode }) {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors",
                   active
-                    ? "bg-brand-green/5 text-brand-green"
-                    : "text-brand-gray-dark/70 hover:bg-brand-gray-light"
+                    ? "bg-accent/5 text-accent"
+                    : "text-ink-2 hover:bg-bg-soft"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -62,7 +62,7 @@ export default function AccountLayout({ children }: { children: ReactNode }) {
 
           <button
             onClick={() => signOut()}
-            className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-brand-gray-dark/50 transition-colors hover:bg-brand-gray-light hover:text-error"
+            className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-mute transition-colors hover:bg-bg-soft hover:text-error"
           >
             <LogOut className="h-4 w-4" />
             Выйти

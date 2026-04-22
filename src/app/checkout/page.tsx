@@ -55,7 +55,7 @@ export default function CheckoutPage() {
   if (!hydrated) {
     return (
       <div className="container-main section-padding flex justify-center py-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-gray-light border-t-brand-green" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-accent" />
       </div>
     );
   }

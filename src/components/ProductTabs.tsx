@@ -26,7 +26,7 @@ export function ProductTabs({ product }: { product: ProductWithRelations }) {
 
       <div className="mt-6">
         {activeTab === "description" && (
-          <div className="prose prose-sm max-w-none text-brand-gray-dark/80 leading-relaxed whitespace-pre-line">
+          <div className="prose prose-sm max-w-none text-ink-2 leading-relaxed whitespace-pre-line">
             {description}
           </div>
         )}
@@ -43,12 +43,12 @@ export function ProductTabs({ product }: { product: ProductWithRelations }) {
               </div>
             )}
             {usage && (
-              <div className="prose prose-sm max-w-none text-brand-gray-dark/80 leading-relaxed whitespace-pre-line">
+              <div className="prose prose-sm max-w-none text-ink-2 leading-relaxed whitespace-pre-line">
                 {usage}
               </div>
             )}
             {!product.videoUrl && !usage && (
-              <p className="text-brand-gray-dark/60">Инструкция по применению скоро появится.</p>
+              <p className="text-mute">Инструкция по применению скоро появится.</p>
             )}
           </div>
         )}

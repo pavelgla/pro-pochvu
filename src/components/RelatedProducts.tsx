@@ -8,8 +8,8 @@ export async function RelatedProducts({ product }: { product: ProductWithLine })
 
   return (
     <section className="mt-16">
-      <h2 className="mb-6">Похожие товары</h2>
-      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+      <h2 className="mb-6 font-serif text-3xl font-normal tracking-tight">Похожие товары</h2>
+      <div className="grid gap-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
         {items.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}

@@ -62,34 +62,34 @@ export function CityAutocomplete({ value, onChange, className }: Props) {
   return (
     <div ref={ref} className={cn("relative", className)}>
       <div className="relative">
-        <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-gray-dark/40" />
+        <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-mute/60" />
         <input
           type="text"
           value={query}
           onChange={(e) => handleInput(e.target.value)}
           onFocus={() => cities.length > 0 && setOpen(true)}
           placeholder="Введите город..."
-          className="h-11 w-full rounded-xl border border-brand-gray-light bg-white pl-10 pr-4 text-base transition-colors placeholder:text-brand-gray-dark/40 focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20"
+          className="h-11 w-full rounded-xl border border-line bg-bg pl-10 pr-4 text-base transition-colors placeholder:text-mute/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
         />
         {loading && (
-          <div className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin rounded-full border-2 border-brand-gray-light border-t-brand-green" />
+          <div className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin rounded-full border-2 border-line border-t-accent" />
         )}
       </div>
 
       {open && cities.length > 0 && (
-        <ul className="absolute z-50 mt-1 w-full rounded-xl border border-brand-gray-light bg-white py-1 shadow-lg max-h-60 overflow-auto">
+        <ul className="absolute z-50 mt-1 w-full rounded-xl border border-line bg-bg py-1 shadow-lg max-h-60 overflow-auto">
           {cities.map((city) => (
             <li key={city.id}>
               <button
                 type="button"
                 onClick={() => handleSelect(city)}
-                className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm hover:bg-brand-gray-light"
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm hover:bg-bg-soft"
               >
-                <MapPin className="h-3.5 w-3.5 shrink-0 text-brand-gray-dark/40" />
+                <MapPin className="h-3.5 w-3.5 shrink-0 text-mute/60" />
                 <span>
                   {city.name}
                   {city.region && (
-                    <span className="text-brand-gray-dark/40">
+                    <span className="text-mute/60">
                       , {city.region}
                     </span>
                   )}

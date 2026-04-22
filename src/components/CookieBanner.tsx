@@ -20,11 +20,11 @@ export function CookieBanner() {
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 max-w-sm w-[calc(100%-2rem)] sm:w-auto rounded-xl shadow-2xl bg-white border border-gray-200 p-4 space-y-3">
+    <div className="fixed bottom-4 left-4 z-50 max-w-sm w-[calc(100%-2rem)] sm:w-auto rounded-xl shadow-2xl bg-bg border border-gray-200 p-4 space-y-3">
       <p className="text-sm text-gray-700 leading-relaxed">
         Мы используем cookie для работы сайта, аналитики и улучшения опыта.
         Подробнее в{" "}
-        <Link href="/privacy" className="underline text-gray-900 hover:text-brand-green">
+        <Link href="/privacy" className="underline text-gray-900 hover:text-accent">
           Политике конфиденциальности
         </Link>
         .
@@ -32,7 +32,7 @@ export function CookieBanner() {
       <div className="flex gap-2">
         <button
           onClick={() => accept("all")}
-          className="flex-1 rounded-lg bg-brand-green text-white text-sm font-medium py-2 px-3 hover:opacity-90 transition-opacity"
+          className="flex-1 rounded-lg bg-accent text-white text-sm font-medium py-2 px-3 hover:opacity-90 transition-opacity"
         >
           Принять все
         </button>

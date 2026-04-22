@@ -67,7 +67,7 @@ function LoginForm() {
         <div className="text-right">
           <Link
             href="/auth/reset-password"
-            className="text-sm text-brand-green hover:underline"
+            className="text-sm text-accent hover:underline"
           >
             Забыли пароль?
           </Link>
@@ -78,9 +78,9 @@ function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-brand-gray-dark/60">
+      <p className="mt-6 text-center text-sm text-mute">
         Нет аккаунта?{" "}
-        <Link href="/auth/signup" className="text-brand-green font-medium hover:underline">
+        <Link href="/auth/signup" className="text-accent font-medium hover:underline">
           Зарегистрироваться
         </Link>
       </p>

@@ -2,19 +2,19 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { X, User, LogIn } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { Logo } from "./Logo";
 import { cn } from "@/lib/utils";
 import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
 const menuLinks = [
   { href: "/catalog", label: "Каталог" },
-  { href: "/catalog?brand=ecokon", label: "Удобрения" },
+  { href: "/catalog?brand=ecokon", label: "Бренды" },
+  { href: "/knowledge-base/video", label: "Уход за растениями" },
+  { href: "/about", label: "О нас" },
   ...(SHOW_TSVETOLOGIYA
     ? [{ href: "/catalog?brand=tsvetologiya", label: "Фитомодули" }]
     : []),
-  { href: "/knowledge-base/video", label: "Видеоинструкции" },
-  { href: "/about", label: "О бренде" },
   { href: "/delivery", label: "Доставка и оплата" },
 ];
 
@@ -42,7 +42,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       {/* Overlay */}
       <div
         className={cn(
-          "fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300",
+          "fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300",
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         )}
         onClick={onClose}
@@ -51,30 +51,32 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       {/* Panel */}
       <div
         className={cn(
-          "fixed right-0 top-0 z-[70] flex h-full w-72 flex-col bg-white shadow-xl transition-transform duration-300",
+          "fixed right-0 top-0 z-[70] flex h-full w-80 flex-col bg-bg shadow-2xl transition-transform duration-300",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* Header */}
-        <div className="flex h-16 items-center justify-between border-b border-brand-gray-light px-4">
-          <span className="text-lg font-bold text-brand-green">Меню</span>
+        <div className="flex h-[72px] items-center justify-between border-b border-line px-6">
+          <Logo size={0.8} />
           <button
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-brand-gray-light"
+            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-bg-soft"
             aria-label="Закрыть меню"
           >
-            <X className="h-5 w-5" />
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
 
         {/* Links */}
-        <nav className="flex-1 overflow-auto px-2 py-4">
+        <nav className="flex-1 overflow-auto px-4 py-6">
           {menuLinks.map((link) => (
             <Link
-              key={link.href}
+              key={link.href + link.label}
               href={link.href}
               onClick={onClose}
-              className="flex h-12 items-center rounded-lg px-4 text-base font-medium text-brand-gray-dark transition-colors hover:bg-brand-gray-light"
+              className="flex h-12 items-center rounded-lg px-4 font-serif text-lg font-medium text-ink transition-colors hover:bg-bg-soft"
             >
               {link.label}
             </Link>
@@ -82,23 +84,28 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </nav>
 
         {/* Account */}
-        <div className="border-t border-brand-gray-light p-4 flex flex-col gap-1">
+        <div className="border-t border-line p-4">
           {session?.user ? (
             <Link
               href="/account"
               onClick={onClose}
-              className="flex h-12 items-center gap-3 rounded-lg px-4 text-base font-medium text-brand-gray-dark transition-colors hover:bg-brand-gray-light"
+              className="flex h-12 items-center gap-3 rounded-lg px-4 text-sm font-medium text-ink transition-colors hover:bg-bg-soft"
             >
-              <User className="h-5 w-5 text-brand-green" fill="currentColor" />
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="6.5" r="2.8" stroke="currentColor" strokeWidth="1.3" />
+                <path d="M3.5 15.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+              </svg>
               Личный кабинет
             </Link>
           ) : (
             <Link
               href="/auth/login"
               onClick={onClose}
-              className="flex h-12 items-center gap-3 rounded-lg px-4 text-base font-medium text-brand-gray-dark transition-colors hover:bg-brand-gray-light"
+              className="flex h-12 items-center gap-3 rounded-lg px-4 text-sm font-medium text-ink transition-colors hover:bg-bg-soft"
             >
-              <LogIn className="h-5 w-5" />
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M10 3h4v12h-4M7 9h7M12 6l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
               Войти
             </Link>
           )}

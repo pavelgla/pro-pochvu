@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Button } from "@/components/ui/Button";
+import { Ornament } from "@/components/ui/Ornament";
 import { CatalogContent } from "../CatalogContent";
 import { getProductLineBySlug, getProductLines } from "@/lib/catalog";
 import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
@@ -89,44 +89,39 @@ export default async function ProductLinePage({ params }: Props) {
       />
 
       {/* Hero banner */}
-      <div
-        className={`mt-6 rounded-2xl p-6 md:p-10 ${
-          pl.brand === "ecokon" ? "bg-ecokon/5" : "bg-tsvetologiya/5"
-        }`}
-      >
-        <h1
-          className={
-            pl.brand === "ecokon" ? "text-ecokon" : "text-tsvetologiya"
-          }
-        >
+      <div className="mt-6 rounded-lg bg-bg-soft p-8 md:p-12">
+        <div className="section-label mb-4">
+          <Ornament variant="divider" />
+          <span>{pl.brand === "ecokon" ? "ЭКО КОНЬ" : "ЦВЕТОЛОГИЯ"}</span>
+        </div>
+        <h1 className="section-heading text-4xl md:text-5xl lg:text-6xl text-ink">
           {pl.name}
         </h1>
         {pl.description && (
-          <p className="mt-2 max-w-2xl text-brand-gray-dark/70">
+          <p className="mt-4 max-w-2xl text-ink-2 leading-relaxed">
             {pl.description}
           </p>
         )}
       </div>
 
       {/* Products */}
-      <div className="mt-8">
+      <div className="mt-10">
         <Suspense>
           <CatalogContent productLineSlug={pl.slug} />
         </Suspense>
       </div>
 
       {/* Why choose */}
-      <section className="mt-16">
-        <h2 className="mb-6">Почему выбирают {pl.name.toLowerCase()}</h2>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-20">
+        <h2 className="font-serif text-3xl font-normal tracking-tight mb-8">
+          Почему выбирают {pl.name.toLowerCase()}
+        </h2>
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {reasons.map((r) => (
-            <div
-              key={r.title}
-              className="rounded-xl bg-brand-gray-light/50 p-5"
-            >
+            <div key={r.title} className="rounded-lg bg-bg-soft p-6">
               <span className="text-2xl">{r.emoji}</span>
-              <h4 className="mt-2 text-sm font-bold">{r.title}</h4>
-              <p className="mt-1 text-sm text-brand-gray-dark/60">{r.text}</p>
+              <h4 className="mt-3 font-serif text-base font-medium">{r.title}</h4>
+              <p className="mt-1.5 text-sm text-ink-2">{r.text}</p>
             </div>
           ))}
         </div>
@@ -134,12 +129,14 @@ export default async function ProductLinePage({ params }: Props) {
 
       {/* Cross-sell */}
       {cross && (
-        <section className="mt-16 rounded-2xl bg-brand-cream p-6 text-center md:p-10">
-          <h2>Отлично сочетается с</h2>
-          <p className="mt-2 text-brand-gray-dark/60">{cross.text}</p>
-          <div className="mt-4">
-            <Link href={`/catalog/${cross.slug}`}>
-              <Button variant="secondary">{cross.title} →</Button>
+        <section className="mt-20 rounded-lg bg-cream p-8 text-center md:p-12">
+          <h2 className="font-serif text-3xl font-normal tracking-tight">
+            Отлично сочетается с
+          </h2>
+          <p className="mt-3 text-ink-2">{cross.text}</p>
+          <div className="mt-6">
+            <Link href={`/catalog/${cross.slug}`} className="btn-outline">
+              {cross.title} →
             </Link>
           </div>
         </section>

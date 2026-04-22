@@ -62,16 +62,16 @@ export function PaymentStep({ total, deliveryProvider, onSubmit, onBack, loading
               type="button"
               onClick={() => setSelected(option.id)}
               className={cn(
-                "flex w-full items-center gap-4 rounded-xl border-2 p-4 text-left transition-colors",
+                "flex w-full items-center gap-4 rounded-lg border-2 p-4 text-left transition-colors",
                 selected === option.id
-                  ? "border-brand-green bg-brand-green/5"
-                  : "border-brand-gray-light hover:border-brand-green/30"
+                  ? "border-accent bg-accent/5"
+                  : "border-line hover:border-accent/30"
               )}
             >
-              <Icon className="h-5 w-5 shrink-0 text-brand-gray-dark/60" />
+              <Icon className="h-5 w-5 shrink-0 text-mute" />
               <div className="flex-1">
                 <span className="text-sm font-medium">{option.label}</span>
-                <p className="text-xs text-brand-gray-dark/50">
+                <p className="text-xs text-mute">
                   {option.description}
                 </p>
               </div>
@@ -86,15 +86,15 @@ export function PaymentStep({ total, deliveryProvider, onSubmit, onBack, loading
           type="checkbox"
           checked={agreed}
           onChange={(e) => setAgreed(e.target.checked)}
-          className="mt-1 h-4 w-4 rounded border-brand-gray-light text-brand-green focus:ring-brand-green"
+          className="mt-1 h-4 w-4 rounded border-line text-accent focus:ring-accent"
         />
-        <span className="text-sm text-brand-gray-dark/70">
+        <span className="text-sm text-ink-2">
           Я согласен с{" "}
-          <a href="/terms" target="_blank" className="text-brand-green underline">
+          <a href="/terms" target="_blank" className="text-accent underline">
             офертой
           </a>{" "}
           и{" "}
-          <a href="/privacy" target="_blank" className="text-brand-green underline">
+          <a href="/privacy" target="_blank" className="text-accent underline">
             политикой конфиденциальности
           </a>
         </span>

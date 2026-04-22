@@ -64,8 +64,8 @@ export function OrderTracker({ currentStatus, dates, trackNumber, deliveryProvid
                   className={cn(
                     "flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors",
                     isCompleted
-                      ? "border-brand-green bg-brand-green text-white"
-                      : "border-brand-gray-light bg-white text-brand-gray-dark/30"
+                      ? "border-accent bg-accent text-white"
+                      : "border-line bg-bg text-mute/30"
                   )}
                 >
                   {isCompleted ? "✓" : i + 1}
@@ -73,13 +73,13 @@ export function OrderTracker({ currentStatus, dates, trackNumber, deliveryProvid
                 <span
                   className={cn(
                     "mt-1.5 text-center text-[11px] leading-tight",
-                    isCurrent ? "font-bold text-brand-green" : isCompleted ? "text-brand-gray-dark/70" : "text-brand-gray-dark/30"
+                    isCurrent ? "font-bold text-accent" : isCompleted ? "text-ink-2" : "text-mute/30"
                   )}
                 >
                   {step.label}
                 </span>
                 {dates?.[step.key] && (
-                  <span className="mt-0.5 text-[10px] text-brand-gray-dark/40">
+                  <span className="mt-0.5 text-[10px] text-mute/60">
                     {formatDate(dates[step.key]!)}
                   </span>
                 )}
@@ -90,7 +90,7 @@ export function OrderTracker({ currentStatus, dates, trackNumber, deliveryProvid
                 <div
                   className={cn(
                     "mx-1 h-0.5 flex-1 transition-colors",
-                    i < currentIdx ? "bg-brand-green" : "bg-brand-gray-light"
+                    i < currentIdx ? "bg-accent" : "bg-bg-soft"
                   )}
                 />
               )}
@@ -101,9 +101,9 @@ export function OrderTracker({ currentStatus, dates, trackNumber, deliveryProvid
 
       {/* Track button */}
       {trackNumber && (
-        <div className="flex items-center justify-between rounded-lg bg-brand-cream p-3 text-sm">
+        <div className="flex items-center justify-between rounded-lg bg-cream p-3 text-sm">
           <div>
-            <span className="text-brand-gray-dark/60">Трек-номер: </span>
+            <span className="text-mute">Трек-номер: </span>
             <span className="font-mono font-medium">{trackNumber}</span>
           </div>
           {trackingUrl && (
@@ -111,7 +111,7 @@ export function OrderTracker({ currentStatus, dates, trackNumber, deliveryProvid
               href={trackingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-md bg-brand-green px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-green/90 transition-colors"
+              className="inline-flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent/90 transition-colors"
             >
               Отследить
               <ExternalLink className="h-3 w-3" />

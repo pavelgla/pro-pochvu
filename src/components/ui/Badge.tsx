@@ -5,7 +5,7 @@ const variantStyles = {
   success: "bg-success/10 text-success",
   warning: "bg-yellow-100 text-yellow-800",
   info: "bg-blue-100 text-blue-800",
-  bestseller: "bg-brand-green/10 text-brand-green",
+  bestseller: "bg-accent/10 text-accent",
   new: "bg-purple-100 text-purple-800",
   sale: "bg-error/10 text-error",
 };

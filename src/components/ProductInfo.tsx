@@ -55,7 +55,7 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
         >
           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
           <span className="font-medium">{product.rating} из 5</span>
-          <span className="text-brand-gray-dark/50">
+          <span className="text-mute">
             ({product.reviewsCount.toLocaleString("ru-RU")} отзывов)
           </span>
           {product.badge && (
@@ -68,7 +68,7 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-bold">{formatPrice(product.price)}</span>
         {product.oldPrice && (
-          <span className="text-lg text-brand-gray-dark/40 line-through">
+          <span className="text-lg text-mute/60 line-through">
             {formatPrice(product.oldPrice)}
           </span>
         )}
@@ -87,7 +87,7 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
           {inStock ? "В наличии" : "Нет в наличии"}
         </span>
         {product.weightGrams > 0 && (
-          <span className="flex items-center gap-1 text-brand-gray-dark/50">
+          <span className="flex items-center gap-1 text-mute">
             <Weight className="h-3.5 w-3.5" />
             {product.weightGrams >= 1000
               ? `${(product.weightGrams / 1000).toFixed(1)} кг`
@@ -98,7 +98,7 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
 
       {/* Short description */}
       {product.shortDesc && (
-        <p className="text-sm leading-relaxed text-brand-gray-dark/70">
+        <p className="text-sm leading-relaxed text-ink-2">
           {product.shortDesc}
         </p>
       )}
@@ -117,11 +117,11 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
 
       {/* Quantity */}
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-brand-gray-dark/70">Количество</span>
-        <div className="flex items-center rounded-xl border border-brand-gray-light">
+        <span className="text-sm font-medium text-ink-2">Количество</span>
+        <div className="flex items-center rounded-xl border border-line">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="flex h-10 w-10 items-center justify-center text-brand-gray-dark/60 hover:text-brand-gray-dark transition-colors"
+            className="flex h-10 w-10 items-center justify-center text-mute hover:text-ink transition-colors"
             disabled={quantity <= 1}
           >
             <Minus className="h-4 w-4" />
@@ -135,11 +135,11 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
             }}
             min={1}
             max={product.stock}
-            className="h-10 w-14 text-center text-sm font-medium border-x border-brand-gray-light focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="h-10 w-14 text-center text-sm font-medium border-x border-line focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
           <button
             onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-            className="flex h-10 w-10 items-center justify-center text-brand-gray-dark/60 hover:text-brand-gray-dark transition-colors"
+            className="flex h-10 w-10 items-center justify-center text-mute hover:text-ink transition-colors"
             disabled={quantity >= product.stock}
           >
             <Plus className="h-4 w-4" />
@@ -165,12 +165,12 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
             }
             setIsFavorite(!isFavorite);
           }}
-          className="flex h-13 w-13 items-center justify-center rounded-xl border-2 border-brand-gray-light transition-colors hover:border-brand-green/50"
+          className="flex h-13 w-13 items-center justify-center rounded-xl border-2 border-line transition-colors hover:border-accent/50"
           aria-label="В избранное"
         >
           <Heart
             className={`h-5 w-5 transition-colors ${
-              isFavorite ? "fill-error text-error" : "text-brand-gray-dark/40"
+              isFavorite ? "fill-error text-error" : "text-mute/60"
             }`}
           />
         </button>
@@ -217,11 +217,11 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
       )}
 
       {/* Delivery info */}
-      <div className="flex items-start gap-3 rounded-xl bg-brand-gray-light/50 p-4">
-        <Package className="mt-0.5 h-5 w-5 shrink-0 text-brand-green" />
+      <div className="flex items-start gap-3 rounded-xl bg-bg-soft/50 p-4">
+        <Package className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
         <div className="text-sm">
           <p className="font-medium">Доставка от 99 ₽ по всей России</p>
-          <p className="mt-0.5 text-brand-gray-dark/60">
+          <p className="mt-0.5 text-mute">
             5Post, Boxberry, Почта России, СДЭК
           </p>
         </div>

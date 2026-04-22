@@ -1,43 +1,31 @@
 const benefits = [
-  {
-    emoji: "♻️",
-    title: "Органический состав",
-    description: "100% натуральные компоненты без химии",
-  },
-  {
-    emoji: "⭐",
-    title: "4.9 на маркетплейсах",
-    description: "51 000+ проверенных отзывов",
-  },
-  {
-    emoji: "🚚",
-    title: "Доставка по России",
-    description: "5Post, Boxberry, СДЭК, Почта России",
-  },
-  {
-    emoji: "🔄",
-    title: "Лёгкий возврат",
-    description: "Вернём деньги если не подойдёт",
-  },
+  { icon: "♻", title: "Органический состав", description: "100% без химии" },
+  { icon: "★", title: "4.9 на маркетплейсах", description: "51 000+ отзывов" },
+  { icon: "⇢", title: "Доставка по России", description: "СДЭК · 5Post · Boxberry" },
+  { icon: "↺", title: "Лёгкий возврат", description: "30 дней без вопросов" },
 ];
 
 export function Benefits() {
   return (
-    <section className="section-padding">
-      <div className="container-main">
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-          {benefits.map((benefit) => (
+    <section className="px-4 pb-12 md:px-6 xl:px-12 lg:pb-18">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid grid-cols-2 rounded-lg bg-bg-soft lg:grid-cols-4">
+          {benefits.map((b, i) => (
             <div
-              key={benefit.title}
-              className="flex flex-col items-center rounded-2xl bg-brand-cream/50 p-6 text-center"
+              key={b.title}
+              className={`flex items-center gap-4 px-5 py-6 lg:px-7 ${
+                i > 0 ? "border-l border-line" : ""
+              }`}
             >
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand-green/10">
-                <span className="text-2xl">{benefit.emoji}</span>
+              <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-bg font-serif text-xl text-accent">
+                {b.icon}
               </div>
-              <h4 className="text-base font-bold">{benefit.title}</h4>
-              <p className="mt-2 text-sm text-brand-gray-dark/60">
-                {benefit.description}
-              </p>
+              <div>
+                <div className="font-serif text-base font-medium tracking-tight lg:text-[17px]">
+                  {b.title}
+                </div>
+                <div className="mt-0.5 text-xs text-ink-2">{b.description}</div>
+              </div>
             </div>
           ))}
         </div>

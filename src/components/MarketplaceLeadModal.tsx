@@ -78,7 +78,7 @@ export function MarketplaceLeadModal({
     <Modal isOpen={isOpen} onClose={reset} title={title}>
       {step === "form" ? (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <p className="text-sm text-brand-gray-dark/60">
+          <p className="text-sm text-mute">
             Оставьте данные и получите промокод на скидку 15%
             при покупке «{productName}» на {mpLabel}.
           </p>
@@ -90,14 +90,14 @@ export function MarketplaceLeadModal({
               placeholder="ФИО *"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full rounded-xl border border-brand-gray-light px-4 py-3 text-sm focus:border-brand-green focus:outline-none"
+              className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
             />
             <input
               type="date"
               placeholder="Дата рождения"
               value={birthdate}
               onChange={e => setBirthdate(e.target.value)}
-              className="w-full rounded-xl border border-brand-gray-light px-4 py-3 text-sm focus:border-brand-green focus:outline-none"
+              className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
             />
             <input
               required
@@ -105,7 +105,7 @@ export function MarketplaceLeadModal({
               placeholder="Email *"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-brand-gray-light px-4 py-3 text-sm focus:border-brand-green focus:outline-none"
+              className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
             />
             <input
               required
@@ -113,7 +113,7 @@ export function MarketplaceLeadModal({
               placeholder="Телефон *"
               value={phone}
               onChange={e => setPhone(e.target.value)}
-              className="w-full rounded-xl border border-brand-gray-light px-4 py-3 text-sm focus:border-brand-green focus:outline-none"
+              className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
             />
           </div>
 
@@ -122,11 +122,11 @@ export function MarketplaceLeadModal({
               type="checkbox"
               checked={consent}
               onChange={e => setConsent(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-brand-gray-light accent-brand-green"
+              className="mt-0.5 h-4 w-4 rounded border-line accent-accent"
             />
-            <span className="text-xs text-brand-gray-dark/60 leading-relaxed">
+            <span className="text-xs text-mute leading-relaxed">
               Я согласен(а) на обработку персональных данных в соответствии с{" "}
-              <Link href="/privacy" target="_blank" className="underline hover:text-brand-green">
+              <Link href="/privacy" target="_blank" className="underline hover:text-accent">
                 Политикой конфиденциальности
               </Link>{" "}
               согласно 152-ФЗ
@@ -141,29 +141,29 @@ export function MarketplaceLeadModal({
         </form>
       ) : (
         <div className="space-y-5 text-center">
-          <p className="text-sm text-brand-gray-dark/60">
+          <p className="text-sm text-mute">
             Применяйте при оформлении заказа на {mpLabel}:
           </p>
 
-          <div className="flex items-center justify-center gap-3 rounded-xl bg-brand-gray-light/60 px-6 py-4">
+          <div className="flex items-center justify-center gap-3 rounded-xl bg-bg-soft/60 px-6 py-4">
             <span className="text-2xl font-bold tracking-widest">{PROMO}</span>
             <button
               onClick={copyPromo}
-              className="rounded-lg p-2 text-brand-gray-dark/60 hover:text-brand-green transition-colors"
+              className="rounded-lg p-2 text-mute hover:text-accent transition-colors"
               title="Скопировать"
             >
-              {copied ? <Check className="h-5 w-5 text-brand-green" /> : <Copy className="h-5 w-5" />}
+              {copied ? <Check className="h-5 w-5 text-accent" /> : <Copy className="h-5 w-5" />}
             </button>
           </div>
 
-          <p className="text-xs text-brand-gray-dark/40">Скидка 15% на ваш заказ</p>
+          <p className="text-xs text-mute/60">Скидка 15% на ваш заказ</p>
 
           <a
             href={marketplaceUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={reset}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-3 text-sm font-medium text-white hover:bg-brand-green/90 transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white hover:bg-accent/90 transition-colors"
           >
             Перейти на {mpLabel}
             <ExternalLink className="h-4 w-4" />

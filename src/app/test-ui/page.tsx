@@ -54,15 +54,15 @@ export default function TestUIPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <p className="font-medium">Default card</p>
-            <p className="mt-1 text-sm text-brand-gray-dark/60">Без hover-эффекта</p>
+            <p className="mt-1 text-sm text-mute">Без hover-эффекта</p>
           </Card>
           <Card variant="hover">
             <p className="font-medium">Hover card</p>
-            <p className="mt-1 text-sm text-brand-gray-dark/60">Наведите мышку</p>
+            <p className="mt-1 text-sm text-mute">Наведите мышку</p>
           </Card>
-          <Card variant="hover" className="bg-brand-cream">
+          <Card variant="hover" className="bg-cream">
             <p className="font-medium">Cream card</p>
-            <p className="mt-1 text-sm text-brand-gray-dark/60">Кастомный фон</p>
+            <p className="mt-1 text-sm text-mute">Кастомный фон</p>
           </Card>
         </div>
       </section>
@@ -119,7 +119,7 @@ export default function TestUIPage() {
       <section className="space-y-4">
         <h2>Табы</h2>
         <Tabs tabs={demotabs} activeTab={activeTab} onChange={setActiveTab} />
-        <p className="text-sm text-brand-gray-dark/60">
+        <p className="text-sm text-mute">
           Активный таб: <strong>{activeTab}</strong>
         </p>
       </section>
@@ -131,7 +131,7 @@ export default function TestUIPage() {
           <Spinner size="sm" />
           <Spinner size="md" />
           <Spinner size="lg" />
-          <span className="text-brand-green"><Spinner size="md" /></span>
+          <span className="text-accent"><Spinner size="md" /></span>
         </div>
       </section>
 
@@ -140,7 +140,7 @@ export default function TestUIPage() {
         <h2>Модальное окно</h2>
         <Button onClick={() => setModalOpen(true)}>Открыть модал</Button>
         <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Пример модала">
-          <p className="text-sm text-brand-gray-dark/60">
+          <p className="text-sm text-mute">
             Модальное окно с backdrop blur и fade-in анимацией. Закрывается по Escape, клику на оверлей или крестику.
           </p>
           <div className="mt-4 flex gap-2">

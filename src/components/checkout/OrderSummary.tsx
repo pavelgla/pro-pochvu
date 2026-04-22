@@ -23,7 +23,7 @@ export function OrderSummary({ deliveryOption }: Props) {
   const total = subtotal - discount + deliveryCost;
 
   return (
-    <div className="rounded-2xl border border-brand-gray-light p-5 space-y-4">
+    <div className="rounded-2xl border border-line p-5 space-y-4">
       <h3 className="text-base font-bold">Ваш заказ</h3>
 
       {/* Mini items list */}
@@ -33,17 +33,17 @@ export function OrderSummary({ deliveryOption }: Props) {
             key={`${item.product_id}:${item.variant_id || ""}`}
             className="flex items-center gap-3"
           >
-            <div className="h-10 w-10 shrink-0 rounded-lg bg-brand-gray-light flex items-center justify-center text-sm text-brand-gray-dark/15">
+            <div className="h-10 w-10 shrink-0 rounded-lg bg-bg-soft flex items-center justify-center text-sm text-mute/30">
               {item.brand === "ecokon" ? "🌿" : "🌱"}
             </div>
             <div className="flex-1 min-w-0">
               <Link
                 href={`/product/${item.slug}`}
-                className="text-xs font-medium line-clamp-1 hover:text-brand-green"
+                className="text-xs font-medium line-clamp-1 hover:text-accent"
               >
                 {item.name}
               </Link>
-              <p className="text-xs text-brand-gray-dark/50">
+              <p className="text-xs text-mute">
                 {item.quantity} x {formatPrice(item.price)}
               </p>
             </div>
@@ -55,9 +55,9 @@ export function OrderSummary({ deliveryOption }: Props) {
       </div>
 
       {/* Totals */}
-      <div className="space-y-1.5 border-t border-brand-gray-light pt-3 text-sm">
+      <div className="space-y-1.5 border-t border-line pt-3 text-sm">
         <div className="flex justify-between">
-          <span className="text-brand-gray-dark/60">Товары ({items.length})</span>
+          <span className="text-mute">Товары ({items.length})</span>
           <span>{formatPrice(subtotal)}</span>
         </div>
         {discount > 0 && (
@@ -67,7 +67,7 @@ export function OrderSummary({ deliveryOption }: Props) {
           </div>
         )}
         <div className="flex justify-between">
-          <span className="text-brand-gray-dark/60">Доставка</span>
+          <span className="text-mute">Доставка</span>
           <span>
             {deliveryOption
               ? deliveryCost === 0
@@ -76,7 +76,7 @@ export function OrderSummary({ deliveryOption }: Props) {
               : "—"}
           </span>
         </div>
-        <div className="flex justify-between border-t border-brand-gray-light pt-2 text-base font-bold">
+        <div className="flex justify-between border-t border-line pt-2 text-base font-bold">
           <span>Итого</span>
           <span>{formatPrice(total)}</span>
         </div>

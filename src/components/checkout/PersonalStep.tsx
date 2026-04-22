@@ -103,7 +103,7 @@ export function PersonalStep({ data, onChange, onNext, onBack }: Props) {
         <textarea
           placeholder="Особые пожелания..."
           rows={3}
-          className="w-full rounded-xl border border-brand-gray-light px-4 py-3 text-sm focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20"
+          className="w-full rounded-lg border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
           {...register("comment")}
         />
       </div>

@@ -14,15 +14,15 @@ export function ConsentCheckbox({ checked, onChange, required }: Props) {
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         required={required}
-        className="mt-0.5 h-4 w-4 shrink-0 rounded border-brand-gray-light accent-brand-green"
+        className="mt-0.5 h-4 w-4 shrink-0 rounded border-line accent-accent"
       />
-      <span className="text-sm text-brand-gray-dark/70">
+      <span className="text-sm text-ink-2">
         Я согласен(а) с{" "}
-        <Link href="/privacy" className="text-brand-green hover:underline" target="_blank">
+        <Link href="/privacy" className="text-accent hover:underline" target="_blank">
           Политикой обработки персональных данных
         </Link>{" "}
         и{" "}
-        <Link href="/terms" className="text-brand-green hover:underline" target="_blank">
+        <Link href="/terms" className="text-accent hover:underline" target="_blank">
           Пользовательским соглашением
         </Link>
       </span>

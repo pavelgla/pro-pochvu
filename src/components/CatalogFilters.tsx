@@ -91,7 +91,7 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
                   type="checkbox"
                   checked={selectedBrands.includes(b.value)}
                   onChange={() => toggleBrand(b.value)}
-                  className="h-4 w-4 rounded border-brand-gray-light text-brand-green focus:ring-brand-green"
+                  className="h-4 w-4 rounded border-line text-accent focus:ring-accent"
                 />
                 {b.label}
               </label>
@@ -119,7 +119,7 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
                       selectedCategory === cat.slug ? "" : cat.slug
                     )
                   }
-                  className="h-4 w-4 rounded border-brand-gray-light text-brand-green focus:ring-brand-green"
+                  className="h-4 w-4 rounded border-line text-accent focus:ring-accent"
                 />
                 {cat.name}
               </label>
@@ -137,15 +137,15 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
             placeholder="От"
             value={priceMin}
             onChange={(e) => updateParams("priceMin", e.target.value)}
-            className="h-9 w-full rounded-lg border border-brand-gray-light px-3 text-sm focus:border-brand-green focus:outline-none"
+            className="h-9 w-full rounded-lg border border-line px-3 text-sm focus:border-accent focus:outline-none"
           />
-          <span className="text-brand-gray-dark/40">—</span>
+          <span className="text-mute">—</span>
           <input
             type="number"
             placeholder="До"
             value={priceMax}
             onChange={(e) => updateParams("priceMax", e.target.value)}
-            className="h-9 w-full rounded-lg border border-brand-gray-light px-3 text-sm focus:border-brand-green focus:outline-none"
+            className="h-9 w-full rounded-lg border border-line px-3 text-sm focus:border-accent focus:outline-none"
           />
         </div>
       </div>
@@ -166,7 +166,7 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
                 onChange={() =>
                   updateParams("rating", selectedRating === r ? "" : r)
                 }
-                className="h-4 w-4 border-brand-gray-light text-brand-green focus:ring-brand-green"
+                className="h-4 w-4 border-line text-accent focus:ring-accent"
               />
               от {r}+
             </label>
@@ -188,12 +188,12 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
       {/* Mobile trigger */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="flex h-10 items-center gap-2 rounded-xl border border-brand-gray-light px-4 text-sm font-medium md:hidden"
+        className="flex h-10 items-center gap-2 rounded-xl border border-line px-4 text-sm font-medium md:hidden"
       >
         <SlidersHorizontal className="h-4 w-4" />
         Фильтры
         {hasFilters && (
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-green text-[10px] text-white">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] text-bg">
             !
           </span>
         )}
@@ -214,7 +214,7 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
       />
       <div
         className={cn(
-          "fixed bottom-0 left-0 right-0 z-[70] max-h-[80vh] overflow-auto rounded-t-2xl bg-white p-6 shadow-xl transition-transform duration-300 md:hidden",
+          "fixed bottom-0 left-0 right-0 z-[70] max-h-[80vh] overflow-auto rounded-t-2xl bg-bg p-6 shadow-xl transition-transform duration-300 md:hidden",
           mobileOpen ? "translate-y-0" : "translate-y-full"
         )}
       >
@@ -222,7 +222,7 @@ export function CatalogFilters({ productLineSlug }: { productLineSlug?: string }
           <h3 className="text-lg font-bold">Фильтры</h3>
           <button
             onClick={() => setMobileOpen(false)}
-            className="rounded-lg p-2 hover:bg-brand-gray-light"
+            className="rounded-lg p-2 hover:bg-bg-soft"
           >
             <X className="h-5 w-5" />
           </button>

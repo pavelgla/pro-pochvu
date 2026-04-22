@@ -110,9 +110,9 @@ export default function SignUpPage() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-brand-gray-dark/60">
+        <p className="mt-6 text-center text-sm text-mute">
           Уже есть аккаунт?{" "}
-          <Link href="/auth/login" className="text-brand-green font-medium hover:underline">
+          <Link href="/auth/login" className="text-accent font-medium hover:underline">
             Войти
           </Link>
         </p>

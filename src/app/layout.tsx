@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import "./globals.css";
 
-const inter = Inter({
+const fraunces = Fraunces({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
+  variable: "--font-manrope",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -35,7 +42,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body
+        className={`${fraunces.variable} ${manrope.variable} font-sans antialiased`}
+      >
         <AuthProvider>
           <Header />
           <main className="min-h-screen">{children}</main>

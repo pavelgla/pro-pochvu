@@ -24,19 +24,19 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav className="flex items-center gap-1 text-sm text-brand-gray-dark/50">
+      <nav className="flex items-center gap-1 text-sm text-mute">
         {items.map((crumb, i) => (
           <span key={i} className="flex items-center gap-1">
             {i > 0 && <ChevronRight className="h-3 w-3" />}
             {crumb.href ? (
               <Link
                 href={crumb.href}
-                className="hover:text-brand-green transition-colors"
+                className="hover:text-accent transition-colors"
               >
                 {crumb.label}
               </Link>
             ) : (
-              <span className="text-brand-gray-dark">{crumb.label}</span>
+              <span className="text-ink">{crumb.label}</span>
             )}
           </span>
         ))}

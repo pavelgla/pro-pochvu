@@ -84,7 +84,7 @@ export default function OrdersPage() {
 
       {mockOrders.length === 0 ? (
         <div className="py-12 text-center">
-          <p className="text-brand-gray-dark/60">У вас пока нет заказов</p>
+          <p className="text-mute">У вас пока нет заказов</p>
           <Link href="/catalog" className="mt-4 inline-block">
             <Button variant="secondary">Перейти в каталог</Button>
           </Link>
@@ -98,13 +98,13 @@ export default function OrdersPage() {
             return (
               <div
                 key={order.id}
-                className="rounded-xl border border-brand-gray-light overflow-hidden"
+                className="rounded-xl border border-line overflow-hidden"
               >
                 {/* Header row */}
                 <button
                   type="button"
                   onClick={() => setExpanded(isExpanded ? null : order.id)}
-                  className="flex w-full items-center gap-4 p-4 text-left hover:bg-brand-gray-light/30"
+                  className="flex w-full items-center gap-4 p-4 text-left hover:bg-bg-soft/30"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -115,7 +115,7 @@ export default function OrdersPage() {
                         {badge.label}
                       </Badge>
                     </div>
-                    <p className="mt-0.5 text-xs text-brand-gray-dark/50">
+                    <p className="mt-0.5 text-xs text-mute">
                       {new Date(order.created_at).toLocaleDateString("ru-RU")}
                       {order.delivery_track && ` • Трек: ${order.delivery_track}`}
                     </p>
@@ -125,7 +125,7 @@ export default function OrdersPage() {
                   </span>
                   <ChevronDown
                     className={cn(
-                      "h-4 w-4 shrink-0 text-brand-gray-dark/40 transition-transform",
+                      "h-4 w-4 shrink-0 text-mute/60 transition-transform",
                       isExpanded && "rotate-180"
                     )}
                   />
@@ -133,19 +133,19 @@ export default function OrdersPage() {
 
                 {/* Expanded details */}
                 {isExpanded && (
-                  <div className="border-t border-brand-gray-light p-4 space-y-3">
+                  <div className="border-t border-line p-4 space-y-3">
                     {order.items.map((item, i) => (
                       <div key={i} className="flex items-center gap-3 text-sm">
-                        <div className="h-10 w-10 shrink-0 rounded-lg bg-brand-gray-light flex items-center justify-center text-xs text-brand-gray-dark/15">
+                        <div className="h-10 w-10 shrink-0 rounded-lg bg-bg-soft flex items-center justify-center text-xs text-mute/30">
                           {item.brand === "ecokon" ? "🌿" : "🌱"}
                         </div>
                         <Link
                           href={`/product/${item.slug}`}
-                          className="flex-1 hover:text-brand-green"
+                          className="flex-1 hover:text-accent"
                         >
                           {item.name}
                         </Link>
-                        <span className="text-brand-gray-dark/50">
+                        <span className="text-mute">
                           x{item.quantity}
                         </span>
                         <span className="font-medium">
@@ -155,7 +155,7 @@ export default function OrdersPage() {
                     ))}
 
                     {/* Order tracker */}
-                    <div className="border-t border-brand-gray-light pt-3">
+                    <div className="border-t border-line pt-3">
                       <OrderTracker
                         currentStatus={order.status === "delivered" ? "delivered" : order.status === "shipped" ? "shipped" : "paid"}
                         trackNumber={order.delivery_track}
@@ -163,8 +163,8 @@ export default function OrdersPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-brand-gray-light pt-3">
-                      <span className="text-xs text-brand-gray-dark/50">
+                    <div className="flex items-center justify-between border-t border-line pt-3">
+                      <span className="text-xs text-mute">
                         {order.delivery_provider}
                         {order.delivery_track && ` • ${order.delivery_track}`}
                       </span>

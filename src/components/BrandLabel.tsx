@@ -8,12 +8,12 @@ type BrandLabelProps = {
 const brandConfig = {
   ecokon: {
     label: "ЭКО Конь",
-    style: "bg-ecokon/10 text-ecokon",
+    style: "bg-accent/10 text-accent",
     title: "ЭКО Конь® — зарегистрированная торговая марка",
   },
   tsvetologiya: {
     label: "Цветология",
-    style: "bg-tsvetologiya/10 text-tsvetologiya",
+    style: "bg-accent-deep/10 text-accent-deep",
     title: "Цветология® — зарегистрированная торговая марка",
   },
 };
@@ -24,12 +24,12 @@ export function BrandLabel({ brand, className }: BrandLabelProps) {
     <span
       title={config.title}
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[9px] font-medium tracking-[0.1em] uppercase",
         config.style,
         className
       )}
     >
-      {config.label}<sup className="text-[10px]">®</sup>
+      {config.label}<sup className="text-[8px]">®</sup>
     </span>
   );
 }

@@ -46,8 +46,8 @@ export function ProductLines() {
                 />
               </div>
 
-              <h3 className="text-brand-gray-dark">{line.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-brand-gray-dark/70">
+              <h3 className="text-ink">{line.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-ink/70">
                 {line.description}
               </p>
 

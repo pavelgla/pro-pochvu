@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { Ornament } from "@/components/ui/Ornament";
 import { ProductCard } from "@/components/ProductCard";
 import { getProducts } from "@/lib/catalog";
 import type { ProductWithLine } from "@/types/database";
@@ -91,7 +91,7 @@ export async function Bestsellers() {
   let products: ProductWithLine[] = [];
 
   try {
-    const result = await getProducts({ sort: "popularity", limit: 4 });
+    const result = await getProducts({ sort: "popularity", limit: 8 });
     products = result.products;
   } catch {
     products = mockProducts;
@@ -102,19 +102,40 @@ export async function Bestsellers() {
   }
 
   return (
-    <section className="section-padding bg-brand-gray-light/50">
-      <div className="container-main">
-        <h2 className="mb-8 text-center">Бестселлеры</h2>
+    <section className="px-4 pb-12 pt-10 md:px-6 xl:px-12 lg:pb-24">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="section-label mb-5">
+              <Ornament variant="divider" />
+              <span>БЕСТСЕЛЛЕРЫ</span>
+            </div>
+            <h2 className="section-heading">
+              Покупают
+              <br />
+              <span className="text-accent">чаще всего.</span>
+            </h2>
+          </div>
+          <div className="max-w-[360px] lg:text-right">
+            <p className="mb-4 text-sm leading-relaxed text-ink-2">
+              Позиции, к которым клиенты возвращаются раз за разом. Проверено
+              растениями.
+            </p>
+          </div>
+        </div>
 
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          {products.map((product) => (
+        {/* Grid */}
+        <div className="grid gap-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-7">
+          {products.slice(0, 8).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        <div className="mt-8 text-center">
-          <Link href="/catalog">
-            <Button variant="secondary">Все товары →</Button>
+        {/* CTA */}
+        <div className="mt-14 text-center">
+          <Link href="/catalog" className="btn-outline">
+            Смотреть все товары →
           </Link>
         </div>
       </div>

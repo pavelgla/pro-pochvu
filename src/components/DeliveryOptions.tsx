@@ -121,8 +121,8 @@ export function DeliveryOptions({ weightGrams, onSelect }: Props) {
               className={cn(
                 "flex w-full items-center gap-3 rounded-xl border-2 p-4 text-left transition-colors",
                 selected?.tariff_id === option.tariff_id
-                  ? "border-brand-green bg-brand-green/5"
-                  : "border-brand-gray-light hover:border-brand-green/30"
+                  ? "border-accent bg-accent/5"
+                  : "border-line hover:border-accent/30"
               )}
             >
               {/* Provider dot */}
@@ -138,7 +138,7 @@ export function DeliveryOptions({ weightGrams, onSelect }: Props) {
                   </span>
                   {i === 0 && <Badge variant="success" size="sm">Выгодно</Badge>}
                 </div>
-                <p className="mt-0.5 text-xs text-brand-gray-dark/50">
+                <p className="mt-0.5 text-xs text-mute">
                   {option.days_min}–{option.days_max} дн.
                 </p>
               </div>

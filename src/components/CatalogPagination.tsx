@@ -42,7 +42,7 @@ export function CatalogPagination({ page, totalPages }: PaginationProps) {
       <button
         onClick={() => goToPage(page - 1)}
         disabled={page <= 1}
-        className={cn(btnBase, "hover:bg-brand-gray-light")}
+        className={cn(btnBase, "hover:bg-bg-soft")}
         aria-label="Предыдущая страница"
       >
         <ChevronLeft className="h-4 w-4" />
@@ -53,7 +53,7 @@ export function CatalogPagination({ page, totalPages }: PaginationProps) {
         const nodes = [];
         if (i > 0 && p - pageNumbers[i - 1] > 1) {
           nodes.push(
-            <span key={`e-${p}`} className="px-2 text-brand-gray-dark/40">
+            <span key={`e-${p}`} className="px-2 text-mute/60">
               ...
             </span>
           );
@@ -65,8 +65,8 @@ export function CatalogPagination({ page, totalPages }: PaginationProps) {
             className={cn(
               btnBase,
               p === page
-                ? "bg-brand-green text-white"
-                : "hover:bg-brand-gray-light"
+                ? "bg-accent text-white"
+                : "hover:bg-bg-soft"
             )}
           >
             {p}
@@ -79,7 +79,7 @@ export function CatalogPagination({ page, totalPages }: PaginationProps) {
       <button
         onClick={() => goToPage(page + 1)}
         disabled={page >= totalPages}
-        className={cn(btnBase, "hover:bg-brand-gray-light")}
+        className={cn(btnBase, "hover:bg-bg-soft")}
         aria-label="Следующая страница"
       >
         <ChevronRight className="h-4 w-4" />

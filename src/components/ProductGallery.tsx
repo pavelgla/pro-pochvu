@@ -18,7 +18,7 @@ export function ProductGallery({ images, brand }: Props) {
   return (
     <div className="space-y-3">
       {/* Main image */}
-      <div className="relative aspect-square overflow-hidden rounded-xl bg-brand-gray-light">
+      <div className="relative aspect-square overflow-hidden rounded-lg bg-bg-soft">
         <Image
           src={activeImage}
           alt={brand}
@@ -37,9 +37,9 @@ export function ProductGallery({ images, brand }: Props) {
               key={i}
               onClick={() => setActiveIndex(i)}
               className={cn(
-                "relative h-16 w-16 shrink-0 snap-start overflow-hidden rounded-lg bg-brand-gray-light transition-all",
+                "relative h-16 w-16 shrink-0 snap-start overflow-hidden rounded-lg bg-bg-soft transition-all",
                 activeIndex === i
-                  ? "ring-2 ring-brand-green"
+                  ? "ring-2 ring-accent"
                   : "opacity-60 hover:opacity-100"
               )}
             >

@@ -24,7 +24,7 @@ export default function FavoritesPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-gray-light border-t-brand-green" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-accent" />
       </div>
     );
   }
@@ -35,7 +35,7 @@ export default function FavoritesPage() {
 
       {favorites.length === 0 ? (
         <div className="py-12 text-center">
-          <p className="text-brand-gray-dark/60">
+          <p className="text-mute">
             Список избранного пуст
           </p>
           <Link href="/catalog" className="mt-4 inline-block">
@@ -49,7 +49,7 @@ export default function FavoritesPage() {
               <ProductCard product={product} />
               <button
                 onClick={() => removeFavorite(product.id)}
-                className="absolute right-2 bottom-16 z-10 rounded-lg bg-white p-2 shadow-md text-brand-gray-dark/40 hover:text-error transition-colors"
+                className="absolute right-2 bottom-16 z-10 rounded-lg bg-bg p-2 shadow-md text-mute/60 hover:text-error transition-colors"
                 aria-label="Удалить из избранного"
               >
                 <Trash2 className="h-4 w-4" />

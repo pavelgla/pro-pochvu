@@ -13,13 +13,13 @@ const TELEGRAM_URL = "https://t.me/+7cAd9gatgP44MDcy";
 
 export default function ReturnsPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-bg">
       <div className="max-w-3xl mx-auto px-4 py-12 sm:py-16 space-y-10">
 
         {/* Блок 1 — Главное */}
-        <div className="rounded-2xl bg-brand-green/10 border border-brand-green/30 p-8 text-center">
+        <div className="rounded-2xl bg-accent/10 border border-accent/30 p-8 text-center">
           <p className="text-4xl mb-3">✅</p>
-          <h1 className="text-2xl sm:text-3xl font-bold text-brand-green mb-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-accent mb-3">
             14 дней на возврат без вопросов
           </h1>
           <p className="text-gray-600 text-lg">
@@ -78,12 +78,12 @@ export default function ReturnsPage() {
           <h2 className="text-xl font-bold text-gray-900 mb-5">Как оформить возврат</h2>
           <ol className="space-y-5">
             <li className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-green/10 text-brand-green flex items-center justify-center font-bold text-lg">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center font-bold text-lg">
                 1
               </div>
               <div>
                 <p className="font-semibold text-gray-900 flex items-center gap-2">
-                  <MessageCircle className="w-4 h-4 text-brand-green" />
+                  <MessageCircle className="w-4 h-4 text-accent" />
                   Напишите нам
                 </p>
                 <p className="text-gray-600 text-sm mt-1">
@@ -92,12 +92,12 @@ export default function ReturnsPage() {
                     href={TELEGRAM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand-green underline underline-offset-2 hover:no-underline"
+                    className="text-accent underline underline-offset-2 hover:no-underline"
                   >
                     t.me/+7cAd9gatgP44MDcy
                   </a>{" "}
                   или через форму на странице{" "}
-                  <Link href="/contacts" className="text-brand-green underline underline-offset-2 hover:no-underline">
+                  <Link href="/contacts" className="text-accent underline underline-offset-2 hover:no-underline">
                     контактов
                   </Link>
                   .
@@ -105,7 +105,7 @@ export default function ReturnsPage() {
               </div>
             </li>
             <li className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-green/10 text-brand-green flex items-center justify-center font-bold text-lg">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center font-bold text-lg">
                 2
               </div>
               <div>
@@ -116,7 +116,7 @@ export default function ReturnsPage() {
               </div>
             </li>
             <li className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-green/10 text-brand-green flex items-center justify-center font-bold text-lg">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center font-bold text-lg">
                 3
               </div>
               <div>
@@ -131,7 +131,7 @@ export default function ReturnsPage() {
         </section>
 
         {/* Блок 4 — Гарантия на фитомодули */}
-        <section className="rounded-2xl bg-brand-cream p-8">
+        <section className="rounded-2xl bg-cream p-8">
           <h2 className="text-xl font-bold text-gray-900 mb-2">
             Фитомодули Цветология — гарантия 5 лет
           </h2>
@@ -155,7 +155,7 @@ export default function ReturnsPage() {
             href={TELEGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-brand-green text-white px-6 py-3 rounded-xl font-medium hover:bg-brand-green/90 transition-colors"
+            className="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-xl font-medium hover:bg-accent/90 transition-colors"
           >
             <MessageCircle className="w-5 h-5" />
             Написать в Telegram
@@ -163,7 +163,7 @@ export default function ReturnsPage() {
           <div>
             <Link
               href="/catalog"
-              className="inline-flex items-center gap-1 text-brand-green hover:underline font-medium"
+              className="inline-flex items-center gap-1 text-accent hover:underline font-medium"
             >
               Перейти в каталог
               <ArrowRight className="w-4 h-4" />
@@ -174,7 +174,7 @@ export default function ReturnsPage() {
         {/* Footer ссылка */}
         <p className="text-sm text-gray-500 text-center">
           Полные условия —{" "}
-          <Link href="/terms" className="text-brand-green underline underline-offset-2 hover:no-underline">
+          <Link href="/terms" className="text-accent underline underline-offset-2 hover:no-underline">
             Пользовательское соглашение
           </Link>
         </p>

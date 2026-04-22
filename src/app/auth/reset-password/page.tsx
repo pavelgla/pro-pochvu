@@ -35,15 +35,15 @@ export default function ResetPasswordPage() {
 
         {sent ? (
           <div className="mt-8 text-center">
-            <p className="text-lg font-medium text-brand-green">
+            <p className="text-lg font-medium text-accent">
               Письмо отправлено!
             </p>
-            <p className="mt-2 text-sm text-brand-gray-dark/60">
+            <p className="mt-2 text-sm text-mute">
               Проверьте почту {email} и перейдите по ссылке для сброса пароля.
             </p>
             <Link
               href="/auth/login"
-              className="mt-6 inline-block text-sm text-brand-green hover:underline"
+              className="mt-6 inline-block text-sm text-accent hover:underline"
             >
               Вернуться ко входу
             </Link>
@@ -72,7 +72,7 @@ export default function ResetPasswordPage() {
             <p className="text-center">
               <Link
                 href="/auth/login"
-                className="text-sm text-brand-gray-dark/60 hover:text-brand-green"
+                className="text-sm text-mute hover:text-accent"
               >
                 Вернуться ко входу
               </Link>

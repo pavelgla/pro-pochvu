@@ -24,7 +24,7 @@ export function VariantSelector({ variants, selectedId, onSelect }: Props) {
 
   return (
     <div className="space-y-2">
-      <span className="text-sm font-medium text-brand-gray-dark/70">
+      <span className="text-sm font-medium text-ink-2">
         {hasColors ? "Цвет" : "Вариант"}
       </span>
       <div className="flex flex-wrap gap-2">
@@ -35,13 +35,13 @@ export function VariantSelector({ variants, selectedId, onSelect }: Props) {
             className={cn(
               "flex items-center gap-2 rounded-xl border-2 px-4 py-2 text-sm font-medium transition-colors",
               selectedId === v.id
-                ? "border-brand-green bg-brand-green/5 text-brand-green"
-                : "border-brand-gray-light hover:border-brand-green/50"
+                ? "border-accent bg-accent/5 text-accent"
+                : "border-line hover:border-accent/50"
             )}
           >
             {v.color && (
               <span
-                className="h-5 w-5 rounded-full border border-brand-gray-light"
+                className="h-5 w-5 rounded-full border border-line"
                 style={{ backgroundColor: v.color }}
               />
             )}

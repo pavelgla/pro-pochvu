@@ -17,7 +17,7 @@ type TabsProps = {
 export function Tabs({ tabs, activeTab, onChange, className }: TabsProps) {
   return (
     <div
-      className={cn("flex gap-1 border-b border-brand-gray-light", className)}
+      className={cn("flex gap-1 border-b border-line", className)}
     >
       {tabs.map((tab) => (
         <button
@@ -25,15 +25,15 @@ export function Tabs({ tabs, activeTab, onChange, className }: TabsProps) {
           type="button"
           onClick={() => onChange(tab.id)}
           className={cn(
-            "relative px-4 py-3 text-sm font-medium transition-colors touch-target",
+            "relative px-5 py-3 text-sm font-medium transition-colors touch-target",
             activeTab === tab.id
-              ? "text-brand-green"
-              : "text-brand-gray-dark/60 hover:text-brand-gray-dark"
+              ? "text-ink"
+              : "text-mute hover:text-ink"
           )}
         >
           {tab.label}
           {activeTab === tab.id && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-green" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent" />
           )}
         </button>
       ))}

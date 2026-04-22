@@ -15,7 +15,7 @@ function Stars({ count, size = "sm" }: { count: number; size?: "sm" | "md" }) {
           key={i}
           className={cn(
             s,
-            i < count ? "fill-yellow-400 text-yellow-400" : "fill-brand-gray-light text-brand-gray-light"
+            i < count ? "fill-yellow-400 text-yellow-400" : "fill-bg-soft text-bg-soft"
           )}
         />
       ))}
@@ -72,16 +72,16 @@ function RatingDistribution({ reviews, rating, total }: { reviews: Review[]; rat
         <div key={d.stars} className="flex items-center gap-2 text-sm">
           <span className="w-3 text-right">{d.stars}</span>
           <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-          <div className="h-2 flex-1 overflow-hidden rounded-full bg-brand-gray-light">
+          <div className="h-2 flex-1 overflow-hidden rounded-full bg-bg-soft">
             <div
               className="h-full rounded-full bg-yellow-400"
               style={{ width: `${d.pct}%` }}
             />
           </div>
-          <span className="w-8 text-right text-brand-gray-dark/50">{d.pct}%</span>
+          <span className="w-8 text-right text-mute">{d.pct}%</span>
         </div>
       ))}
-      <p className="mt-2 text-xs text-brand-gray-dark/50">
+      <p className="mt-2 text-xs text-mute">
         На основе {total.toLocaleString("ru-RU")} отзывов
       </p>
     </div>
@@ -96,7 +96,7 @@ function ReviewForm({ onSubmit }: { onSubmit: (data: ReviewFormState) => void })
   const [text, setText] = useState("");
 
   return (
-    <div className="rounded-xl border border-brand-gray-light p-5 space-y-4">
+    <div className="rounded-xl border border-line p-5 space-y-4">
       <h4 className="font-bold">Оставить отзыв</h4>
       <div className="flex gap-1">
         {Array.from({ length: 5 }, (_, i) => (
@@ -112,7 +112,7 @@ function ReviewForm({ onSubmit }: { onSubmit: (data: ReviewFormState) => void })
                 "h-7 w-7 transition-colors",
                 (hoverRating || rating) > i
                   ? "fill-yellow-400 text-yellow-400"
-                  : "fill-brand-gray-light text-brand-gray-light"
+                  : "fill-bg-soft text-bg-soft"
               )}
             />
           </button>
@@ -123,7 +123,7 @@ function ReviewForm({ onSubmit }: { onSubmit: (data: ReviewFormState) => void })
         onChange={(e) => setText(e.target.value)}
         placeholder="Расскажите о вашем опыте..."
         rows={4}
-        className="w-full rounded-xl border border-brand-gray-light px-4 py-3 text-sm focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20"
+        className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
       />
       <Button
         size="sm"
@@ -197,13 +197,13 @@ export function Reviews({ product }: Props) {
             <span className="text-5xl font-bold">{rating}</span>
             <div className="space-y-1">
               <Stars count={Math.round(rating)} size="md" />
-              <p className="text-sm text-brand-gray-dark/70">
+              <p className="text-sm text-ink-2">
                 ({reviewsCount.toLocaleString("ru-RU")} отзыва)
               </p>
             </div>
           </div>
           {sourceLabels.length > 0 && (
-            <p className="text-xs text-brand-gray-dark/50">
+            <p className="text-xs text-mute">
               Включает отзывы с {sourceLabels.join(", ")}
             </p>
           )}
@@ -231,14 +231,14 @@ export function Reviews({ product }: Props) {
         <div className="space-y-4">
           {/* Sort controls */}
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-brand-gray-dark/60">Сортировка:</span>
+            <span className="text-mute">Сортировка:</span>
             <button
               onClick={() => handleSortChange("newest")}
               className={cn(
                 "rounded-full px-3 py-1 transition-colors",
                 sort === "newest"
-                  ? "bg-brand-green text-white"
-                  : "bg-brand-gray-light text-brand-gray-dark/70 hover:bg-brand-gray-light/80"
+                  ? "bg-accent text-white"
+                  : "bg-bg-soft text-ink-2 hover:bg-bg-soft/80"
               )}
             >
               Сначала новые
@@ -248,8 +248,8 @@ export function Reviews({ product }: Props) {
               className={cn(
                 "rounded-full px-3 py-1 transition-colors",
                 sort === "rating"
-                  ? "bg-brand-green text-white"
-                  : "bg-brand-gray-light text-brand-gray-dark/70 hover:bg-brand-gray-light/80"
+                  ? "bg-accent text-white"
+                  : "bg-bg-soft text-ink-2 hover:bg-bg-soft/80"
               )}
             >
               По рейтингу
@@ -257,11 +257,11 @@ export function Reviews({ product }: Props) {
           </div>
 
           {reviews.map((r) => (
-            <div key={r.id} className="rounded-xl bg-white p-5 shadow-sm border border-brand-gray-light/50">
+            <div key={r.id} className="rounded-xl bg-bg p-5 shadow-sm border border-line/50">
               {/* Row 1: author + date */}
               <div className="flex items-center justify-between">
                 <span className="font-medium">{r.author}</span>
-                <span className="text-sm text-brand-gray-dark/50">
+                <span className="text-sm text-mute">
                   {formatDate(r.createdAt)}
                 </span>
               </div>
@@ -271,7 +271,7 @@ export function Reviews({ product }: Props) {
               </div>
               {/* Row 3: text */}
               {r.text && (
-                <p className="mt-2 text-sm leading-relaxed text-brand-gray-dark/80">
+                <p className="mt-2 text-sm leading-relaxed text-ink-2">
                   {r.text}
                 </p>
               )}
@@ -301,8 +301,8 @@ export function Reviews({ product }: Props) {
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4 py-12 text-center">
-          <MessageSquare className="h-12 w-12 text-brand-gray-dark/20" />
-          <p className="text-brand-gray-dark/50">
+          <MessageSquare className="h-12 w-12 text-mute/30" />
+          <p className="text-mute">
             Отзывы загружаются. На Wildberries и Ozon этот товар имеет{" "}
             <span className="font-medium">{reviewsCount.toLocaleString("ru-RU")}</span>{" "}
             отзывов с рейтингом <span className="font-medium">{rating}★</span>

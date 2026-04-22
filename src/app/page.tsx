@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Hero } from "@/components/sections/Hero";
-
-import { Bestsellers } from "@/components/sections/Bestsellers";
 import { Benefits } from "@/components/sections/Benefits";
+import { Bestsellers } from "@/components/sections/Bestsellers";
+import { BrandSplit } from "@/components/sections/BrandSplit";
+import { SeasonCalendar } from "@/components/sections/SeasonCalendar";
+import { StoryBlock } from "@/components/sections/StoryBlock";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { VideoGuides } from "@/components/sections/VideoGuides";
 import { Newsletter } from "@/components/sections/Newsletter";
 
 export const metadata: Metadata = {
@@ -27,11 +30,15 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <Benefits />
       <Suspense>
         <Bestsellers />
       </Suspense>
-      <Benefits />
+      <BrandSplit />
+      <SeasonCalendar />
+      <StoryBlock />
       <Testimonials />
+      <VideoGuides />
       <Newsletter />
     </>
   );

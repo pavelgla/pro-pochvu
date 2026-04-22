@@ -59,7 +59,7 @@ export function Select({
   return (
     <div className={cn("flex flex-col gap-1.5", className)} ref={ref}>
       {label && (
-        <span className="text-sm font-medium text-brand-gray-dark">
+        <span className="text-sm font-medium text-ink">
           {label}
         </span>
       )}
@@ -68,10 +68,10 @@ export function Select({
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex h-11 w-full items-center justify-between rounded-xl border border-brand-gray-light bg-white px-4 text-left text-base transition-colors",
-            "focus:border-brand-green focus:outline-none focus:ring-2 focus:ring-brand-green/20",
+            "flex h-11 w-full items-center justify-between rounded-xl border border-line bg-bg px-4 text-left text-base transition-colors",
+            "focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20",
             error && "border-error",
-            !selected && "text-brand-gray-dark/40"
+            !selected && "text-ink/40"
           )}
         >
           <span className="truncate">
@@ -86,7 +86,7 @@ export function Select({
         </button>
 
         {isOpen && (
-          <div className="absolute z-50 mt-1 w-full rounded-xl border border-brand-gray-light bg-white py-1 shadow-lg">
+          <div className="absolute z-50 mt-1 w-full rounded-xl border border-line bg-bg py-1 shadow-lg">
             {searchable && (
               <div className="px-3 pb-2 pt-1">
                 <input
@@ -94,7 +94,7 @@ export function Select({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Поиск..."
-                  className="h-9 w-full rounded-lg border border-brand-gray-light px-3 text-sm focus:border-brand-green focus:outline-none"
+                  className="h-9 w-full rounded-lg border border-line px-3 text-sm focus:border-accent focus:outline-none"
                   autoFocus
                 />
               </div>
@@ -110,9 +110,9 @@ export function Select({
                       setSearch("");
                     }}
                     className={cn(
-                      "flex w-full px-4 py-2 text-left text-sm hover:bg-brand-gray-light",
+                      "flex w-full px-4 py-2 text-left text-sm hover:bg-bg-soft",
                       option.value === value &&
-                        "bg-brand-green/5 font-medium text-brand-green"
+                        "bg-accent/5 font-medium text-accent"
                     )}
                   >
                     {option.label}
@@ -120,7 +120,7 @@ export function Select({
                 </li>
               ))}
               {filtered.length === 0 && (
-                <li className="px-4 py-2 text-sm text-brand-gray-dark/40">
+                <li className="px-4 py-2 text-sm text-ink/40">
                   Ничего не найдено
                 </li>
               )}

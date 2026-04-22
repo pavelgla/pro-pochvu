@@ -6,18 +6,18 @@ import { Spinner } from "./Spinner";
 
 const variants = {
   primary:
-    "bg-brand-green text-white hover:bg-brand-green/90 active:bg-brand-green/80",
+    "bg-ink text-bg hover:bg-accent active:bg-accent-deep",
   secondary:
-    "border-2 border-brand-green text-brand-green hover:bg-brand-green/5 active:bg-brand-green/10",
+    "border border-ink text-ink hover:bg-ink hover:text-bg active:bg-accent",
   ghost:
-    "text-brand-gray-dark hover:bg-brand-gray-light active:bg-brand-gray-light/80",
-  disabled: "bg-brand-gray-light text-brand-gray-dark/40 cursor-not-allowed",
+    "text-ink hover:bg-bg-soft active:bg-bg-soft/80",
+  disabled: "bg-bg-soft text-mute cursor-not-allowed",
 };
 
 const sizes = {
-  sm: "h-9 px-3 text-sm rounded-lg",
-  md: "h-11 px-5 text-base rounded-xl",
-  lg: "h-13 px-7 text-lg rounded-xl",
+  sm: "h-9 px-3 text-sm rounded-full",
+  md: "h-11 px-5 text-base rounded-full",
+  lg: "h-13 px-7 text-lg rounded-full",
 };
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {

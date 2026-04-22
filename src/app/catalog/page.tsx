@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Ornament } from "@/components/ui/Ornament";
 import { CatalogContent } from "./CatalogContent";
 
 export const metadata: Metadata = {
@@ -19,7 +20,15 @@ export default function CatalogPage() {
           { label: "Каталог" },
         ]}
       />
-      <h1 className="mt-4 mb-8">Каталог товаров</h1>
+
+      <div className="mt-6 mb-10">
+        <div className="section-label mb-4">
+          <Ornament variant="divider" />
+          <span>ВСЕ ТОВАРЫ</span>
+        </div>
+        <h1 className="section-heading text-4xl md:text-5xl lg:text-6xl">Каталог</h1>
+      </div>
+
       <Suspense>
         <CatalogContent />
       </Suspense>

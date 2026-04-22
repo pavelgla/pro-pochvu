@@ -65,7 +65,7 @@ export function DeliveryMap({ points, selectedPoint, onSelectPoint }: Props) {
                 "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
                 enabledProviders.has(pr)
                   ? "border-transparent text-white"
-                  : "border-brand-gray-light text-brand-gray-dark/50"
+                  : "border-line text-mute"
               )}
               style={
                 enabledProviders.has(pr)
@@ -88,9 +88,9 @@ export function DeliveryMap({ points, selectedPoint, onSelectPoint }: Props) {
       )}
 
       {/* Map placeholder (Yandex Maps integration) */}
-      <div className="relative h-64 md:h-96 rounded-xl bg-brand-gray-light overflow-hidden">
+      <div className="relative h-64 md:h-96 rounded-xl bg-bg-soft overflow-hidden">
         {/* Static map placeholder — replace with Yandex Maps when API key is set */}
-        <div className="absolute inset-0 flex items-center justify-center text-brand-gray-dark/20">
+        <div className="absolute inset-0 flex items-center justify-center text-mute/30">
           <div className="text-center">
             <MapPin className="mx-auto h-12 w-12" />
             <p className="mt-2 text-sm">
@@ -136,8 +136,8 @@ export function DeliveryMap({ points, selectedPoint, onSelectPoint }: Props) {
             className={cn(
               "flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors",
               selectedPoint?.id === point.id
-                ? "bg-brand-green/5 ring-1 ring-brand-green"
-                : "hover:bg-brand-gray-light"
+                ? "bg-accent/5 ring-1 ring-accent"
+                : "hover:bg-bg-soft"
             )}
           >
             <span
@@ -148,13 +148,13 @@ export function DeliveryMap({ points, selectedPoint, onSelectPoint }: Props) {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">{point.name}</span>
                 {selectedPoint?.id === point.id && (
-                  <Check className="h-4 w-4 text-brand-green" />
+                  <Check className="h-4 w-4 text-accent" />
                 )}
               </div>
-              <p className="mt-0.5 text-xs text-brand-gray-dark/50 truncate">
+              <p className="mt-0.5 text-xs text-mute truncate">
                 {point.address}
               </p>
-              <p className="text-xs text-brand-gray-dark/40">{point.work_time}</p>
+              <p className="text-xs text-mute/60">{point.work_time}</p>
             </div>
           </button>
         ))}

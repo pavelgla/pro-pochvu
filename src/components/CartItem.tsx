@@ -16,9 +16,9 @@ export function CartItem({ item }: { item: CartItemType }) {
   const lineTotal = item.price * item.quantity;
 
   return (
-    <div className="flex gap-4 rounded-xl border border-brand-gray-light p-4">
+    <div className="flex gap-4 rounded-xl border border-line p-4">
       {/* Image */}
-      <div className="h-16 w-16 shrink-0 rounded-lg bg-brand-gray-light overflow-hidden flex items-center justify-center">
+      <div className="h-16 w-16 shrink-0 rounded-lg bg-bg-soft overflow-hidden flex items-center justify-center">
         {item.image && !imgError ? (
           <Image
             src={item.image}
@@ -29,7 +29,7 @@ export function CartItem({ item }: { item: CartItemType }) {
             onError={() => setImgError(true)}
           />
         ) : (
-          <span className="text-2xl text-brand-gray-dark/15">
+          <span className="text-2xl text-mute/30">
             {item.brand === "ecokon" ? "🌿" : "🌱"}
           </span>
         )}
@@ -41,7 +41,7 @@ export function CartItem({ item }: { item: CartItemType }) {
           <div className="min-w-0">
             <Link
               href={`/product/${item.slug}`}
-              className="text-sm font-semibold leading-snug hover:text-brand-green line-clamp-2"
+              className="text-sm font-semibold leading-snug hover:text-accent line-clamp-2"
             >
               {item.name}
             </Link>
@@ -51,7 +51,7 @@ export function CartItem({ item }: { item: CartItemType }) {
           </div>
           <button
             onClick={() => removeItem(item.product_id, item.variant_id)}
-            className="shrink-0 rounded-lg p-1.5 text-brand-gray-dark/40 hover:bg-brand-gray-light hover:text-error transition-colors"
+            className="shrink-0 rounded-lg p-1.5 text-mute hover:bg-bg-soft hover:text-error transition-colors"
             aria-label="Удалить"
           >
             <Trash2 className="h-4 w-4" />
@@ -59,19 +59,19 @@ export function CartItem({ item }: { item: CartItemType }) {
         </div>
 
         {item.variant_id && (
-          <span className="text-xs text-brand-gray-dark/50">
+          <span className="text-xs text-mute">
             Вариант: {item.variant_id}
           </span>
         )}
 
         <div className="flex items-center justify-between">
           {/* Quantity */}
-          <div className="flex items-center rounded-lg border border-brand-gray-light">
+          <div className="flex items-center rounded-lg border border-line">
             <button
               onClick={() =>
                 updateQuantity(item.product_id, item.quantity - 1, item.variant_id)
               }
-              className="flex h-8 w-8 items-center justify-center text-brand-gray-dark/60 hover:text-brand-gray-dark"
+              className="flex h-8 w-8 items-center justify-center text-ink-2 hover:text-ink"
             >
               <Minus className="h-3 w-3" />
             </button>
@@ -82,7 +82,7 @@ export function CartItem({ item }: { item: CartItemType }) {
               onClick={() =>
                 updateQuantity(item.product_id, item.quantity + 1, item.variant_id)
               }
-              className="flex h-8 w-8 items-center justify-center text-brand-gray-dark/60 hover:text-brand-gray-dark"
+              className="flex h-8 w-8 items-center justify-center text-ink-2 hover:text-ink"
             >
               <Plus className="h-3 w-3" />
             </button>
@@ -92,7 +92,7 @@ export function CartItem({ item }: { item: CartItemType }) {
           <div className="text-right">
             <div className="text-sm font-bold">{formatPrice(lineTotal)}</div>
             {item.quantity > 1 && (
-              <div className="text-xs text-brand-gray-dark/50">
+              <div className="text-xs text-mute">
                 {formatPrice(item.price)} × {item.quantity}
               </div>
             )}

@@ -22,7 +22,7 @@ export default function CartPage() {
         <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Корзина" }]} />
         <h1 className="mt-4">Корзина</h1>
         <div className="mt-8 flex justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-gray-light border-t-brand-green" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-accent" />
         </div>
       </div>
     );
@@ -34,11 +34,11 @@ export default function CartPage() {
         <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Корзина" }]} />
         <h1 className="mt-4">Корзина</h1>
         <div className="mt-8 flex flex-col items-center justify-center py-20 text-center">
-          <ShoppingCart className="h-16 w-16 text-brand-gray-dark/15" />
-          <p className="mt-4 text-lg font-medium text-brand-gray-dark/60">
+          <ShoppingCart className="h-16 w-16 text-mute/30" />
+          <p className="mt-4 text-lg font-medium text-mute">
             Корзина пуста
           </p>
-          <p className="mt-1 text-sm text-brand-gray-dark/40">
+          <p className="mt-1 text-sm text-mute/60">
             Добавьте товары из каталога
           </p>
           <Link href="/catalog" className="mt-6">
@@ -57,7 +57,7 @@ export default function CartPage() {
         <h1>Корзина</h1>
         <button
           onClick={clearCart}
-          className="text-sm text-brand-gray-dark/50 hover:text-error transition-colors"
+          className="text-sm text-mute hover:text-error transition-colors"
         >
           Очистить корзину
         </button>

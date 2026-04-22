@@ -51,7 +51,7 @@ export function CatalogContent({ productLineSlug }: { productLineSlug?: string }
       <div className="flex-1">
         {/* Toolbar */}
         <div className="mb-6 flex items-center justify-between">
-          <p className="text-sm text-brand-gray-dark/60">
+          <p className="text-sm text-mute">
             {data.total} {data.total === 1 ? "товар" : data.total < 5 ? "товара" : "товаров"}
           </p>
           <CatalogSort />
@@ -60,20 +60,20 @@ export function CatalogContent({ productLineSlug }: { productLineSlug?: string }
         {/* Grid */}
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-gray-light border-t-brand-green" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-accent" />
           </div>
         ) : data.products.length > 0 ? (
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          <div className="grid gap-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
             {data.products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-lg font-medium text-brand-gray-dark/60">
+            <p className="text-lg font-medium text-mute">
               Товары не найдены
             </p>
-            <p className="mt-1 text-sm text-brand-gray-dark/40">
+            <p className="mt-1 text-sm text-mute/60">
               Попробуйте изменить фильтры
             </p>
           </div>
