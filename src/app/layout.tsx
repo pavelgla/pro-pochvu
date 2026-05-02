@@ -1,9 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
+import {
+  generateOrganizationJsonLd,
+  generateWebSiteJsonLd,
+} from "@/lib/structured-data";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -18,21 +22,103 @@ const manrope = Manrope({
   display: "swap",
 });
 
+const SITE_URL = "https://pro-pochvu.ru";
+const SITE_NAME = "Пропочву";
+const DEFAULT_TITLE =
+  "Пропочву — органические удобрения и вертикальные сады";
+const DEFAULT_DESCRIPTION =
+  "D2C экосистема КФХ «Ранчо Мушкино». Органические удобрения «ЭКО Конь» и фитомодули «Цветология» для вертикального озеленения. Доставка по России от 99 ₽.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pro-pochvu.ru"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Пропочву — органические удобрения и вертикальные сады",
+    default: DEFAULT_TITLE,
     template: "%s | Пропочву",
   },
-  description:
-    "D2C экосистема КФХ «Ранчо Мушкино». Органические удобрения «ЭКО Конь» и фитомодули «Цветология» для вертикального озеленения.",
-  verification: {
-    yandex: "placeholder",
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "биогумус",
+    "органические удобрения",
+    "ЭКО Конь",
+    "Цветология",
+    "фитомодули",
+    "вертикальное озеленение",
+    "био-чай для растений",
+    "удобрение для рассады",
+    "удобрение для орхидей",
+    "удобрение для цветущих",
+  ],
+  authors: [{ name: "КФХ «Ранчо Мушкино»" }],
+  creator: "КФХ «Ранчо Мушкино»",
+  publisher: "КФХ «Ранчо Мушкино»",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Пропочву — органические удобрения и фитомодули",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+  verification: {
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
+    ...(process.env.NEXT_PUBLIC_MAILRU_VERIFICATION
+      ? {
+          other: {
+            "mailru-domain": process.env.NEXT_PUBLIC_MAILRU_VERIFICATION,
+          },
+        }
+      : {}),
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
+  manifest: "/manifest.json",
+  category: "shopping",
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#2d5016",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -40,8 +126,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationJsonLd = generateOrganizationJsonLd();
+  const websiteJsonLd = generateWebSiteJsonLd();
+
   return (
     <html lang="ru">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
+        />
+      </head>
       <body
         className={`${fraunces.variable} ${manrope.variable} font-sans antialiased`}
       >

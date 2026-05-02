@@ -28,6 +28,9 @@ services:
         NEXT_PUBLIC_METRIKA_ID: ${NEXT_PUBLIC_METRIKA_ID:-}
         NEXT_PUBLIC_VK_PIXEL_ID: ${NEXT_PUBLIC_VK_PIXEL_ID:-}
         NEXT_PUBLIC_SHOW_TSVETOLOGIYA: "true"
+        NEXT_PUBLIC_YANDEX_VERIFICATION: ${NEXT_PUBLIC_YANDEX_VERIFICATION:-}
+        NEXT_PUBLIC_GOOGLE_VERIFICATION: ${NEXT_PUBLIC_GOOGLE_VERIFICATION:-}
+        NEXT_PUBLIC_MAILRU_VERIFICATION: ${NEXT_PUBLIC_MAILRU_VERIFICATION:-}
     container_name: ecokon-web
     restart: always
     depends_on:
@@ -61,6 +64,7 @@ services:
       WB2_STATS_KEY: ${WB2_STATS_KEY:-}
       WB_PRICES_KEY: ${WB_PRICES_KEY:-}
       WB2_PRICES_KEY: ${WB2_PRICES_KEY:-}
+      INDEXNOW_KEY: ${INDEXNOW_KEY:-}
     networks:
       - webproxy
       - internal

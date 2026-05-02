@@ -3,7 +3,16 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Блог | ЭКО Конь",
+  description:
+    "Статьи о применении органических удобрений, выращивании рассады, уходе за комнатными растениями и вертикальном озеленении. Опыт КФХ «Ранчо Мушкино».",
   alternates: { canonical: "https://pro-pochvu.ru/blog" },
+  openGraph: {
+    title: "Блог о садоводстве и удобрениях | Пропочву",
+    description:
+      "Статьи о применении органических удобрений, выращивании рассады и вертикальном озеленении.",
+    url: "https://pro-pochvu.ru/blog",
+    type: "website",
+  },
 };
 
 export default function BlogPage() {

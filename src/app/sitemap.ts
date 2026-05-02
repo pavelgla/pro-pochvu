@@ -1,110 +1,108 @@
 import { MetadataRoute } from "next";
-import { getAllProductSlugs } from "@/lib/catalog";
+import { getAllProductSlugs, getProductLines } from "@/lib/catalog";
+import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
+
+const SITE_URL = "https://pro-pochvu.ru";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const slugs = await getAllProductSlugs();
+  const now = new Date();
+
+  const [slugs, productLines] = await Promise.all([
+    getAllProductSlugs(),
+    getProductLines(),
+  ]);
 
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: "https://pro-pochvu.ru",
-      lastModified: new Date(),
+      url: `${SITE_URL}`,
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
-      url: "https://pro-pochvu.ru/catalog",
-      lastModified: new Date(),
+      url: `${SITE_URL}/catalog`,
+      lastModified: now,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: "https://pro-pochvu.ru/catalog?brand=ecokon",
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
-      url: "https://pro-pochvu.ru/catalog?brand=tsvetologiya",
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
-      url: "https://pro-pochvu.ru/about",
-      lastModified: new Date(),
+      url: `${SITE_URL}/about`,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: "https://pro-pochvu.ru/contacts",
-      lastModified: new Date(),
+      url: `${SITE_URL}/contacts`,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: "https://pro-pochvu.ru/delivery",
-      lastModified: new Date(),
+      url: `${SITE_URL}/delivery`,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: "https://pro-pochvu.ru/returns",
-      lastModified: new Date(),
+      url: `${SITE_URL}/returns`,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: "https://pro-pochvu.ru/privacy",
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: "https://pro-pochvu.ru/terms",
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: "https://pro-pochvu.ru/legal",
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: "https://pro-pochvu.ru/blog",
-      lastModified: new Date(),
+      url: `${SITE_URL}/blog`,
+      lastModified: now,
       changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/knowledge-base`,
+      lastModified: now,
+      changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: "https://pro-pochvu.ru/knowledge-base",
-      lastModified: new Date(),
+      url: `${SITE_URL}/knowledge-base/video`,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: "https://pro-pochvu.ru/knowledge-base/video",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
+      url: `${SITE_URL}/privacy`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.2,
     },
     {
-      url: "https://pro-pochvu.ru/auth/login",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.3,
+      url: `${SITE_URL}/terms`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.2,
     },
   ];
 
+  // Линейки товаров (страницы /catalog/[product-line])
+  const productLinePages: MetadataRoute.Sitemap = productLines
+    .filter((pl) => {
+      // Скрываем линейки Цветологии при выключенном фиче-флаге
+      if (!SHOW_TSVETOLOGIYA && pl.brand === "tsvetologiya") return false;
+      return true;
+    })
+    .map((pl) => ({
+      url: `${SITE_URL}/catalog/${pl.slug}`,
+      lastModified: pl.updatedAt || now,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }));
+
   const productPages: MetadataRoute.Sitemap = slugs.map((slug) => ({
-    url: `https://pro-pochvu.ru/product/${slug}`,
-    lastModified: new Date(),
+    url: `${SITE_URL}/product/${slug}`,
+    lastModified: now,
     changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
 
-  return [...staticPages, ...productPages];
+  return [...staticPages, ...productLinePages, ...productPages];
 }

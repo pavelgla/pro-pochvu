@@ -3,6 +3,8 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "База знаний | ЭКО Конь",
+  description:
+    "Инструкции и руководства по применению органических удобрений ЭКО Конь, уходу за растениями и вертикальному озеленению.",
   alternates: { canonical: "https://pro-pochvu.ru/knowledge-base" },
 };
 
