@@ -65,6 +65,7 @@ services:
       WB_PRICES_KEY: ${WB_PRICES_KEY:-}
       WB2_PRICES_KEY: ${WB2_PRICES_KEY:-}
       INDEXNOW_KEY: ${INDEXNOW_KEY:-}
+      ADMIN_API_TOKEN: ${ADMIN_API_TOKEN:-}
     networks:
       - webproxy
       - internal
