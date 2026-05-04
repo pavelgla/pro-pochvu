@@ -16,6 +16,11 @@ export function CookieBanner() {
 
   const accept = (value: "all" | "essential") => {
     localStorage.setItem("cookie-consent", value);
+    // Notify <Metrika /> (and any other listeners) so analytics can boot
+    // without a full page reload.
+    window.dispatchEvent(
+      new CustomEvent("cookie-consent-changed", { detail: value })
+    );
     setVisible(false);
   };
 

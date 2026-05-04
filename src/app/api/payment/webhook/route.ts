@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import type { WebhookEvent } from "@/types/yookassa";
 import { notifyNewOrder } from "@/lib/telegram";
 import { sendOrderConfirmation } from "@/lib/email";
+import { pushPurchaseToMetrika } from "@/lib/analytics-server";
 
 export async function POST(req: NextRequest) {
   // IP whitelist check
@@ -33,8 +34,9 @@ export async function POST(req: NextRequest) {
       });
 
       const items = order.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price }));
+      const ymClientId = payment.metadata?.ym_client_id;
 
-      // Send notifications (fire-and-forget)
+      // Send notifications + offline conversion (fire-and-forget)
       Promise.allSettled([
         notifyNewOrder({
           id: order.id,
@@ -64,15 +66,24 @@ export async function POST(req: NextRequest) {
           customer_email: order.customerEmail,
           items,
         }),
+        pushPurchaseToMetrika({
+          orderId: order.id,
+          ymClientId: ymClientId ?? "",
+          total: order.total,
+          paidAt: new Date(),
+        }),
       ]).then((results) => {
         for (const r of results) {
           if (r.status === "rejected") {
-            console.error("Notification failed:", r.reason);
+            console.error("[payment/webhook] task failed:", r.reason);
           }
         }
       });
 
-      console.log("[payment/webhook] succeeded", { orderId });
+      console.log("[payment/webhook] succeeded", {
+        orderId,
+        hasYmClientId: Boolean(ymClientId),
+      });
       break;
     }
 

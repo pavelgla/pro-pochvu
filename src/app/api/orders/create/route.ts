@@ -34,6 +34,7 @@ const schema = z.object({
   promo_code: z.string().optional(),
   promo_discount: z.number().optional(),
   payment_method: z.string(),
+  ym_client_id: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -180,6 +181,7 @@ export async function POST(req: NextRequest) {
           customerPhone: body.customer_phone,
           paymentMethod:
             body.payment_method === "cod" ? undefined : body.payment_method,
+          ymClientId: body.ym_client_id,
         }),
       }
     );

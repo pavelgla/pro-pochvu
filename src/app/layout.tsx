@@ -4,6 +4,8 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
+import { Metrika } from "@/components/analytics/Metrika";
+import { ClickTracker } from "@/components/analytics/ClickTracker";
 import {
   generateOrganizationJsonLd,
   generateWebSiteJsonLd,
@@ -154,6 +156,8 @@ export default function RootLayout({
           <Footer />
           <CookieBanner />
         </AuthProvider>
+        <Metrika />
+        <ClickTracker />
       </body>
     </html>
   );

@@ -9,9 +9,10 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
   const body = await req.json();
-  const { orderId, paymentMethod } = body as {
+  const { orderId, paymentMethod, ymClientId } = body as {
     orderId: string;
     paymentMethod?: PaymentMethod;
+    ymClientId?: string;
   };
 
   if (!orderId) {
@@ -57,6 +58,7 @@ export async function POST(req: NextRequest) {
       customerEmail: order.customerEmail,
       customerPhone: order.customerPhone,
       paymentMethod,
+      ymClientId,
     });
 
     await prisma.order.update({

@@ -25,6 +25,13 @@ export type YooKassaReceipt = {
   items: ReceiptItem[];
 };
 
+export type PaymentMetadata = {
+  order_id: string;
+  order_number: number;
+  /** Yandex Metrika client id (`_ym_uid` cookie) — used for offline conversion attribution. */
+  ym_client_id?: string;
+};
+
 export type CreatePaymentRequest = {
   amount: {
     value: string;
@@ -36,10 +43,7 @@ export type CreatePaymentRequest = {
   };
   capture: true;
   description: string;
-  metadata: {
-    order_id: string;
-    order_number: number;
-  };
+  metadata: PaymentMetadata;
   payment_method_data?: {
     type: PaymentMethod;
   };
@@ -57,10 +61,7 @@ export type YooKassaPayment = {
     type: string;
     confirmation_url: string;
   };
-  metadata: {
-    order_id: string;
-    order_number: number;
-  };
+  metadata: PaymentMetadata;
 };
 
 export type WebhookEvent = {

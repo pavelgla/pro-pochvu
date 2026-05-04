@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepIndicator } from "@/components/checkout/StepIndicator";
@@ -11,6 +11,7 @@ import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { useCartStore } from "@/store/cartStore";
 import { useCartHydrated } from "@/hooks/useCart";
 import { FREE_DELIVERY_THRESHOLD } from "@/lib/constants";
+import { readYandexClientId, trackBeginCheckout } from "@/lib/analytics";
 import type { DeliveryOption, PickupPoint } from "@/types/delivery";
 import type { PaymentMethod } from "@/types/yookassa";
 
@@ -45,6 +46,24 @@ export default function CheckoutPage() {
     phone: "",
     comment: "",
   });
+
+  // Fire begin_checkout once the cart is hydrated and non-empty.
+  useEffect(() => {
+    if (!hydrated || items.length === 0) return;
+    trackBeginCheckout(
+      items.map((i) => ({
+        id: i.product_id,
+        name: i.name,
+        price: i.price,
+        brand: i.brand,
+        variant: i.variant_id,
+        quantity: i.quantity,
+      }))
+    );
+    // run once after hydration; intentionally not depending on `items`
+    // (we don't want to re-fire every cart edit on /checkout).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   // Redirect if empty cart
   if (hydrated && items.length === 0) {
@@ -107,6 +126,7 @@ export default function CheckoutPage() {
           promo_code: promo?.code,
           promo_discount: discount,
           payment_method: method,
+          ym_client_id: readYandexClientId() ?? undefined,
         }),
       });
 

@@ -39,6 +39,12 @@ type OrderData = {
   customerEmail: string;
   customerPhone?: string;
   paymentMethod?: PaymentMethod;
+  /**
+   * Yandex Metrika client id (`_ym_uid` cookie). Stored in YooKassa metadata
+   * so the payment webhook can fire a server-side offline conversion attributed
+   * to the visitor that placed the order.
+   */
+  ymClientId?: string;
 };
 
 function buildReceipt(data: OrderData): YooKassaReceipt {
@@ -104,6 +110,7 @@ export async function createPayment(
     metadata: {
       order_id: data.orderId,
       order_number: data.orderNumber,
+      ...(data.ymClientId ? { ym_client_id: data.ymClientId } : {}),
     },
     receipt,
   };

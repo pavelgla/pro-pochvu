@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { trackAddToCart, trackRemoveFromCart, type EcommerceProduct } from "@/lib/analytics";
 
 export interface CartItem {
   product_id: string;
@@ -38,6 +39,17 @@ function itemKey(productId: string, variantId?: string) {
   return variantId ? `${productId}:${variantId}` : productId;
 }
 
+function toEcommerceProduct(item: CartItem, quantity?: number): EcommerceProduct {
+  return {
+    id: item.product_id,
+    name: item.name,
+    price: item.price,
+    brand: item.brand,
+    variant: item.variant_id,
+    quantity: quantity ?? item.quantity,
+  };
+}
+
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
@@ -61,15 +73,24 @@ export const useCartStore = create<CartStore>()(
           }
           return { items: [...state.items, item] };
         });
+        // Analytics: fire add_to_cart goal + ecommerce dataLayer push.
+        // Safe even when Metrika hasn't loaded — trackAddToCart no-ops in that case.
+        trackAddToCart(toEcommerceProduct(item));
       },
 
       removeItem: (productId, variantId) => {
         const key = itemKey(productId, variantId);
+        const removed = get().items.find(
+          (i) => itemKey(i.product_id, i.variant_id) === key
+        );
         set((state) => ({
           items: state.items.filter(
             (i) => itemKey(i.product_id, i.variant_id) !== key
           ),
         }));
+        if (removed) {
+          trackRemoveFromCart(toEcommerceProduct(removed));
+        }
       },
 
       updateQuantity: (productId, quantity, variantId) => {

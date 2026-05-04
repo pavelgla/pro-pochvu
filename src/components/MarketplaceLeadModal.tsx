@@ -77,7 +77,11 @@ export function MarketplaceLeadModal({
   return (
     <Modal isOpen={isOpen} onClose={reset} title={title}>
       {step === "form" ? (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          data-track-form="marketplace_lead"
+          className="space-y-4"
+        >
           <p className="text-sm text-mute">
             Оставьте данные и получите промокод на скидку 15%
             при покупке «{productName}» на {mpLabel}.

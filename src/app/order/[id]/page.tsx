@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/Button";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { OrderTracker } from "@/components/OrderTracker";
+import { PurchaseTracker } from "@/components/analytics/PurchaseTracker";
+import type { EcommerceProduct } from "@/lib/analytics";
 
 type Props = {
   params: { id: string };
@@ -17,14 +19,27 @@ async function getOrder(id: string) {
       id,
       orderNumber: 999999,
       total: 1490,
+      subtotal: 1490,
+      deliveryCost: 0,
+      promoCode: null,
       customerEmail: "test@example.com",
       paymentStatus: "paid" as const,
       paymentMethod: "online",
       status: "confirmed",
       createdAt: new Date(),
+      items: [] as Array<{
+        productId: string;
+        variantId: string | null;
+        name: string;
+        price: number;
+        quantity: number;
+      }>,
     };
   }
-  return prisma.order.findUnique({ where: { id } });
+  return prisma.order.findUnique({
+    where: { id },
+    include: { items: true },
+  });
 }
 
 export default async function OrderPage({ params, searchParams }: Props) {
@@ -44,8 +59,25 @@ export default async function OrderPage({ params, searchParams }: Props) {
 
   const orderNumber = String(order.orderNumber).padStart(6, "0");
 
+  const ecommerceProducts: EcommerceProduct[] = (order.items ?? []).map((i) => ({
+    id: i.productId,
+    name: i.name,
+    price: i.price,
+    quantity: i.quantity,
+    variant: i.variantId ?? undefined,
+  }));
+
   return (
     <div className="container-main section-padding">
+      <PurchaseTracker
+        orderId={order.id}
+        orderNumber={order.orderNumber}
+        total={order.total}
+        shipping={order.deliveryCost ?? 0}
+        coupon={order.promoCode ?? undefined}
+        products={ecommerceProducts}
+        enabled={isConfirmed}
+      />
       <Breadcrumbs
         items={[
           { label: "Главная", href: "/" },
