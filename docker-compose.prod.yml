@@ -18,7 +18,7 @@ services:
       retries: 5
 
   web:
-    image: ghcr.io/pavelgla/ecokon/web:${IMAGE_TAG:-latest}
+    image: ghcr.io/pavelgla/pro-pochvu/web:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile
