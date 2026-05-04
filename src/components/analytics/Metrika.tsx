@@ -1,55 +1,26 @@
-"use client";
-
 import Script from "next/script";
-import { useEffect, useState } from "react";
 
 /**
  * Yandex Metrika loader.
  *
- * Strict consent mode: the Metrika script is NOT loaded until the user picks
- * a cookie option. After "essential" — counter loads without webvisor/clickmap
- * (only pageviews + reachGoal). After "all" — webvisor + clickmap enabled.
+ * Soft mode: the counter loads on every page view, with webvisor + clickmap
+ * always on. The cookie banner is informational and does not gate analytics —
+ * this matches typical practice on Russian sites and avoids losing visitor
+ * data when the user ignores the banner.
  *
- * Listens to a custom `cookie-consent-changed` window event so the
- * <CookieBanner /> can flip consent at runtime without a full reload.
- *
- * Counter ID comes from NEXT_PUBLIC_METRIKA_ID, baked at build time
- * via the Docker build-arg.
+ * Counter ID comes from NEXT_PUBLIC_METRIKA_ID, baked at build time via the
+ * Docker build-arg. If the env var is empty/invalid, the component renders
+ * nothing (e.g. for local dev without Metrika configured).
  */
 
 const COUNTER_ID_RAW = process.env.NEXT_PUBLIC_METRIKA_ID;
 
-type Consent = "all" | "essential" | null;
-
-function readConsent(): Consent {
-  if (typeof window === "undefined") return null;
-  try {
-    const v = window.localStorage.getItem("cookie-consent");
-    return v === "all" || v === "essential" ? v : null;
-  } catch {
-    return null;
-  }
-}
-
 export function Metrika() {
-  const [consent, setConsent] = useState<Consent>(null);
-
-  useEffect(() => {
-    setConsent(readConsent());
-    const handler = () => setConsent(readConsent());
-    window.addEventListener("cookie-consent-changed", handler);
-    return () => window.removeEventListener("cookie-consent-changed", handler);
-  }, []);
-
   if (!COUNTER_ID_RAW) return null;
   const counterId = Number(COUNTER_ID_RAW);
   if (!Number.isFinite(counterId) || counterId <= 0) return null;
-  if (!consent) return null;
 
-  const webvisor = consent === "all";
-
-  // The init script is the canonical Metrika snippet, parameterized for
-  // counter ID and webvisor/clickmap based on consent.
+  // Canonical Metrika init snippet, parameterized only by counter id.
   const initCode = `
 (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
 m[i].l=1*new Date();
@@ -58,10 +29,10 @@ k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNo
 (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
 ym(${counterId}, "init", {
-  clickmap: ${webvisor ? "true" : "false"},
+  clickmap: true,
   trackLinks: true,
   accurateTrackBounce: true,
-  webvisor: ${webvisor ? "true" : "false"},
+  webvisor: true,
   ecommerce: "dataLayer"
 });
   `.trim();

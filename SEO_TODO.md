@@ -41,7 +41,7 @@
 ## Что осталось делать (TODO)
 
 ### Этап 3 — Аналитика (код готов, ждёт деплой + настройку Метрики)
-- [x] `src/components/analytics/Metrika.tsx` — client + `next/script`, строгий cookie consent (webvisor только при `consent === "all"`)
+- [x] `src/components/analytics/Metrika.tsx` — Server Component + `next/script`, **мягкий режим**: счётчик грузится сразу с webvisor+clickmap, cookie-баннер только информационный (не блокирует трекинг). Без согласия пользователя данные собираются — типовая практика на RU-сайтах
 - [x] `src/lib/analytics.ts` — типизированные обёртки: `trackGoal`, `trackAddToCart`, `trackRemoveFromCart`, `trackBeginCheckout`, `trackPurchase`, `trackPhoneClick`, `trackTelegramClick`, `trackLeadFormSubmit`, `pushEcommerce`, `readYandexClientId`
 - [x] `src/lib/analytics-server.ts` — серверный fallback `purchase` через Я.Метрика **offline conversions API** (CSV-upload, OAuth)
 - [x] `src/components/analytics/PurchaseTracker.tsx` — клиентский трекер на `/order/[id]`, идемпотентен через `sessionStorage`
@@ -50,7 +50,7 @@
 - [x] `/checkout` стреляет `begin_checkout` при гидрации
 - [x] `_ym_uid` cookie прокидывается клиент → `/api/orders/create` → `/api/payment/create` → YooKassa `metadata.ym_client_id` → webhook → offline conversion
 - [x] Webhook `/api/payment/webhook` идемпотентен и зовёт `pushPurchaseToMetrika` fire-and-forget
-- [x] CookieBanner диспатчит `cookie-consent-changed` — Метрика стартует/догружает webvisor без перезагрузки
+- [x] CookieBanner оставлен как информационный (диспатчит `cookie-consent-changed`, но Метрика на это больше не реагирует — soft mode)
 - [x] Лид-форма `MarketplaceLeadModal` помечена `data-track-form="marketplace_lead"`
 - [ ] **После деплоя** — в Я.Метрике вручную создать цели типа «JavaScript-событие»: `add_to_cart`, `remove_from_cart`, `begin_checkout`, `purchase`, `lead_form_submit`, `phone_click`, `telegram_click`, `whatsapp_click`
 - [ ] **После деплоя** — для серверного канала получить `YANDEX_OAUTH_TOKEN` (https://oauth.yandex.ru, scope «Метрика: запись»), прописать в `~/pro-pochvu/.env`, редеплой
