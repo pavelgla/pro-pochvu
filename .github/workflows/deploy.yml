@@ -79,6 +79,7 @@ jobs:
             NEXT_PUBLIC_VK_PIXEL_ID=${{ secrets.NEXT_PUBLIC_VK_PIXEL_ID }}
             NEXT_PUBLIC_SHOW_TSVETOLOGIYA=true
             NEXT_PUBLIC_YANDEX_VERIFICATION=53a70f2c26dfd38f
+            NEXT_PUBLIC_GOOGLE_VERIFICATION=I5dEqLJwjdduaNAz8D1xldbfnRAolFFx654zP2RwGBE
           cache-from: type=gha,scope=web
           cache-to: type=gha,mode=max,scope=web
 
