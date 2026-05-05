@@ -66,6 +66,7 @@ services:
       WB2_PRICES_KEY: ${WB2_PRICES_KEY:-}
       INDEXNOW_KEY: ${INDEXNOW_KEY:-}
       ADMIN_API_TOKEN: ${ADMIN_API_TOKEN:-}
+      YANDEX_OAUTH_TOKEN: ${YANDEX_OAUTH_TOKEN:-}
     networks:
       - webproxy
       - internal
