@@ -1558,6 +1558,188 @@ take: 50 вместо 10 для reviews.
 
 ---
 
+## ПРОМПТ 31: Главная — разные превью у видео в блоке «Видео-инструкции от профессионалов»
+
+```
+Ты работаешь в папке ~/Obsidian/pro-pochvu — Next.js 14 + TypeScript + Tailwind.
+
+Задача: в блоке «Видео-инструкции от профессионалов» на главной странице сделать так, чтобы у каждого видео была своя уникальная картинка-превью вместо одной общей.
+
+1. Найди компонент блока:
+   grep -rn "Видео-инструкции\|VideoInstructions\|video.*инструкц" src/ --include="*.tsx" --include="*.ts"
+
+2. Посмотри как сейчас задаются превью (одно изображение на все или нет).
+
+3. Обнови данные/пропсы блока — у каждого видео должно быть своё поле thumbnail (путь к картинке).
+
+4. Подбери или создай заглушки превью для каждого видео — можно использовать существующие изображения из public/images/ или автоматически генерировать через YouTube thumbnail API если используются YouTube-видео (формат: https://img.youtube.com/vi/{VIDEO_ID}/hqdefault.jpg).
+
+5. Если видео — YouTube, извлеки VIDEO_ID из URL и подставь thumbnail автоматически. Если нет — используй явно заданный путь.
+
+6. npm run build — без ошибок.
+7. git add -A && git commit -m "feat: unique video thumbnails in VideoInstructions section"
+```
+
+---
+
+## ПРОМПТ 32: Товар — убрать «со скидкой» и модалку у кнопок маркетплейсов
+
+```
+Ты работаешь в папке ~/Obsidian/pro-pochvu — Next.js 14 + TypeScript + Tailwind.
+
+Задача: на странице товара кнопки «Купить на Wildberries» и «Купить на Ozon» должны вести напрямую на страницу товара на маркетплейсе, без модального окна и без текста «со скидкой».
+
+1. Найди компонент с кнопками маркетплейсов:
+   grep -rn "со скидкой\|MarketplaceLead\|wildberries\|ozon\|wbUrl\|ozonUrl" src/ --include="*.tsx" --include="*.ts" -l
+
+2. Прочитай найденные компоненты.
+
+3. Внеси изменения:
+   а) Убери слова «со скидкой» из текста кнопок (оставь «Купить на Wildberries» / «Купить на Ozon»).
+   б) Убери открытие модального окна (MarketplaceLeadModal или аналог) — вместо этого кнопка должна быть обычной ссылкой <a href={wbUrl} target="_blank" rel="noopener noreferrer"> или router.push.
+   в) Если модальный компонент больше нигде не используется — убери его импорт из страницы товара (сам компонент не удаляй).
+
+4. Убедись что wbUrl и ozonUrl берутся из данных товара (БД) и не пустые — если поле null/undefined, кнопку не рендерить.
+
+5. npm run build — без ошибок.
+6. git add -A && git commit -m "feat: marketplace buttons link directly, remove discount label and modal"
+```
+
+---
+
+## ПРОМПТ 33: Убрать блок доставки (99 ₽, перевозчики) со страницы товара
+
+```
+Ты работаешь в папке ~/Obsidian/pro-pochvu — Next.js 14 + TypeScript + Tailwind.
+
+Задача: убрать со страницы товара блок/строку с текстом «Доставка от 99 ₽ по всей России» и перечислением перевозчиков (5Post, Boxberry, Почта России, СДЭК).
+
+1. Найди компонент:
+   grep -rn "99\|5Post\|Boxberry\|Почта России\|СДЭК\|доставка" src/ --include="*.tsx" -i -l
+
+2. Прочитай найденные файлы, локализуй блок.
+
+3. Удали блок целиком (JSX-элемент с этим содержимым). Не трогай остальную логику доставки (DeliveryMap, ApiShip и т.д.).
+
+4. npm run build — без ошибок.
+5. git add -A && git commit -m "feat: remove delivery promo block from product page"
+```
+
+---
+
+## ПРОМПТ 34: Главная — убрать Bestsellers, переделать ProductLines на 3 категории
+
+```
+Ты работаешь в папке ~/Obsidian/pro-pochvu — Next.js 14 + TypeScript + Tailwind.
+
+### Часть 1 — убрать блок Bestsellers
+
+1. Открой `src/app/page.tsx`.
+2. Удали импорт `Bestsellers` и компонент `<Bestsellers />` из разметки.
+3. Сам файл `src/components/sections/Bestsellers.tsx` не удаляй.
+
+### Часть 2 — переделать ProductLines на 3 категории
+
+Файл: `src/components/sections/ProductLines.tsx`
+
+Замени массив `lines` с 2 брендов (ЭКО Конь / Цветология) на 3 категории:
+
+```ts
+const lines = [
+  {
+    title: "Фитомодули",
+    description: "Модульные системы вертикального озеленения. Живой интерьер для дома, офиса, ресторана — без лишних хлопот.",
+    href: "/catalog?brand=tsvetologiya",
+    bg: "bg-slate-50",
+    image: "/images/tsvetologiya/fitomodul-50-4-white_0.jpg",
+    buttonLabel: "Смотреть фитомодули",
+  },
+  {
+    title: "Грунты",
+    description: "Специальные субстраты для разных видов растений. Правильный грунт — залог здоровой корневой системы.",
+    href: "/catalog?category=grunty-substraty",
+    bg: "bg-amber-50",
+    image: "/images/ecokon/bio-chay-yantar-fosfor_1.jpg",
+    buttonLabel: "Смотреть грунты",
+  },
+  {
+    title: "Удобрения",
+    description: "Органические удобрения на основе конского биогумуса. 51 000+ отзывов, 4.9 на маркетплейсах.",
+    href: "/catalog?brand=ecokon",
+    bg: "bg-green-50",
+    image: "/images/ecokon/bio-chay-yantar-fosfor_0.jpg",
+    buttonLabel: "Смотреть удобрения",
+  },
+];
+```
+
+Для изображения Грунтов: проверь `ls public/images/` — если есть папка `grunty/` или файлы с "grunt" — используй их. Иначе оставь заглушку и добавь TODO-комментарий.
+
+Обнови сетку на 3 колонки для desktop:
+```tsx
+<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+```
+
+Убери фильтр по `SHOW_TSVETOLOGIYA` — показываем все 3 карточки без feature-flag.
+
+Заголовок секции: «Наши продукты» → «Что мы производим».
+
+4. npm run build — без ошибок.
+5. git add -A && git commit -m "feat: remove Bestsellers, replace ProductLines with 3 category cards"
+```
+
+---
+
+## ПРОМПТ 35: Скрыть страницу /delivery и убрать все ссылки на неё
+
+```
+Ты работаешь в папке ~/Obsidian/pro-pochvu — Next.js 14 + TypeScript + Tailwind.
+
+Страница /delivery временно убирается с сайта. Логику доставки в checkout (DeliveryOptions, DeliveryStep, DeliveryMap, API /api/delivery/*) НЕ ТРОГАТЬ.
+
+### 1. Редирект страницы /delivery → главная
+
+Открой `src/app/delivery/page.tsx`. Замени весь контент на редирект:
+
+```tsx
+import { redirect } from "next/navigation";
+
+export default function DeliveryPage() {
+  redirect("/");
+}
+```
+
+Метатег canonical и metadata тоже убери (или закомментируй) — страница не должна индексироваться.
+
+### 2. Убрать ссылку из Footer
+
+Файл: `src/components/Footer.tsx`
+Найди строку `{ href: "/delivery", label: "Доставка и оплата" }` и удали её из массива навигации.
+
+### 3. Убрать ссылку из MobileMenu
+
+Файл: `src/components/MobileMenu.tsx`
+Найди строку `{ href: "/delivery", label: "Доставка и оплата" }` и удали её.
+
+### 4. Убрать из sitemap
+
+Файл: `src/app/sitemap.ts`
+Найди упоминание `/delivery` и удали эту запись из sitemap — страница не должна попадать в индекс.
+
+### 5. Проверить
+
+```bash
+grep -rn '"/delivery"' src/ --include="*.tsx" --include="*.ts"
+# Должны остаться только: checkout/delivery API routes, types/delivery, компоненты checkout
+# НЕ должно быть: ссылок href="/delivery" в навигации или тексте
+```
+
+6. npm run build — без ошибок.
+7. git add -A && git commit -m "feat: hide /delivery page and remove nav links"
+```
+
+---
+
 ## Порядок запуска
 
 ```bash
@@ -1580,4 +1762,7 @@ git init && git add -A && git commit -m "Initial state before MVP Phase 1"
 
 # Phase 4 — Фиксы, изображения, отзывы WB:
 ./run-prompts.sh 26 30
+
+# Phase 5 — UI-фиксы:
+./run-prompts.sh 31 35
 ```

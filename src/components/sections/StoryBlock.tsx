@@ -4,7 +4,7 @@ import { Ornament } from "@/components/ui/Ornament";
 const stats = [
   { value: "2014", label: "год основания" },
   { value: "500К+", label: "довольных клиентов" },
-  { value: "4.9★", label: "средняя оценка" },
+  { value: "4.92★", label: "средняя оценка" },
 ];
 
 export function StoryBlock() {

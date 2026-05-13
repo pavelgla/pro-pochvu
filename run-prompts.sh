@@ -53,6 +53,11 @@ PROMPTS=(
   "28-wb-reviews-sync|WB Sync: парсер отзывов через публичный feedbacks API"
   "29-reviews-display|Reviews: отображение с бейджами WB/Ozon, пагинация"
   "30-final-phase4|Final Phase 4: 404 проверка, изображения, TypeScript"
+  "31-video-thumbnails|UI: уникальные превью у каждого видео в блоке VideoInstructions"
+  "32-marketplace-buttons|UI: убрать «со скидкой» и модалку с кнопок WB/Ozon"
+  "33-remove-delivery-promo|UI: убрать блок «Доставка от 99 ₽» со страницы товара"
+  "34-homepage-sections|UI: убрать Bestsellers, переделать ProductLines на 3 категории"
+  "35-hide-delivery-page|UI: скрыть /delivery, убрать ссылки из Footer/MobileMenu/sitemap"
 )
 
 TOTAL=${#PROMPTS[@]}

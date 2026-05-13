@@ -59,7 +59,7 @@ export function Footer() {
               производителей.
             </p>
             <p className="mt-5 text-[11px] font-medium text-accent-light">
-              Основано в&nbsp;2014 г.
+              Основано в&nbsp;2020 г.
             </p>
           </div>
 

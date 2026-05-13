@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const stats = [
   { value: "500 000+", label: "довольных покупателей" },
-  { value: "4.9★", label: "средний рейтинг" },
+  { value: "4.92★", label: "средний рейтинг" },
   { value: "18", label: "товаров в линейке" },
   { value: "5 лет", label: "гарантия на фитомодули" },
 ];

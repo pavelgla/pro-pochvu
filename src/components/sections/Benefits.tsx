@@ -1,8 +1,8 @@
 const benefits = [
   { icon: "♻", title: "Органический состав", description: "100% без химии" },
-  { icon: "★", title: "4.9 на маркетплейсах", description: "51 000+ отзывов" },
-  { icon: "⇢", title: "Доставка по России", description: "СДЭК · 5Post · Boxberry" },
-  { icon: "↺", title: "Лёгкий возврат", description: "30 дней без вопросов" },
+  { icon: "★", title: "4.92 на маркетплейсах", description: "51 000+ отзывов" },
+  { icon: "🌱", title: "Прямо с фермы", description: "Производитель без посредников" },
+  { icon: "✓", title: "Результат за 2 недели", description: "Проверено на 500 000+ растений" },
 ];
 
 export function Benefits() {

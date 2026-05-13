@@ -54,17 +54,17 @@ export function Hero() {
             <div className="hidden h-8 w-px bg-line sm:block" />
             <div>
               <span className="block font-serif text-[22px] font-semibold text-ink">
-                4.9★
+                4.92★
               </span>
               <span className="mt-0.5 block text-[11px]">средняя оценка</span>
             </div>
             <div className="hidden h-8 w-px bg-line sm:block" />
             <div>
               <span className="block font-serif text-[22px] font-semibold text-ink">
-                2
+                25
               </span>
               <span className="mt-0.5 block text-[11px]">
-                собственных бренда
+                собственных разработок
               </span>
             </div>
           </div>
@@ -101,7 +101,7 @@ export function Hero() {
           {/* Rating badge */}
           <div className="absolute -right-4 top-5 hidden h-24 w-24 flex-col items-center justify-center rounded-full bg-accent text-center text-bg lg:flex">
             <span className="text-[11px] opacity-85">рейтинг</span>
-            <span className="mt-0.5 text-[28px] font-semibold">4.9★</span>
+            <span className="mt-0.5 text-[28px] font-semibold">4.92★</span>
             <span className="mt-0.5 text-[9px] tracking-[0.08em] opacity-80">
               OZON
             </span>
