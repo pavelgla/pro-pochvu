@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
+
 import { Hero } from "@/components/sections/Hero";
 import { Benefits } from "@/components/sections/Benefits";
-import { Bestsellers } from "@/components/sections/Bestsellers";
+
 import { BrandSplit } from "@/components/sections/BrandSplit";
 import { SeasonCalendar } from "@/components/sections/SeasonCalendar";
 import { StoryBlock } from "@/components/sections/StoryBlock";
@@ -31,9 +31,7 @@ export default function Home() {
     <>
       <Hero />
       <Benefits />
-      <Suspense>
-        <Bestsellers />
-      </Suspense>
+
       <BrandSplit />
       <SeasonCalendar />
       <StoryBlock />

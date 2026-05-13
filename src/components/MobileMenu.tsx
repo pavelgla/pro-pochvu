@@ -15,7 +15,7 @@ const menuLinks = [
   ...(SHOW_TSVETOLOGIYA
     ? [{ href: "/catalog?brand=tsvetologiya", label: "Фитомодули" }]
     : []),
-  { href: "/delivery", label: "Доставка и оплата" },
+
 ];
 
 type MobileMenuProps = {

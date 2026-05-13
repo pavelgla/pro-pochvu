@@ -1,50 +1,46 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
-const brands = [
+const categories = [
   {
-    name: "ЭКО Конь",
-    tag: "Бренд №1",
-    subtitle: "Удобрения и грунты",
+    name: "Фитомодули",
+    subtitle: "Вертикальное озеленение",
     description:
-      "Био-чай, гранулы, готовые смеси — ферментированная органика из конского навоза, обогащённая микроэлементами по рецептам семьи Мушкиных.",
-    href: "/catalog?brand=ecokon",
-    image: "/images/ecokon/bio-chay-yantar-fosfor_0.jpg",
-    fromPrice: "399",
-    brandKey: "ecokon" as const,
-  },
-  {
-    name: "Цветология",
-    tag: "Бренд №2",
-    subtitle: "Фитомодули и сады",
-    description:
-      "Живые картины из растений — каждый модуль собираем вручную, подбираем растения под ваш интерьер и уровень освещения.",
+      "Модульные системы для живого интерьера. Для дома, офиса, ресторана — собираем вручную, подбираем растения под ваш интерьер.",
     href: "/catalog?brand=tsvetologiya",
     image: "/images/tsvetologiya/fitomodul-50-4-white_0.jpg",
     fromPrice: "890",
-    brandKey: "tsvetologiya" as const,
+  },
+  {
+    name: "Грунты",
+    subtitle: "Субстраты и почвосмеси",
+    description:
+      "Специальные субстраты для разных видов растений. Правильный грунт — залог здоровой корневой системы.",
+    href: "/catalog?category=grunty-substraty",
+    image: "/images/ecokon/udobrenie-rassada_0.jpg", // TODO: заменить на фото грунта
+    fromPrice: "299",
+  },
+  {
+    name: "Удобрения",
+    subtitle: "Органические подкормки",
+    description:
+      "Био-чай, гранулы, готовые смеси — ферментированная органика из конского навоза. 51 000+ отзывов, 4.92 на маркетплейсах.",
+    href: "/catalog?brand=ecokon",
+    image: "/images/ecokon/bio-chay-yantar-fosfor_0.jpg",
+    fromPrice: "399",
   },
 ];
 
 export function BrandSplit() {
-  const visibleBrands = SHOW_TSVETOLOGIYA
-    ? brands
-    : brands.filter((b) => b.brandKey !== "tsvetologiya");
-
   return (
     <section className="px-4 pb-12 md:px-6 xl:px-12 lg:pb-24">
       <div className="mx-auto max-w-7xl">
-        <div
-          className={`grid gap-6 ${
-            visibleBrands.length > 1 ? "lg:grid-cols-2" : "lg:grid-cols-1"
-          }`}
-        >
-          {visibleBrands.map((b) => (
+        <div className="grid gap-6 lg:grid-cols-3">
+          {categories.map((b) => (
             <Link
               key={b.name}
               href={b.href}
-              className="group relative flex min-h-[480px] overflow-hidden rounded-lg lg:min-h-[540px]"
+              className="group relative flex min-h-[380px] overflow-hidden rounded-lg lg:min-h-[440px]"
             >
               <Image
                 src={b.image}

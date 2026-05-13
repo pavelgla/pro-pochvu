@@ -8,7 +8,7 @@ const columns = [
     title: "Покупателям",
     links: [
       { href: "/catalog", label: "Каталог" },
-      { href: "/delivery", label: "Доставка и оплата" },
+
       { href: "/returns", label: "Возврат" },
       { href: "/contacts", label: "Контакты" },
     ],

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Heart, Minus, Plus, Package, Weight, ShoppingBag } from "lucide-react";
+import { Star, Heart, Minus, Plus, Weight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
 import { VariantSelector } from "@/components/VariantSelector";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
-import { MarketplaceLeadModal } from "@/components/MarketplaceLeadModal";
+
 import { getMarketplaceLinks } from "@/lib/marketplace-map";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/catalog";
@@ -19,7 +19,7 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [leadModal, setLeadModal] = useState<{ marketplace: "wb" | "ozon"; url: string } | null>(null);
+
   const links = getMarketplaceLinks(product.slug);
   const addItem = useCartStore((s) => s.addItem);
   const { user } = useAuth();
@@ -180,52 +180,29 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
       {(links.wb || links.ozon) && (
         <div className="flex flex-col gap-2">
           {links.wb && (
-            <Button
-              variant="secondary"
-              size="lg"
-              className="w-full gap-2 border-[#CB11AB] text-[#CB11AB] hover:bg-[#CB11AB]/5"
-              onClick={() => setLeadModal({ marketplace: "wb", url: links.wb! })}
+            <a
+              href={links.wb}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#CB11AB] px-6 py-3 text-sm font-medium text-[#CB11AB] transition-colors hover:bg-[#CB11AB]/5"
             >
               <ShoppingBag className="h-4 w-4" />
-              Купить на WB со скидкой
-            </Button>
+              Купить на Wildberries
+            </a>
           )}
           {links.ozon && (
-            <Button
-              variant="secondary"
-              size="lg"
-              className="w-full gap-2 border-[#005BFF] text-[#005BFF] hover:bg-[#005BFF]/5"
-              onClick={() => setLeadModal({ marketplace: "ozon", url: links.ozon! })}
+            <a
+              href={links.ozon}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#005BFF] px-6 py-3 text-sm font-medium text-[#005BFF] transition-colors hover:bg-[#005BFF]/5"
             >
               <ShoppingBag className="h-4 w-4" />
-              Купить на Ozon со скидкой
-            </Button>
+              Купить на Ozon
+            </a>
           )}
         </div>
       )}
-
-      {/* Lead modal */}
-      {leadModal && (
-        <MarketplaceLeadModal
-          isOpen
-          onClose={() => setLeadModal(null)}
-          productSlug={product.slug}
-          marketplace={leadModal.marketplace}
-          marketplaceUrl={leadModal.url}
-          productName={product.name}
-        />
-      )}
-
-      {/* Delivery info */}
-      <div className="flex items-start gap-3 rounded-xl bg-bg-soft/50 p-4">
-        <Package className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
-        <div className="text-sm">
-          <p className="font-medium">Доставка от 99 ₽ по всей России</p>
-          <p className="mt-0.5 text-mute">
-            5Post, Boxberry, Почта России, СДЭК
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
