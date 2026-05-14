@@ -11,6 +11,7 @@ import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 const navLinks = [
   { href: "/catalog", label: "Каталог" },
   { href: "/catalog?brand=ecokon", label: "Бренды" },
+  { href: "/blog", label: "Блог" },
   { href: "/knowledge-base/video", label: "Уход за растениями" },
   { href: "/about", label: "О нас" },
   ...(SHOW_TSVETOLOGIYA
