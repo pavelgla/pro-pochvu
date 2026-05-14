@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getAllProductSlugs, getProductLines } from "@/lib/catalog";
 import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
+import { prisma } from "@/lib/prisma";
 
 const SITE_URL = "https://pro-pochvu.ru";
 
@@ -9,9 +10,13 @@ export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const [slugs, productLines] = await Promise.all([
+  const [slugs, productLines, blogPosts] = await Promise.all([
     getAllProductSlugs(),
     getProductLines(),
+    prisma.blogPost.findMany({
+      where: { isPublished: true },
+      select: { slug: true, updatedAt: true },
+    }),
   ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -99,5 +104,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...productLinePages, ...productPages];
+  const blogPostPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: post.updatedAt,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...productLinePages, ...productPages, ...blogPostPages];
 }
