@@ -17,7 +17,7 @@ const categories = [
     description:
       "Специальные субстраты для разных видов растений. Правильный грунт — залог здоровой корневой системы.",
     href: "/catalog?category=grunty-substraty",
-    image: "/images/ecokon/udobrenie-rassada_0.jpg", // TODO: заменить на фото грунта
+    image: "/images/ozon/grunt-ecokon-20l_1.jpg",
     fromPrice: "299",
   },
   {
