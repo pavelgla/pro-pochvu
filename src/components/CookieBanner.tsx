@@ -25,7 +25,7 @@ export function CookieBanner() {
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 max-w-sm w-[calc(100%-2rem)] sm:w-auto rounded-xl shadow-2xl bg-bg border border-gray-200 p-4 space-y-3">
+    <div data-nosnippet className="fixed bottom-4 left-4 z-50 max-w-sm w-[calc(100%-2rem)] sm:w-auto rounded-xl shadow-2xl bg-bg border border-gray-200 p-4 space-y-3">
       <p className="text-sm text-gray-700 leading-relaxed">
         Мы используем cookie для работы сайта, аналитики и улучшения опыта.
         Подробнее в{" "}
