@@ -12,15 +12,6 @@ const categories = [
     fromPrice: "890",
   },
   {
-    name: "Грунты",
-    subtitle: "Субстраты и почвосмеси",
-    description:
-      "Специальные субстраты для разных видов растений. Правильный грунт — залог здоровой корневой системы.",
-    href: "/catalog?category=grunty-substraty",
-    image: "/images/ozon/grunt-ecokon-20l_1.jpg",
-    fromPrice: "299",
-  },
-  {
     name: "Удобрения",
     subtitle: "Органические подкормки",
     description:
@@ -28,6 +19,15 @@ const categories = [
     href: "/catalog?brand=ecokon",
     image: "/images/ecokon/bio-chay-yantar-fosfor_0.jpg",
     fromPrice: "399",
+  },
+  {
+    name: "Грунты",
+    subtitle: "Субстраты и почвосмеси",
+    description:
+      "Специальные субстраты для разных видов растений. Правильный грунт — залог здоровой корневой системы.",
+    href: "/catalog?category=grunty-substraty",
+    image: "/images/ozon/grunt-ecokon-organicheskiy_1.jpg",
+    fromPrice: "299",
   },
 ];
 
@@ -46,26 +46,25 @@ export function BrandSplit() {
                 src={b.image}
                 alt={b.name}
                 fill
-                className="object-contain transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(28,32,24,0.85)] via-[rgba(28,32,24,0.3)] to-transparent" />
 
-              <div className="relative z-10 flex flex-1 flex-col justify-end p-8 text-bg lg:p-10">
-                <div>
-                  <div className="font-serif text-4xl font-medium tracking-tight lg:text-[56px] lg:leading-none">
+              <div className="relative z-10 flex flex-1 flex-col justify-end">
+                <div className="bg-bg/85 px-8 py-7 backdrop-blur-sm lg:px-10 lg:py-8">
+                  <div className="font-serif text-4xl font-medium tracking-tight text-ink lg:text-[56px] lg:leading-none">
                     {b.name}
                   </div>
-                  <div className="mt-2 text-[15px] opacity-85">
+                  <div className="mt-2 text-[15px] text-ink/70">
                     {b.subtitle}
                   </div>
-                  <p className="mt-5 max-w-[420px] text-sm leading-relaxed opacity-90">
+                  <p className="mt-5 max-w-[420px] text-sm leading-relaxed text-ink/80">
                     {b.description}
                   </p>
                   <div className="mt-7 flex items-center gap-3.5">
-                    <span className="rounded-full bg-bg px-6 py-3.5 text-[13px] font-medium text-ink transition-colors group-hover:bg-accent group-hover:text-bg">
+                    <span className="rounded-full bg-ink px-6 py-3.5 text-[13px] font-medium text-bg transition-colors group-hover:bg-accent group-hover:text-bg">
                       Открыть коллекцию →
                     </span>
-                    <span className="text-[11px] tracking-[0.1em] opacity-70">
+                    <span className="text-[11px] tracking-[0.1em] text-ink/60">
                       ОТ {b.fromPrice} ₽
                     </span>
                   </div>
