@@ -5,6 +5,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { prisma } from "@/lib/prisma";
 import { blogCategoryLabel } from "@/lib/blog";
+import { TELEGRAM_URL } from "@/lib/constants";
 
 const SITE_URL = "https://pro-pochvu.ru";
 
@@ -136,6 +137,37 @@ export default async function BlogPostPage({ params }: Props) {
             {/* Markdown content */}
             <div className="prose prose-lg max-w-none [&_a]:text-accent [&_a:hover]:text-accent-deep [&_h2]:text-ink [&_h3]:text-ink [&_strong]:text-ink">
               <ReactMarkdown>{post.content}</ReactMarkdown>
+            </div>
+
+            {/* CTA — каталог по теме + Telegram */}
+            <div className="mt-12 rounded-2xl bg-cream p-7 sm:p-8">
+              <h2 className="font-serif text-2xl font-medium text-ink mb-2">
+                Готовы попробовать?
+              </h2>
+              <p className="text-ink-2 mb-5">
+                Выбирайте товары в каталоге и заказывайте на Wildberries или Ozon.
+                Полезные советы по уходу — в нашем Telegram.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={
+                    post.category === "tsvetologiya"
+                      ? "/catalog?brand=tsvetologiya"
+                      : "/catalog?brand=ecokon"
+                  }
+                  className="inline-flex items-center gap-1 rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white hover:bg-accent/90 transition-colors"
+                >
+                  Смотреть в каталоге →
+                </Link>
+                <a
+                  href={TELEGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 rounded-xl border border-line px-6 py-3 text-sm font-medium text-ink hover:bg-bg-soft transition-colors"
+                >
+                  Открыть Telegram
+                </a>
+              </div>
             </div>
 
             {/* Back link */}

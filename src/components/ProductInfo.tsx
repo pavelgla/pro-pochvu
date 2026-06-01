@@ -228,6 +228,43 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
           marketplaceUrl={leadModal.url}
         />
       )}
+
+      {/* Mobile sticky buy bar */}
+      {!product.sellDirect && hasMarketplace && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur md:hidden">
+          <div className="flex items-center gap-3">
+            <span className="shrink-0 font-serif text-lg font-semibold text-ink">
+              {formatPrice(product.price)}
+            </span>
+            <div className="flex flex-1 gap-2">
+              {links.ozon && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "ozon", slug: product.slug, source: "sticky" });
+                    setLeadModal({ mp: "ozon", url: links.ozon! });
+                  }}
+                  className="flex-1 rounded-xl bg-[#005BFF] py-2.5 text-sm font-semibold text-white"
+                >
+                  Ozon
+                </button>
+              )}
+              {links.wb && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "wb", slug: product.slug, source: "sticky" });
+                    setLeadModal({ mp: "wb", url: links.wb! });
+                  }}
+                  className="flex-1 rounded-xl bg-[#CB11AB] py-2.5 text-sm font-semibold text-white"
+                >
+                  WB
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Ornament } from "@/components/ui/Ornament";
-import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
+import { SHOW_TSVETOLOGIYA, MARKETPLACE_STORES } from "@/lib/constants";
 
 export function Hero() {
   return (
@@ -41,6 +41,28 @@ export function Hero() {
                 Фитомодули
               </Link>
             )}
+          </div>
+
+          {/* Покупка идёт на маркетплейсах */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-mute">
+            <span>Покупка на маркетплейсах:</span>
+            <a
+              href={MARKETPLACE_STORES.ozonEcokon}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-[#005BFF] hover:underline"
+            >
+              Ozon
+            </a>
+            <span className="text-line">·</span>
+            <a
+              href={MARKETPLACE_STORES.wildberries}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-[#CB11AB] hover:underline"
+            >
+              Wildberries
+            </a>
           </div>
 
           {/* Stats strip */}
