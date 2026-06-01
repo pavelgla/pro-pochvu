@@ -28,4 +28,9 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "vertikalnyy-sad-v-kvartire": "fitomodul-50-4-white",
   "vertikalnoe-ozelenenie-v-kvartire": "fitomodul-50-4-green",
   "kak-pravilno-uhazhivat-za-komnatnymi-rasteniyami": "bio-chay-dekorativno-listvennye",
+  "chem-podkormit-komnatnye-cvety": "bio-chay-yantar-fosfor",
+  "yantarnaya-kislota-dlya-rasteniy": "bio-chay-yantar-fosfor",
+  "podkormka-rassady-tomatov-pertsa": "udobrenie-rassada",
+  "konskiy-navoz-kak-udobrenie": "udobrenie-kornevaya",
+  "chem-podkormit-fialki": "bio-chay-dekorativno-listvennye",
 };
