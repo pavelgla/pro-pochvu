@@ -29,7 +29,8 @@ export function Hero() {
           <p className="mt-8 max-w-[520px] text-[17px] leading-relaxed text-ink-2">
             Удобрения, грунты и фитомодули от&nbsp;калининградских
             предпринимателей. Бренды «ЭКО&nbsp;Конь» и&nbsp;«Цветология» —
-            более 500&nbsp;000 довольных клиентов на&nbsp;Wildberries и&nbsp;Ozon.
+            с&nbsp;2014 года, более 500&nbsp;000 довольных клиентов
+            на&nbsp;Wildberries и&nbsp;Ozon.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
