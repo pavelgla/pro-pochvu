@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { prisma } from "@/lib/prisma";
-import { blogCategoryLabel, BLOG_PRODUCT_ANCHORS } from "@/lib/blog";
+import { blogCategoryLabel, BLOG_PRODUCT_ANCHORS, BLOG_IMAGE_CREDITS } from "@/lib/blog";
 import { BlogProductCta } from "@/components/BlogProductCta";
 
 const SITE_URL = "https://pro-pochvu.ru";
@@ -142,11 +142,24 @@ export default async function BlogPostPage({ params }: Props) {
             {/* CTA — товар из статьи + прямые кнопки маркетплейса */}
             <BlogProductCta productSlug={BLOG_PRODUCT_ANCHORS[post.slug]} />
 
-            {/* Back link */}
-            <div className="mt-12 pt-8 border-t border-line">
+            {/* Back link + источник изображения */}
+            <div className="mt-12 pt-8 border-t border-line flex flex-wrap items-center justify-between gap-3">
               <Link href="/blog" className="text-sm text-mute hover:text-accent transition-colors">
                 ← Все статьи
               </Link>
+              {BLOG_IMAGE_CREDITS[post.slug] && (
+                <span className="text-xs text-mute/70">
+                  Изображение:{" "}
+                  <a
+                    href={BLOG_IMAGE_CREDITS[post.slug].source}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    className="underline underline-offset-2 hover:text-accent"
+                  >
+                    {BLOG_IMAGE_CREDITS[post.slug].author} / Pexels
+                  </a>
+                </span>
+              )}
             </div>
           </div>
         </div>

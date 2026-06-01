@@ -42,3 +42,27 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "fitomodul-svoimi-rukami-vs-gotovyy": "fitomodul-50-4-white",
   "uhod-za-fitostenoy": "fitomodul-50-4-green",
 };
+
+// Источник обложки статьи (стоковые фото Pexels). Показываем в футере статьи.
+export type ImageCredit = { author: string; source: string };
+export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
+  "chem-podkormit-komnatnye-cvety": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  "yantarnaya-kislota-dlya-rasteniy": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
+  "kak-pravilno-uhazhivat-za-komnatnymi-rasteniyami": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
+  "podkormka-rassady-tomatov-pertsa": { author: "Judith Knight", source: "https://www.pexels.com/photo/green-plants-in-black-plastic-pots-14057978/" },
+  "pochemu-rassada-vytyagivaetsya": { author: "Karol Dach", source: "https://www.pexels.com/photo/plants-in-plastic-cups-12258688/" },
+  "kak-vybrat-grunt-dlya-rassady": { author: "Gary Barnes", source: "https://www.pexels.com/photo/gardeners-planting-seedling-in-pots-in-greenhouse-6231852/" },
+  "biogumus-dlya-rassady": { author: "Joice Rivas", source: "https://www.pexels.com/photo/potted-plants-placed-on-rows-9512341/" },
+  "grunt-dlya-rassady-svoimi-rukami": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
+  "agroperlit-vermikulit-v-grunte": { author: "Teona Swift", source: "https://www.pexels.com/photo/gardener-planting-cactus-in-pot-with-soil-6912844/" },
+  "konskiy-navoz-kak-udobrenie": { author: "Juanmt", source: "https://www.pexels.com/photo/hands-holding-rich-organic-compost-in-garden-33995853/" },
+  "chem-podkormit-fialki": { author: "Mikhail Nilov", source: "https://www.pexels.com/photo/an-african-violet-plant-in-close-up-photography-7814292/" },
+  "grunt-dlya-orhidey": { author: "Pixabay", source: "https://www.pexels.com/photo/white-moth-orchids-87016/" },
+  "udobrenie-dlya-orhidey": { author: "Andromeda99", source: "https://www.pexels.com/photo/beautiful-phalaenopsis-in-close-up-photography-11205261/" },
+  "vertikalnoe-ozelenenie-ofisa": { author: "Asanjorjo", source: "https://www.pexels.com/photo/lush-vertical-garden-in-singapore-s-marina-bay-31712918/" },
+  "rasteniya-dlya-fitosteny-v-kvartire": { author: "Sayeed X Chowdhury", source: "https://www.pexels.com/photo/colorful-vertical-garden-wall-with-potted-plants-33628019/" },
+  "fitomodul-svoimi-rukami-vs-gotovyy": { author: "Sukrit Lamthong", source: "https://www.pexels.com/photo/green-plants-hanging-on-the-brick-wall-7443025/" },
+  "uhod-za-fitostenoy": { author: "Magda Ehlers", source: "https://www.pexels.com/photo/green-plants-on-black-pots-5958769/" },
+  "vertikalnyy-sad-v-kvartire": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
+  "vertikalnoe-ozelenenie-v-kvartire": { author: "Ian Panelo", source: "https://www.pexels.com/photo/assorted-plants-in-plastic-containers-6911177/" },
+};
