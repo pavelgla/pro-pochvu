@@ -16,6 +16,7 @@ export const GOAL = {
   BEGIN_CHECKOUT: "begin_checkout",
   PURCHASE: "purchase",
   LEAD_FORM_SUBMIT: "lead_form_submit",
+  MARKETPLACE_CLICK: "marketplace_click",
   PHONE_CLICK: "phone_click",
   TELEGRAM_CLICK: "telegram_click",
   WHATSAPP_CLICK: "whatsapp_click",

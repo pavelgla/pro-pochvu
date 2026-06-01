@@ -191,8 +191,9 @@ export default function PrivacyPage() {
           </p>
           <ul className="mb-4 list-disc space-y-2 pl-6">
             <li>
-              <span className="font-medium">Службы доставки:</span> СДЭК, Boxberry,
-              5Post, Почта России — адрес и контакты получателя
+              <span className="font-medium">Службы доставки</span> (после запуска
+              прямой доставки с сайта) — адрес и контакты получателя для исполнения
+              заказа
             </li>
             <li>
               <span className="font-medium">Платёжный сервис:</span> ЮKassa (НКО

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { blogCategoryLabel } from "@/lib/blog";
 
 export const dynamic = "force-dynamic";
 
@@ -79,9 +80,9 @@ export default async function BlogPage() {
                 </div>
               )}
               <div className="flex flex-col flex-1 p-5">
-                {post.category && (
+                {blogCategoryLabel(post.category) && (
                   <span className="text-xs font-medium text-accent uppercase tracking-wide mb-2">
-                    {post.category === "tsvetologiya" ? "Цветология" : "Удобрения"}
+                    {blogCategoryLabel(post.category)}
                   </span>
                 )}
                 <h2 className="text-base font-semibold text-ink mb-2 group-hover:text-accent transition-colors line-clamp-2">

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { prisma } from "@/lib/prisma";
+import { blogCategoryLabel } from "@/lib/blog";
 
 const SITE_URL = "https://pro-pochvu.ru";
 
@@ -112,9 +113,9 @@ export default async function BlogPostPage({ params }: Props) {
           <div className="max-w-2xl">
             {/* Meta */}
             <div className="flex items-center gap-3 mb-4">
-              {post.category && (
+              {blogCategoryLabel(post.category) && (
                 <span className="text-xs font-medium text-accent uppercase tracking-wide">
-                  {post.category === "tsvetologiya" ? "Цветология" : "Удобрения"}
+                  {blogCategoryLabel(post.category)}
                 </span>
               )}
               {post.publishedAt && (

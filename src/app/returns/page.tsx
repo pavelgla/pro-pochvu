@@ -1,6 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle, XCircle, MessageCircle, ArrowRight } from "lucide-react";
+import { generateFaqJsonLd } from "@/lib/structured-data";
+
+const FAQ = [
+  {
+    question: "Сколько дней даётся на возврат?",
+    answer:
+      "14 дней на возврат без объяснения причин, если товар не подошёл. Бракованный или повреждённый при доставке товар можно вернуть в любом состоянии.",
+  },
+  {
+    question: "Какой товар нельзя вернуть?",
+    answer:
+      "Вскрытые удобрения (по санитарным нормам) и товары с явными следами использования возврату не подлежат.",
+  },
+  {
+    question: "Как оформить возврат?",
+    answer:
+      "Напишите нам в Telegram или через форму на странице контактов, пришлите фото товара и упаковки. После подтверждения вернём деньги в течение 10 рабочих дней.",
+  },
+  {
+    question: "Есть ли гарантия на фитомодули?",
+    answer:
+      "Да, на фитомодули Цветология действует гарантия 5 лет на производственный брак, трещины и деформацию без механических повреждений.",
+  },
+];
 
 export const metadata: Metadata = {
   title: "Возврат товара | ЭКО Конь",
@@ -12,8 +36,13 @@ export const metadata: Metadata = {
 const TELEGRAM_URL = "https://t.me/+7cAd9gatgP44MDcy";
 
 export default function ReturnsPage() {
+  const faqJsonLd = generateFaqJsonLd(FAQ);
   return (
     <main className="min-h-screen bg-bg">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="max-w-3xl mx-auto px-4 py-12 sm:py-16 space-y-10">
 
         {/* Блок 1 — Главное */}

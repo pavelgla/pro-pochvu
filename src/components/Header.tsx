@@ -75,7 +75,7 @@ export function Header() {
         <div className="container-main flex items-center justify-between py-2 text-[11px] tracking-[0.08em] font-sans">
           <span className="font-medium">★ 4.9 на Ozon · 51&nbsp;000+ отзывов</span>
           <span className="font-medium">
-            Бесплатная доставка от&nbsp;3 000&nbsp;₽
+            Продаём на Wildberries и&nbsp;Ozon · доставка маркетплейса
           </span>
           <span className="opacity-80 font-medium">RU</span>
         </div>
@@ -99,18 +99,20 @@ export function Header() {
           </nav>
 
           <div className="ml-auto flex items-center gap-4">
-            <button
+            <Link
+              href="/catalog"
               className="hidden h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-bg-soft md:flex"
-              aria-label="Поиск"
+              aria-label="Поиск по каталогу"
             >
               <IconSearch />
-            </button>
-            <button
+            </Link>
+            <Link
+              href={user ? "/account/favorites" : "/auth/login?return=/account/favorites"}
               className="hidden h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-bg-soft md:flex"
               aria-label="Избранное"
             >
               <IconHeart />
-            </button>
+            </Link>
             <Link
               href={user ? "/account" : "/auth/login"}
               className="hidden h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-bg-soft md:flex"

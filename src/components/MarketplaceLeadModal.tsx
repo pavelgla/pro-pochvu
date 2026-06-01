@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
-import { Copy, Check, ExternalLink } from "lucide-react";
+import { ExternalLink, Send, Bell } from "lucide-react";
 import Link from "next/link";
 
-const PROMO = "ECOKON15";
+const TELEGRAM_CHANNEL = "https://t.me/+7cAd9gatgP44MDcy";
+const LEAD_MAGNET = "telegram+sale_alerts";
 
 interface Props {
   isOpen: boolean;
@@ -17,35 +18,32 @@ interface Props {
   productName: string;
 }
 
-type Step = "form" | "promo";
+type Step = "form" | "done";
 
 export function MarketplaceLeadModal({
   isOpen, onClose, productSlug, marketplace, marketplaceUrl, productName,
 }: Props) {
   const [step, setStep]       = useState<Step>("form");
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied]   = useState(false);
   const [error, setError]     = useState("");
 
-  const [name, setName]           = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [email, setEmail]         = useState("");
-  const [phone, setPhone]         = useState("");
-  const [consent, setConsent]     = useState(false);
+  const [email, setEmail]     = useState("");
+  const [phone, setPhone]     = useState("");
+  const [consent, setConsent] = useState(false);
 
   const mpLabel = marketplace === "wb" ? "Wildberries" : "Ozon";
 
   function reset() {
     setStep("form");
     setLoading(false);
-    setCopied(false);
     setError("");
-    setName(""); setBirthdate(""); setEmail(""); setPhone(""); setConsent(false);
+    setEmail(""); setPhone(""); setConsent(false);
     onClose();
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!email && !phone) { setError("Укажите email или телефон"); return; }
     if (!consent) { setError("Необходимо согласие на обработку данных"); return; }
     setLoading(true);
     setError("");
@@ -53,10 +51,10 @@ export function MarketplaceLeadModal({
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, birthdate, email, phone, productSlug, marketplace }),
+        body: JSON.stringify({ email, phone, productSlug, marketplace, leadMagnet: LEAD_MAGNET }),
       });
       if (!res.ok) throw new Error("Ошибка сервера");
-      setStep("promo");
+      setStep("done");
     } catch {
       setError("Не удалось отправить данные. Попробуйте ещё раз.");
     } finally {
@@ -64,15 +62,7 @@ export function MarketplaceLeadModal({
     }
   }
 
-  function copyPromo() {
-    navigator.clipboard.writeText(PROMO);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  const title = step === "form"
-    ? `Скидка 15% на ${mpLabel}`
-    : "Ваш промокод готов!";
+  const title = step === "form" ? "Будьте в курсе акций" : "Готово!";
 
   return (
     <Modal isOpen={isOpen} onClose={reset} title={title}>
@@ -83,38 +73,21 @@ export function MarketplaceLeadModal({
           className="space-y-4"
         >
           <p className="text-sm text-mute">
-            Оставьте данные и получите промокод на скидку 15%
-            при покупке «{productName}» на {mpLabel}.
+            Оставьте контакт — пришлём доступ в закрытый Telegram с советами по уходу
+            и предупредим, когда на «{productName}» будет акция на {mpLabel}.
           </p>
 
           <div className="space-y-3">
             <input
-              required
-              type="text"
-              placeholder="ФИО *"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
-            />
-            <input
-              type="date"
-              placeholder="Дата рождения"
-              value={birthdate}
-              onChange={e => setBirthdate(e.target.value)}
-              className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
-            />
-            <input
-              required
               type="email"
-              placeholder="Email *"
+              placeholder="Email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
             />
             <input
-              required
               type="tel"
-              placeholder="Телефон *"
+              placeholder="Телефон или ник в Telegram"
               value={phone}
               onChange={e => setPhone(e.target.value)}
               className="w-full rounded-xl border border-line px-4 py-3 text-sm focus:border-accent focus:outline-none"
@@ -139,28 +112,37 @@ export function MarketplaceLeadModal({
 
           {error && <p className="text-sm text-error">{error}</p>}
 
-          <Button type="submit" size="lg" className="w-full" disabled={loading || !consent}>
-            {loading ? "Отправляем..." : "Получить промокод"}
+          <Button type="submit" size="lg" className="w-full" disabled={loading}>
+            {loading ? "Отправляем..." : "Подписаться и перейти"}
           </Button>
+
+          <a
+            href={marketplaceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={reset}
+            className="block text-center text-sm text-mute underline-offset-2 hover:text-ink hover:underline"
+          >
+            Перейти сразу на {mpLabel} →
+          </a>
         </form>
       ) : (
         <div className="space-y-5 text-center">
+          <Bell className="mx-auto h-10 w-10 text-accent" />
           <p className="text-sm text-mute">
-            Применяйте при оформлении заказа на {mpLabel}:
+            Спасибо! Сообщим об акциях на «{productName}». Заходите в наш Telegram —
+            там советы по уходу и анонсы скидок.
           </p>
 
-          <div className="flex items-center justify-center gap-3 rounded-xl bg-bg-soft/60 px-6 py-4">
-            <span className="text-2xl font-bold tracking-widest">{PROMO}</span>
-            <button
-              onClick={copyPromo}
-              className="rounded-lg p-2 text-mute hover:text-accent transition-colors"
-              title="Скопировать"
-            >
-              {copied ? <Check className="h-5 w-5 text-accent" /> : <Copy className="h-5 w-5" />}
-            </button>
-          </div>
-
-          <p className="text-xs text-mute/60">Скидка 15% на ваш заказ</p>
+          <a
+            href={TELEGRAM_CHANNEL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-line px-6 py-3 text-sm font-medium text-ink hover:bg-bg-soft transition-colors"
+          >
+            <Send className="h-4 w-4" />
+            Открыть Telegram
+          </a>
 
           <a
             href={marketplaceUrl}

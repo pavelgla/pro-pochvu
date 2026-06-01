@@ -4,7 +4,7 @@ import type { ProductWithLine } from "@/types/database";
 
 export async function CrossSell({ product }: { product: ProductWithLine }) {
   const brand = product.productLine?.brand || "ecokon";
-  const items = await getCrossSellProducts(brand, product.id, 4);
+  const items = await getCrossSellProducts(brand, product.id, 4, product.price);
   if (items.length === 0) return null;
 
   return (
