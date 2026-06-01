@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Heart, Minus, Plus, Weight, ShoppingBag } from "lucide-react";
+import { Star, Heart, Minus, Plus, Weight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
 import { VariantSelector } from "@/components/VariantSelector";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
+import { MarketplaceButtons } from "@/components/MarketplaceButtons";
 
 import { getMarketplaceLinks } from "@/lib/marketplace-map";
-import { MarketplaceLeadModal } from "@/components/MarketplaceLeadModal";
 import { trackGoal, GOAL } from "@/lib/analytics";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/catalog";
@@ -21,7 +21,6 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [leadModal, setLeadModal] = useState<{ mp: "wb" | "ozon"; url: string } | null>(null);
 
   const links = getMarketplaceLinks(product.slug);
   const hasMarketplace = Boolean(links.wb || links.ozon);
@@ -183,32 +182,12 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
               <p className="text-sm text-mute">
                 Доставка и оплата — на маркетплейсе
               </p>
-              {links.wb && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "wb", slug: product.slug });
-                    setLeadModal({ mp: "wb", url: links.wb! });
-                  }}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#CB11AB] px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                >
-                  <ShoppingBag className="h-4 w-4" />
-                  Купить на Wildberries
-                </button>
-              )}
-              {links.ozon && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "ozon", slug: product.slug });
-                    setLeadModal({ mp: "ozon", url: links.ozon! });
-                  }}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#005BFF] px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                >
-                  <ShoppingBag className="h-4 w-4" />
-                  Купить на Ozon
-                </button>
-              )}
+              <MarketplaceButtons
+                wb={links.wb}
+                ozon={links.ozon}
+                slug={product.slug}
+                source="product"
+              />
             </>
           ) : (
             <p className="rounded-xl border border-line bg-bg-soft px-4 py-3 text-sm text-mute">
@@ -216,17 +195,6 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
             </p>
           )}
         </div>
-      )}
-
-      {leadModal && (
-        <MarketplaceLeadModal
-          isOpen
-          onClose={() => setLeadModal(null)}
-          productSlug={product.slug}
-          productName={product.name}
-          marketplace={leadModal.mp}
-          marketplaceUrl={leadModal.url}
-        />
       )}
 
       {/* Mobile sticky buy bar */}
@@ -238,28 +206,30 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
             </span>
             <div className="flex flex-1 gap-2">
               {links.ozon && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "ozon", slug: product.slug, source: "sticky" });
-                    setLeadModal({ mp: "ozon", url: links.ozon! });
-                  }}
-                  className="flex-1 rounded-xl bg-[#005BFF] py-2.5 text-sm font-semibold text-white"
+                <a
+                  href={links.ozon}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "ozon", slug: product.slug, source: "sticky" })
+                  }
+                  className="flex-1 rounded-xl bg-[#005BFF] py-2.5 text-center text-sm font-semibold text-white"
                 >
                   Ozon
-                </button>
+                </a>
               )}
               {links.wb && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "wb", slug: product.slug, source: "sticky" });
-                    setLeadModal({ mp: "wb", url: links.wb! });
-                  }}
-                  className="flex-1 rounded-xl bg-[#CB11AB] py-2.5 text-sm font-semibold text-white"
+                <a
+                  href={links.wb}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "wb", slug: product.slug, source: "sticky" })
+                  }
+                  className="flex-1 rounded-xl bg-[#CB11AB] py-2.5 text-center text-sm font-semibold text-white"
                 >
                   WB
-                </button>
+                </a>
               )}
             </div>
           </div>

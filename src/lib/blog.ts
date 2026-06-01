@@ -18,3 +18,14 @@ export function blogCategoryLabel(category?: string | null): string | null {
   if (!category) return null;
   return BLOG_CATEGORY_LABELS[category.trim().toLowerCase()] ?? "Статьи";
 }
+
+// Статья → товар-якорь для CTA в конце материала.
+export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
+  "bio-chay-ekokon-obzor": "bio-chay-yantar-fosfor",
+  "biogumus-dlya-rassady": "udobrenie-rassada",
+  "udobrenie-dlya-orhidey": "bio-chay-orhidei",
+  "kak-vybrat-grunt-dlya-rassady": "grunt-ecokon-20l",
+  "vertikalnyy-sad-v-kvartire": "fitomodul-50-4-white",
+  "vertikalnoe-ozelenenie-v-kvartire": "fitomodul-50-4-green",
+  "kak-pravilno-uhazhivat-za-komnatnymi-rasteniyami": "bio-chay-dekorativno-listvennye",
+};
