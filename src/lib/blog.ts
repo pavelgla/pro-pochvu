@@ -33,4 +33,12 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "podkormka-rassady-tomatov-pertsa": "udobrenie-rassada",
   "konskiy-navoz-kak-udobrenie": "udobrenie-kornevaya",
   "chem-podkormit-fialki": "bio-chay-dekorativno-listvennye",
+  "grunt-dlya-rassady-svoimi-rukami": "grunt-ecokon-20l",
+  "grunt-dlya-orhidey": "grunt-ecokon-organicheskiy",
+  "pochemu-rassada-vytyagivaetsya": "grunt-ecokon-20l",
+  "agroperlit-vermikulit-v-grunte": "grunt-ecokon-organicheskiy",
+  "vertikalnoe-ozelenenie-ofisa": "fitomodul-50-4-black",
+  "rasteniya-dlya-fitosteny-v-kvartire": "fitomodul-50-4-white",
+  "fitomodul-svoimi-rukami-vs-gotovyy": "fitomodul-50-4-white",
+  "uhod-za-fitostenoy": "fitomodul-50-4-green",
 };
