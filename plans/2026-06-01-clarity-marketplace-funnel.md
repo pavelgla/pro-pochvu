@@ -1,9 +1,9 @@
 ---
 type: plan
-status: in-progress
+status: done
 date: 2026-06-01
 updated: 2026-06-01
-last_progress: Phase 1–3 в основном выполнены, ветка feat/clarity-marketplace-funnel
+last_progress: Phase 1–3 + часть Phase 4 отгружены на прод и проверены в браузере
 project: pro-pochvu
 source_plan: ~/.claude/plans/transient-toasting-muffin.md
 ---
@@ -55,9 +55,20 @@ source_plan: ~/.claude/plans/transient-toasting-muffin.md
 - Миграция `20260601000000_add_product_sell_direct` применится автоматически при старте контейнера.
 - Прогнать IndexNow после деплоя.
 
+## ОТГРУЖЕНО НА ПРОД (2026-06-01)
+- 2 коммита смержены в main, 2 деплоя CI — оба success.
+- `scripts/fix-blog-content.ts` прогнан на проде (обложки+категории в prod БД).
+- IndexNow: отправлено 8 URL (200).
+- Браузерная проверка на pro-pochvu.ru: главная (плашка, Hero-CTA, история 2020), карточка (кнопки WB/Ozon primary, cross-sell ЭКО Конь, лид-модалка «Будьте в курсе акций»), блог (категории Грунты/Цветология/Уход, обложки 200), /delivery+FAQ, /knowledge-base→/blog. Всё ок.
+
 ## Заметка по верификации
 - `npx tsc --noEmit` — чисто; `npm run lint` — чисто (старые warnings).
-- `npm run build` и `next dev` локально не поднялись: SIGBUS/OOM (на хосте свободно ~700Mi RAM). Авторитетный build — в CI при push. Визуальная проверка в браузере не выполнена по той же причине.
+- `npm run build` и `next dev` локально не поднялись: SIGBUS/OOM (на хосте свободно ~700Mi RAM). Build прошёл в CI (success). Визуальная проверка сделана на проде через chrome-devtools.
+
+## Остаётся (бэклог)
+- Прямые кнопки WB/Ozon на карточках каталога — НЕ добавлял намеренно: увели бы мимо лид-захвата на карточке товара. Решить, нужно ли.
+- CTA в статьях блога теперь общий (каталог+Telegram); точечные товарные CTA в каждую статью — по контент-плану.
+- Открытые вопросы: ферма/2014, регион «калининградские» в Hero, список товаров под `sellDirect=true`.
 
 ## Открытые вопросы
 - Ферма «Ранчо Мушкино» и 2014 — правда про производство или убрать?
