@@ -9,6 +9,8 @@ import { ProductInfo } from "@/components/ProductInfo";
 import { ProductTabs } from "@/components/ProductTabs";
 import { CrossSell } from "@/components/CrossSell";
 import { RelatedProducts } from "@/components/RelatedProducts";
+import { TelegramPost } from "@/components/TelegramPost";
+import { PARTNER, PARTNER_PRODUCT_POSTS } from "@/lib/partner-content";
 
 type Props = {
   params: { slug: string };
@@ -60,6 +62,7 @@ export default async function ProductPage({ params }: Props) {
   ];
 
   const jsonLd = generateProductJsonLd(product);
+  const partnerPost = PARTNER_PRODUCT_POSTS[product.slug];
 
   return (
     <div className="container-main section-padding">
@@ -84,6 +87,23 @@ export default async function ProductPage({ params }: Props) {
       <div className="mt-12">
         <ProductTabs product={product} />
       </div>
+
+      {/* Видео-обзор от партнёра-блогера */}
+      {partnerPost && (
+        <div className="mt-12 border-t border-ink/10 pt-10">
+          <div className="mb-6 max-w-xl">
+            <h2 className="font-serif text-2xl font-medium tracking-tight">
+              Видео-обзор от <span className="text-accent">{PARTNER.name}</span>
+            </h2>
+            <p className="mt-2 text-sm text-ink/70">
+              {PARTNER.fullName} рассказывает о товаре своим подписчикам в Telegram.
+            </p>
+          </div>
+          <div className="max-w-md">
+            <TelegramPost post={partnerPost} />
+          </div>
+        </div>
+      )}
 
       {/* Cross-sell & related */}
       <Suspense>

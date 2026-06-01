@@ -41,6 +41,13 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "rasteniya-dlya-fitosteny-v-kvartire": "fitomodul-50-4-white",
   "fitomodul-svoimi-rukami-vs-gotovyy": "fitomodul-50-4-white",
   "uhod-za-fitostenoy": "fitomodul-50-4-green",
+  // Батч по материалам @spottykit (июнь 2026)
+  "zhivaya-mikroflora-grunta": "grunt-ecokon-organicheskiy",
+  "rasteniya-dlya-solnechnyh-okon": "bio-chay-yantar-fosfor",
+  "uhod-za-domashnimi-tsitrusami": "udobrenie-tsitrusovye",
+  "klubnika-na-fitomodule": "fitomodul-50-4-white",
+  "neprihotlivye-komnatnye-rasteniya": "bio-chay-dekorativno-listvennye",
+  "vesennie-solnechnye-ozhogi": "bio-chay-yantar-fosfor",
 };
 
 // Источник обложки статьи (стоковые фото Pexels). Показываем в футере статьи.

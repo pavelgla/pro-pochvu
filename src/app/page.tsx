@@ -8,6 +8,7 @@ import { SeasonCalendar } from "@/components/sections/SeasonCalendar";
 import { StoryBlock } from "@/components/sections/StoryBlock";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { VideoGuides } from "@/components/sections/VideoGuides";
+import { PartnerSpotlight } from "@/components/sections/PartnerSpotlight";
 import { Newsletter } from "@/components/sections/Newsletter";
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function Home() {
       <StoryBlock />
       <Testimonials />
       <VideoGuides />
+      <PartnerSpotlight />
       <Newsletter />
     </>
   );
