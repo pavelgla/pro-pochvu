@@ -155,17 +155,50 @@ export async function getRelatedProducts(productId: string, categoryId: string, 
   });
 }
 
-export async function getCrossSellProducts(productLineBrand: string, excludeProductId: string, limit = 4) {
-  const otherBrand = productLineBrand === "ecokon" ? "tsvetologiya" : "ecokon";
-  if (process.env.NEXT_PUBLIC_SHOW_TSVETOLOGIYA === "false" && otherBrand === "tsvetologiya") {
-    return [];
-  }
-  return prisma.product.findMany({
-    where: { isActive: true, productLine: { brand: otherBrand }, id: { not: excludeProductId } },
-    include: { productLine: true, category: true },
+export async function getCrossSellProducts(
+  brand: string,
+  excludeProductId: string,
+  limit = 4,
+  basePrice?: number
+) {
+  const include = { productLine: true, category: true };
+  // Cap price so a cheap product doesn't recommend items several times pricier.
+  const priceFilter =
+    basePrice && basePrice > 0 ? { lte: basePrice * 3 } : undefined;
+
+  // 1. Same brand, comparable price — most relevant.
+  const sameBrand = await prisma.product.findMany({
+    where: {
+      isActive: true,
+      productLine: { brand },
+      id: { not: excludeProductId },
+      ...(priceFilter ? { price: priceFilter } : {}),
+    },
+    include,
     take: limit,
     orderBy: { reviewsCount: "desc" },
   });
+  if (sameBrand.length >= limit) return sameBrand;
+
+  // 2. Fill remaining slots with the other brand (skipped if hidden).
+  const otherBrand = brand === "ecokon" ? "tsvetologiya" : "ecokon";
+  const collected = [...sameBrand];
+  const seen = new Set(collected.map((p) => p.id));
+  if (
+    !(process.env.NEXT_PUBLIC_SHOW_TSVETOLOGIYA === "false" && otherBrand === "tsvetologiya")
+  ) {
+    const filler = await prisma.product.findMany({
+      where: { isActive: true, productLine: { brand: otherBrand }, id: { not: excludeProductId } },
+      include,
+      take: limit,
+      orderBy: { reviewsCount: "desc" },
+    });
+    for (const p of filler) {
+      if (collected.length >= limit) break;
+      if (!seen.has(p.id)) collected.push(p);
+    }
+  }
+  return collected;
 }
 
 export function formatPrice(price: number): string {

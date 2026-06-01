@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MessageCircle, ShoppingBag, ChevronDown } from "lucide-react";
+import { generateFaqJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Контакты | ЭКО Конь и Цветология",
@@ -24,8 +25,13 @@ const faq = [
 ];
 
 export default function ContactsPage() {
+  const faqJsonLd = generateFaqJsonLd(faq.map(({ q, a }) => ({ question: q, answer: a })));
   return (
     <div className="container-main section-padding">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Header */}
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-gray-900 mb-3">

@@ -15,28 +15,37 @@ async function sendTelegram(text: string) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { name, birthdate, email, phone, productSlug, marketplace } = body as {
-    name: string; birthdate: string; email: string; phone: string;
-    productSlug: string; marketplace: "wb" | "ozon";
+  const { name, email, phone, productSlug, marketplace, leadMagnet } = body as {
+    name?: string; email?: string; phone?: string;
+    productSlug: string; marketplace: "wb" | "ozon"; leadMagnet?: string;
   };
 
-  if (!name || !email || !phone || !productSlug || !marketplace) {
-    return NextResponse.json({ error: "Заполните все поля" }, { status: 400 });
+  if ((!email && !phone) || !productSlug || !marketplace) {
+    return NextResponse.json(
+      { error: "Укажите email или телефон" },
+      { status: 400 }
+    );
   }
 
   await prisma.lead.create({
-    data: { name, birthdate: birthdate || "", email, phone, productSlug, marketplace },
+    data: {
+      name: name || "—",
+      birthdate: "",
+      email: email || "",
+      phone: phone || "",
+      productSlug,
+      marketplace,
+    },
   });
 
   const mp = marketplace === "wb" ? "Wildberries" : "Ozon";
   await sendTelegram(
-    `🛒 <b>Новый лид — сайт Экоконь</b>\n\n` +
-    `👤 ${name}\n` +
-    `🎂 ${birthdate || "не указано"}\n` +
-    `📧 ${email}\n` +
-    `📱 ${phone}\n` +
+    `🛒 <b>Новый лид — сайт Пропочву</b>\n\n` +
+    `📧 ${email || "—"}\n` +
+    `📱 ${phone || "—"}\n` +
     `📦 Товар: <code>${productSlug}</code>\n` +
-    `🏪 Маркетплейс: ${mp}`
+    `🏪 Маркетплейс: ${mp}\n` +
+    `🎁 Магнит: ${leadMagnet || "—"}`
   );
 
   return NextResponse.json({ ok: true });

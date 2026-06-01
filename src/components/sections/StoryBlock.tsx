@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Ornament } from "@/components/ui/Ornament";
 
 const stats = [
-  { value: "2014", label: "год основания" },
+  { value: "2020", label: "год основания" },
   { value: "500К+", label: "довольных клиентов" },
   { value: "4.92★", label: "средняя оценка" },
 ];
@@ -23,10 +23,10 @@ export function StoryBlock() {
           </div>
           <div className="absolute -bottom-6 -right-6 hidden rounded-lg bg-accent p-7 text-bg lg:block" style={{ width: 200 }}>
             <div className="text-[10px] tracking-[0.14em] opacity-80">
-              С 2014 ГОДА
+              С 2020 ГОДА
             </div>
             <div className="mt-1.5 font-serif text-5xl font-medium tracking-tight">
-              12 лет
+              6 лет
             </div>
             <div className="mt-1 text-[13px] leading-snug opacity-90">
               работаем с&nbsp;землёй руками
@@ -50,9 +50,9 @@ export function StoryBlock() {
           </p>
 
           <p className="mt-6 max-w-[620px] text-base leading-relaxed text-ink-2">
-            В 2014 мы подумали — что если из того, что обычно пропадает
-            на&nbsp;ферме, сделать лучшее удобрение страны? Через год — первая
-            партия био-чая на Ozon. Через десять лет — два бренда, 500 000
+            В 2020 мы подумали — что если из того, что обычно пропадает
+            на&nbsp;ферме, сделать лучшее удобрение страны? Вскоре — первая
+            партия био-чая на Ozon. За несколько лет — два бренда, 500 000
             довольных клиентов и собственные фитостены в&nbsp;сотне интерьеров.
             Мы по-прежнему фасуем руками и знаем каждую партию.
           </p>

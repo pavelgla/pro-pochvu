@@ -9,6 +9,8 @@ import { VariantSelector } from "@/components/VariantSelector";
 import { ProductCharacteristics } from "@/components/ProductCharacteristics";
 
 import { getMarketplaceLinks } from "@/lib/marketplace-map";
+import { MarketplaceLeadModal } from "@/components/MarketplaceLeadModal";
+import { trackGoal, GOAL } from "@/lib/analytics";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
@@ -19,8 +21,10 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [leadModal, setLeadModal] = useState<{ mp: "wb" | "ozon"; url: string } | null>(null);
 
   const links = getMarketplaceLinks(product.slug);
+  const hasMarketplace = Boolean(links.wb || links.ozon);
   const addItem = useCartStore((s) => s.addItem);
   const { user } = useAuth();
   const router = useRouter();
@@ -147,62 +151,106 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
         </div>
       </div>
 
-      {/* CTA buttons */}
-      <div className="flex gap-3">
+      {/* Favorite */}
+      <FavoriteButton />
+
+      {product.sellDirect && inStock ? (
+        /* Direct sale — own cart */
         <Button
           size="lg"
-          className="flex-1 opacity-60 cursor-not-allowed"
-          disabled
-          title="Скоро будет доставка с нашего сайта"
+          className="w-full"
+          onClick={() =>
+            addItem({
+              product_id: product.id,
+              variant_id: selectedVariant ?? undefined,
+              name: product.name,
+              brand,
+              price: product.price,
+              quantity,
+              image: Array.isArray(product.images) ? ((product.images as string[])[0] ?? "") : "",
+              slug: product.slug,
+              weight_grams: product.weightGrams,
+            })
+          }
         >
           В корзину
         </Button>
-        <button
-          onClick={() => {
-            if (!user) {
-              router.push(`/auth/login?return=/product/${product.slug}`);
-              return;
-            }
-            setIsFavorite(!isFavorite);
-          }}
-          className="flex h-13 w-13 items-center justify-center rounded-xl border-2 border-line transition-colors hover:border-accent/50"
-          aria-label="В избранное"
-        >
-          <Heart
-            className={`h-5 w-5 transition-colors ${
-              isFavorite ? "fill-error text-error" : "text-mute/60"
-            }`}
-          />
-        </button>
-      </div>
-
-      {/* Marketplace buttons */}
-      {(links.wb || links.ozon) && (
+      ) : (
+        /* Marketplace-first mode */
         <div className="flex flex-col gap-2">
-          {links.wb && (
-            <a
-              href={links.wb}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#CB11AB] px-6 py-3 text-sm font-medium text-[#CB11AB] transition-colors hover:bg-[#CB11AB]/5"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              Купить на Wildberries
-            </a>
-          )}
-          {links.ozon && (
-            <a
-              href={links.ozon}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#005BFF] px-6 py-3 text-sm font-medium text-[#005BFF] transition-colors hover:bg-[#005BFF]/5"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              Купить на Ozon
-            </a>
+          {hasMarketplace ? (
+            <>
+              <p className="text-sm text-mute">
+                Доставка и оплата — на маркетплейсе
+              </p>
+              {links.wb && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "wb", slug: product.slug });
+                    setLeadModal({ mp: "wb", url: links.wb! });
+                  }}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#CB11AB] px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  Купить на Wildberries
+                </button>
+              )}
+              {links.ozon && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    trackGoal(GOAL.MARKETPLACE_CLICK, { marketplace: "ozon", slug: product.slug });
+                    setLeadModal({ mp: "ozon", url: links.ozon! });
+                  }}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#005BFF] px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  Купить на Ozon
+                </button>
+              )}
+            </>
+          ) : (
+            <p className="rounded-xl border border-line bg-bg-soft px-4 py-3 text-sm text-mute">
+              Уточняйте наличие на наших страницах Wildberries и Ozon.
+            </p>
           )}
         </div>
       )}
+
+      {leadModal && (
+        <MarketplaceLeadModal
+          isOpen
+          onClose={() => setLeadModal(null)}
+          productSlug={product.slug}
+          productName={product.name}
+          marketplace={leadModal.mp}
+          marketplaceUrl={leadModal.url}
+        />
+      )}
     </div>
   );
+
+  function FavoriteButton() {
+    return (
+      <button
+        onClick={() => {
+          if (!user) {
+            router.push(`/auth/login?return=/product/${product.slug}`);
+            return;
+          }
+          setIsFavorite(!isFavorite);
+        }}
+        className="inline-flex items-center gap-2 text-sm text-mute transition-colors hover:text-ink"
+        aria-label="В избранное"
+      >
+        <Heart
+          className={`h-5 w-5 transition-colors ${
+            isFavorite ? "fill-error text-error" : "text-mute/60"
+          }`}
+        />
+        {isFavorite ? "В избранном" : "В избранное"}
+      </button>
+    );
+  }
 }
