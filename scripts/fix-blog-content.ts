@@ -14,7 +14,7 @@ const FIXES: { slug: string; category?: string; coverImage?: string }[] = [
   {
     slug: "vertikalnoe-ozelenenie-v-kvartire",
     category: "tsvetologiya",
-    coverImage: "/images/tsvetologiya/fitomodul-50-4-green_0.jpg",
+    coverImage: "/images/tsvetologiya/fitomodul-50-4-white_0.jpg",
   },
   {
     slug: "kak-pravilno-uhazhivat-za-komnatnymi-rasteniyami",
