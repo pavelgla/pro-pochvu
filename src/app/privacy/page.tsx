@@ -180,10 +180,27 @@ export default function PrivacyPage() {
           </ul>
         </section>
 
-        {/* 6. Передача данных третьим лицам */}
+        {/* 6. Комментарии в блоге */}
         <section>
           <h2 className="mb-4 text-xl font-semibold text-gray-900">
-            6. Передача данных третьим лицам
+            6. Комментарии в блоге
+          </h2>
+          <p>
+            При отправке комментария мы обрабатываем имя автора (публикуется
+            рядом с комментарием), адрес электронной почты (указывается по
+            желанию, не публикуется и используется только для возможных
+            уведомлений), текст комментария и технический хэш IP-адреса (для
+            защиты от спама; он не публикуется и не позволяет идентифицировать
+            устройство). Основание обработки — ваше согласие, выражаемое
+            отметкой соответствующего поля при отправке комментария. Данные
+            хранятся до отзыва согласия или удаления комментария.
+          </p>
+        </section>
+
+        {/* 7. Передача данных третьим лицам */}
+        <section>
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">
+            7. Передача данных третьим лицам
           </h2>
           <p className="mb-3">
             Мы передаём персональные данные следующим получателям исключительно для
@@ -213,10 +230,10 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* 7. Хранение данных */}
+        {/* 8. Хранение данных */}
         <section>
           <h2 className="mb-4 text-xl font-semibold text-gray-900">
-            7. Хранение данных
+            8. Хранение данных
           </h2>
           <p>
             Персональные данные хранятся на серверах, расположенных на территории
@@ -224,10 +241,10 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* 8. Права субъекта */}
+        {/* 9. Права субъекта */}
         <section>
           <h2 className="mb-4 text-xl font-semibold text-gray-900">
-            8. Права субъекта персональных данных
+            9. Права субъекта персональных данных
           </h2>
           <p className="mb-3">Вы имеете право:</p>
           <ul className="mb-4 list-disc space-y-2 pl-6">
@@ -250,10 +267,10 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* 9. Файлы cookie */}
+        {/* 10. Файлы cookie */}
         <section>
           <h2 className="mb-4 text-xl font-semibold text-gray-900">
-            9. Файлы cookie
+            10. Файлы cookie
           </h2>
           <p className="mb-4">
             Сайт использует cookie для корректной работы, аналитики и улучшения
@@ -273,10 +290,10 @@ export default function PrivacyPage() {
           </ul>
         </section>
 
-        {/* 10. Изменения Политики */}
+        {/* 11. Изменения Политики */}
         <section>
           <h2 className="mb-4 text-xl font-semibold text-gray-900">
-            10. Изменения Политики
+            11. Изменения Политики
           </h2>
           <p>
             Мы вправе изменять Политику. При существенных изменениях уведомим по
@@ -288,9 +305,9 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {/* 11. Контакты */}
+        {/* 12. Контакты */}
         <section>
-          <h2 className="mb-4 text-xl font-semibold text-gray-900">11. Контакты</h2>
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">12. Контакты</h2>
           <div className="space-y-1">
             <p>
               <span className="font-medium">Оператор:</span> ООО «Цветология»
