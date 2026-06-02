@@ -188,6 +188,10 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "pryanye-travy-v-kashpo": "fitomodul-50-4-white",
   "yadovitye-komnatnye-rasteniya": "bio-chay-dekorativno-listvennye",
   "razmnozhenie-rasteniy-cherenkami": "udobrenie-kornevaya",
+  // Батч 3 по материалам @spottykit (июнь 2026)
+  "spatifillum-opustil-listya": "bio-chay-dekorativno-listvennye",
+  "orhideya-otcvela-chto-delat": "bio-chay-orhidei",
+  "dolgoigrayushchie-udobreniya-dlya-rasteniy": "bio-chay-yantar-fosfor",
 };
 
 // Источник обложки статьи (стоковые фото Pexels). Показываем в футере статьи.
@@ -219,4 +223,8 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "pryanye-travy-v-kashpo": { author: "Sukrit Lamthong", source: "https://www.pexels.com/photo/green-plants-hanging-on-the-brick-wall-7443025/" },
   "yadovitye-komnatnye-rasteniya": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
   "razmnozhenie-rasteniy-cherenkami": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
+  // Батч 3 @spottykit — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "spatifillum-opustil-listya": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
+  "orhideya-otcvela-chto-delat": { author: "Pixabay", source: "https://www.pexels.com/photo/white-moth-orchids-87016/" },
+  "dolgoigrayushchie-udobreniya-dlya-rasteniy": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
 };
