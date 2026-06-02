@@ -1,6 +1,6 @@
 ---
 type: plan
-status: in-progress
+status: done
 date: 2026-06-02
 updated: 2026-06-02
 project: pro-pochvu
