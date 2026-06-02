@@ -181,6 +181,13 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "klubnika-na-fitomodule": "fitomodul-50-4-white",
   "neprihotlivye-komnatnye-rasteniya": "bio-chay-dekorativno-listvennye",
   "vesennie-solnechnye-ozhogi": "bio-chay-yantar-fosfor",
+  // Батч 2 по материалам @spottykit (июнь 2026)
+  "monstera-uhod-vidy": "grunt-ecokon-organicheskiy",
+  "anturium-uhod-pochemu-ne-cvetet": "udobrenie-tsvetushchie",
+  "tripsy-na-komnatnyh-rasteniyah": "bio-chay-yantar-fosfor",
+  "pryanye-travy-v-kashpo": "fitomodul-50-4-white",
+  "yadovitye-komnatnye-rasteniya": "bio-chay-dekorativno-listvennye",
+  "razmnozhenie-rasteniy-cherenkami": "udobrenie-kornevaya",
 };
 
 // Источник обложки статьи (стоковые фото Pexels). Показываем в футере статьи.
@@ -205,4 +212,11 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "uhod-za-fitostenoy": { author: "Magda Ehlers", source: "https://www.pexels.com/photo/green-plants-on-black-pots-5958769/" },
   "vertikalnyy-sad-v-kvartire": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
   "vertikalnoe-ozelenenie-v-kvartire": { author: "Ian Panelo", source: "https://www.pexels.com/photo/assorted-plants-in-plastic-containers-6911177/" },
+  // Батч 2 @spottykit — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "monstera-uhod-vidy": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  "anturium-uhod-pochemu-ne-cvetet": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
+  "tripsy-na-komnatnyh-rasteniyah": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
+  "pryanye-travy-v-kashpo": { author: "Sukrit Lamthong", source: "https://www.pexels.com/photo/green-plants-hanging-on-the-brick-wall-7443025/" },
+  "yadovitye-komnatnye-rasteniya": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
+  "razmnozhenie-rasteniy-cherenkami": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
 };
