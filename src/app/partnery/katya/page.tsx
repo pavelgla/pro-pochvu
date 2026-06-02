@@ -37,7 +37,12 @@ export default function PartnerKatyaPage() {
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {PARTNER_SHOWCASE_POSTS.map((p) => (
-          <TelegramPost key={p} post={p} />
+          <TelegramPost
+            key={p.post}
+            post={p.post}
+            fallbackImage={p.image}
+            fallbackTitle={p.title}
+          />
         ))}
       </div>
     </div>

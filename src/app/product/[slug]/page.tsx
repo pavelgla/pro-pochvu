@@ -100,7 +100,11 @@ export default async function ProductPage({ params }: Props) {
             </p>
           </div>
           <div className="max-w-md">
-            <TelegramPost post={partnerPost} />
+            <TelegramPost
+              post={partnerPost.post}
+              fallbackImage={partnerPost.image}
+              fallbackTitle={partnerPost.title}
+            />
           </div>
         </div>
       )}

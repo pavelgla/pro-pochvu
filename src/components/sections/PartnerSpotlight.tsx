@@ -30,7 +30,12 @@ export function PartnerSpotlight() {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {PARTNER_SHOWCASE_POSTS.map((p) => (
-            <TelegramPost key={p} post={p} />
+            <TelegramPost
+              key={p.post}
+              post={p.post}
+              fallbackImage={p.image}
+              fallbackTitle={p.title}
+            />
           ))}
         </div>
       </div>

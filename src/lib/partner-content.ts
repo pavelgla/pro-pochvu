@@ -1,9 +1,10 @@
 // Партнёрский контент: Telegram-канал Екатерины (@spottykit, «Дом соломинки»).
-// Полные права на использование получены. Встраиваем официальным виджетом Telegram —
-// контент остаётся за автором, с атрибуцией и ссылкой на канал.
+// Полные права на использование. Встраиваем официальным виджетом Telegram, но
+// т.к. в РФ Telegram режется РКН и без VPN эмбед не грузится — у каждого поста
+// есть self-hosted превью (image) + заголовок (title) для карточки-фолбэка.
 //
-// ID постов сверены вручную из t.me/s/spottykit. В дальнейшем обновляются
-// скиллом tg-parser (см. plans/declarative-discovering-harbor.md).
+// Превью лежат в /public/images/partner/ (скачаны с cdn.telesco.pe).
+// ID постов сверены вручную из t.me/s/spottykit; обновляются скиллом tg-parser.
 
 export const PARTNER = {
   name: "Катя",
@@ -15,16 +16,46 @@ export const PARTNER = {
     "Блогер и эксперт по домашнему озеленению. Рассказывает про уход за растениями и наш грунт своим 163 000 подписчиков в Telegram.",
 } as const;
 
+export type PartnerPost = {
+  post: string; // "channel/messageId" для виджета
+  title: string; // подпись для карточки-фолбэка
+  image: string; // self-hosted превью (РКН-устойчиво)
+};
+
 // Курируемая лента для витрины «Нас рекомендует Катя».
-export const PARTNER_SHOWCASE_POSTS: readonly string[] = [
-  "spottykit/10794", // видео: наш грунт — новая партия
-  "spottykit/10792", // видео: топ-3 растения для южных окон
-  "spottykit/10793", // зелёный календарь на месяц
-  "spottykit/10783", // ароматные растения, рубрика «Да, но»
+export const PARTNER_SHOWCASE_POSTS: PartnerPost[] = [
+  {
+    post: "spottykit/10794",
+    title: "Новая партия нашего воздушного грунта уже в пути",
+    image: "/images/partner/spottykit-10794.jpg",
+  },
+  {
+    post: "spottykit/10792",
+    title: "Топ-3 растения для южных окон — без кактусов и суккулентов",
+    image: "/images/partner/spottykit-10792.jpg",
+  },
+  {
+    post: "spottykit/10793",
+    title: "Зелёный календарь на месяц",
+    image: "/images/partner/spottykit-10793.jpg",
+  },
+  {
+    post: "spottykit/10783",
+    title: "Ароматные растения: рубрика «Да, но»",
+    image: "/images/partner/spottykit-10783.jpg",
+  },
 ];
 
 // Карта товар (slug) → пост-обзор Кати для блока на карточке товара.
-export const PARTNER_PRODUCT_POSTS: Record<string, string> = {
-  "grunt-ecokon-20l": "spottykit/10794",
-  "grunt-ecokon-organicheskiy": "spottykit/10794",
+export const PARTNER_PRODUCT_POSTS: Record<string, PartnerPost> = {
+  "grunt-ecokon-20l": {
+    post: "spottykit/10794",
+    title: "Катя о нашем грунте: новая партия уже в пути",
+    image: "/images/partner/spottykit-10794.jpg",
+  },
+  "grunt-ecokon-organicheskiy": {
+    post: "spottykit/10794",
+    title: "Катя о нашем грунте: новая партия уже в пути",
+    image: "/images/partner/spottykit-10794.jpg",
+  },
 };
