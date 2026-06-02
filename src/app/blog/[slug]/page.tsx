@@ -12,6 +12,7 @@ import {
   getCategoryMeta,
 } from "@/lib/blog";
 import { BlogProductCta } from "@/components/BlogProductCta";
+import { BlogComments } from "@/components/blog/BlogComments";
 
 const SITE_URL = "https://pro-pochvu.ru";
 
@@ -63,6 +64,13 @@ export default async function BlogPostPage({ params }: Props) {
 
   if (!post) notFound();
 
+  const approvedComments = await prisma.blogComment.findMany({
+    where: { postSlug: post.slug, status: "APPROVED" },
+    orderBy: { approvedAt: "asc" },
+    select: { authorName: true, body: true, approvedAt: true },
+    take: 10,
+  });
+
   const catSlug = categorySlugForRaw(post.category);
   const catMeta = catSlug ? getCategoryMeta(catSlug) : undefined;
 
@@ -85,6 +93,15 @@ export default async function BlogPostPage({ params }: Props) {
     },
     ...(post.coverImage && {
       image: `${SITE_URL}${post.coverImage}`,
+    }),
+    ...(approvedComments.length > 0 && {
+      commentCount: approvedComments.length,
+      comment: approvedComments.map((c) => ({
+        "@type": "Comment",
+        author: { "@type": "Person", name: c.authorName },
+        ...(c.approvedAt && { datePublished: c.approvedAt.toISOString() }),
+        text: c.body,
+      })),
     }),
   };
 
@@ -178,6 +195,9 @@ export default async function BlogPostPage({ params }: Props) {
                 </span>
               )}
             </div>
+
+            {/* Комментарии */}
+            <BlogComments slug={post.slug} />
           </div>
         </div>
       </article>
