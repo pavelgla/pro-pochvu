@@ -288,8 +288,32 @@ model BlogPost {
   publishedAt    DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  comments       BlogComment[]
 
   @@map("blog_posts")
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model BlogComment {
+  id              String        @id @default(cuid())
+  postSlug        String
+  post            BlogPost      @relation(fields: [postSlug], references: [slug], onDelete: Cascade)
+  authorName      String
+  authorEmail     String?
+  body            String        @db.Text
+  status          CommentStatus @default(PENDING)
+  ipHash          String?
+  moderationToken String        @unique
+  createdAt       DateTime      @default(now())
+  approvedAt      DateTime?
+
+  @@index([postSlug, status, createdAt])
+  @@map("blog_comments")
 }
 
 // === БАЗА ЗНАНИЙ ===
