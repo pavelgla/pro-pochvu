@@ -1,3 +1,5 @@
+import { newCommentMessage, type NewCommentMessageInput } from "@/lib/comments";
+
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_CHAT_ID = process.env.TELEGRAM_ADMIN_CHAT_ID;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pro-pochvu.ru";
@@ -121,6 +123,18 @@ export async function notifyNewOrder(order: OrderForNotification) {
 
 export async function notifyStatusChange(order: OrderForNotification) {
   return sendMessage({ text: statusChangeMessage(order) });
+}
+
+export async function notifyNewComment(input: NewCommentMessageInput) {
+  if (isMockMode()) {
+    console.log("[telegram mock] new comment:", input.commentId, input.authorName);
+    return;
+  }
+  await sendMessage({
+    chatId: ADMIN_CHAT_ID!,
+    text: newCommentMessage(input),
+    parseMode: "HTML",
+  });
 }
 
 export type { OrderForNotification };
