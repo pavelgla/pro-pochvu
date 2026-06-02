@@ -10,48 +10,45 @@ type Props = {
   className?: string;
 };
 
-// Официальный виджет-эмбед поста Telegram. Скрипт telegram-widget.js находит
-// контейнер по data-атрибутам и подставляет iframe с постом (включая видео).
-// Ленивая загрузка через IntersectionObserver — скрипт не тянется, пока блок
-// не приблизился к вьюпорту.
+// Эмбед поста Telegram через прямой iframe виджета (t.me/<post>?embed=1).
+// Telegram присылает родителю postMessage {"event":"resize","height":N} —
+// слушаем его и подгоняем высоту. Детерминированно, без инжекта внешнего
+// скрипта и без IntersectionObserver. Нативная ленивая загрузка — loading="lazy".
 export function TelegramPost({ post, userpic = true, className }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [load, setLoad] = useState(false);
+  const ref = useRef<HTMLIFrameElement>(null);
+  const [height, setHeight] = useState(320);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el || load) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setLoad(true);
-          io.disconnect();
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== "https://t.me") return;
+      const iframe = ref.current;
+      if (!iframe || e.source !== iframe.contentWindow) return;
+      try {
+        const data =
+          typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+        if (data?.event === "resize" && typeof data.height === "number") {
+          setHeight(data.height);
         }
-      },
-      { rootMargin: "300px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [load]);
+      } catch {
+        /* not a telegram resize message */
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!load || !el || el.querySelector("script, iframe")) return;
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = "https://telegram.org/js/telegram-widget.js?22";
-    script.setAttribute("data-telegram-post", post);
-    script.setAttribute("data-width", "100%");
-    script.setAttribute("data-userpic", String(userpic));
-    el.appendChild(script);
-  }, [load, post, userpic]);
+  const src = `https://t.me/${post}?embed=1&userpic=${userpic}&dark=0`;
 
   return (
-    <div
-      ref={containerRef}
+    <iframe
+      ref={ref}
+      src={src}
+      title={`Пост Telegram ${post}`}
+      loading="lazy"
+      scrolling="no"
+      frameBorder="0"
       className={className}
-      style={{ minHeight: 320 }}
-      aria-label={`Пост Telegram ${post}`}
+      style={{ width: "100%", height, border: "none", minWidth: 0 }}
     />
   );
 }

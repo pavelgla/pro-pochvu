@@ -19,6 +19,139 @@ export function blogCategoryLabel(category?: string | null): string | null {
   return BLOG_CATEGORY_LABELS[category.trim().toLowerCase()] ?? "Статьи";
 }
 
+// --- Блог-хаб: канонические категории (рубрики) ---
+// raw-значения category в БД разнородны (ecokon/udobreniya, grunty/grunt, …),
+// поэтому каждую рубрику задаём списком match-значений + URL-slug + SEO-мета.
+export type BlogCategoryMeta = {
+  slug: string; // URL: /blog/category/<slug>
+  label: string; // отображаемое имя рубрики
+  title: string; // <title> страницы рубрики
+  description: string; // meta description
+  intro: string; // вводный абзац на странице рубрики
+  match: string[]; // raw-значения category (lowercase), относящиеся к рубрике
+};
+
+export const BLOG_CATEGORIES: BlogCategoryMeta[] = [
+  {
+    slug: "udobreniya",
+    label: "Удобрения",
+    title: "Удобрения для растений: подкормки и питание — блог Пропочву",
+    description:
+      "Статьи об органических удобрениях и подкормке комнатных растений, рассады и сада: когда, чем и как часто кормить растения.",
+    intro:
+      "Как и чем подкармливать растения, рассаду и цветы, чтобы не навредить: органика, дозировки, схемы и частые ошибки.",
+    match: ["ecokon", "udobreniya", "udobrenie"],
+  },
+  {
+    slug: "grunty",
+    label: "Грунты",
+    title: "Грунты и субстраты для растений — блог Пропочву",
+    description:
+      "Как выбрать и составить грунт для рассады, комнатных растений и орхидей. Состав, разрыхлители, живая микрофлора почвы.",
+    intro:
+      "Из чего состоит хороший грунт, зачем нужны перлит и вермикулит и почему живая почва важнее стерильной.",
+    match: ["grunty", "grunt"],
+  },
+  {
+    slug: "tsvetologiya",
+    label: "Цветология",
+    title: "Вертикальное озеленение и фитомодули — блог Пропочву",
+    description:
+      "Вертикальные сады, фитомодули и зелёные стены для дома и офиса: подбор растений, монтаж, уход, фитильный полив.",
+    intro:
+      "Вертикальное озеленение для квартиры и офиса: как устроены фитомодули, что на них растёт и как за этим ухаживать.",
+    match: ["tsvetologiya", "ozelenenie", "озеленение"],
+  },
+  {
+    slug: "uhod",
+    label: "Уход за растениями",
+    title: "Уход за комнатными растениями — блог Пропочву",
+    description:
+      "Практичные советы по уходу за комнатными растениями: освещение, полив, пересадка, борьба с вредителями и сезонные работы.",
+    intro:
+      "Свет, полив, пересадка и защита от вредителей — практичные советы по уходу за домашними растениями круглый год.",
+    match: ["uhod", "уход"],
+  },
+];
+
+export function categorySlugForRaw(raw?: string | null): string | null {
+  if (!raw) return null;
+  const low = raw.trim().toLowerCase();
+  return BLOG_CATEGORIES.find((c) => c.match.includes(low))?.slug ?? null;
+}
+
+export function getCategoryMeta(slug: string): BlogCategoryMeta | undefined {
+  return BLOG_CATEGORIES.find((c) => c.slug === slug);
+}
+
+// --- Кураторские подборки ---
+export type BlogCollection = {
+  slug: string; // URL: /blog/podborka/<slug>
+  title: string;
+  description: string;
+  intro: string;
+  postSlugs: string[]; // порядок статей в подборке
+};
+
+export const BLOG_COLLECTIONS: BlogCollection[] = [
+  {
+    slug: "s-chego-nachat",
+    title: "С чего начать новичку",
+    description:
+      "Подборка статей для тех, кто только завёл растения: неприхотливые виды, полив, подкормка и первый грунт.",
+    intro:
+      "Если растения появились недавно — начните отсюда. Самое важное про выбор, полив и питание простыми словами.",
+    postSlugs: [
+      "neprihotlivye-komnatnye-rasteniya",
+      "chem-podkormit-komnatnye-cvety",
+      "zhivaya-mikroflora-grunta",
+      "kak-vybrat-grunt-dlya-rassady",
+    ],
+  },
+  {
+    slug: "sezonnoe-leto",
+    title: "Сезонное: лето",
+    description:
+      "Что важно для растений летом: солнечные ожоги, растения для южных окон, вертикальные грядки и подкормка в жару.",
+    intro:
+      "Летние заботы цветовода: защита от солнца, подбор растений для ярких окон и урожай на вертикальной грядке.",
+    postSlugs: [
+      "vesennie-solnechnye-ozhogi",
+      "rasteniya-dlya-solnechnyh-okon",
+      "klubnika-na-fitomodule",
+      "uhod-za-domashnimi-tsitrusami",
+    ],
+  },
+  {
+    slug: "rassada",
+    title: "Всё про рассаду",
+    description:
+      "Грунт, подкормка и частые проблемы рассады: как вырастить крепкие сеянцы томатов, перца и цветов.",
+    intro:
+      "От выбора грунта до подкормки по неделям — всё, что нужно для крепкой рассады без вытягивания.",
+    postSlugs: [
+      "kak-vybrat-grunt-dlya-rassady",
+      "podkormka-rassady-tomatov-pertsa",
+      "pochemu-rassada-vytyagivaetsya",
+      "biogumus-dlya-rassady",
+      "grunt-dlya-rassady-svoimi-rukami",
+    ],
+  },
+];
+
+export function getCollection(slug: string): BlogCollection | undefined {
+  return BLOG_COLLECTIONS.find((c) => c.slug === slug);
+}
+
+// --- Теги ---
+export function tagToSlug(tag: string): string {
+  return encodeURIComponent(tag.trim().toLowerCase());
+}
+
+export function slugToTag(slug: string): string {
+  return decodeURIComponent(slug).toLowerCase();
+}
+
 // Статья → товар-якорь для CTA в конце материала.
 export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "bio-chay-ekokon-obzor": "bio-chay-yantar-fosfor",

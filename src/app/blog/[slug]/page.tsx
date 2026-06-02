@@ -4,7 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { prisma } from "@/lib/prisma";
-import { blogCategoryLabel, BLOG_PRODUCT_ANCHORS, BLOG_IMAGE_CREDITS } from "@/lib/blog";
+import {
+  blogCategoryLabel,
+  BLOG_PRODUCT_ANCHORS,
+  BLOG_IMAGE_CREDITS,
+  categorySlugForRaw,
+  getCategoryMeta,
+} from "@/lib/blog";
 import { BlogProductCta } from "@/components/BlogProductCta";
 
 const SITE_URL = "https://pro-pochvu.ru";
@@ -57,6 +63,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   if (!post) notFound();
 
+  const catSlug = categorySlugForRaw(post.category);
+  const catMeta = catSlug ? getCategoryMeta(catSlug) : undefined;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -108,6 +117,14 @@ export default async function BlogPostPage({ params }: Props) {
             {" / "}
             <Link href="/blog" className="hover:text-accent">Блог</Link>
             {" / "}
+            {catMeta && (
+              <>
+                <Link href={`/blog/category/${catMeta.slug}`} className="hover:text-accent">
+                  {catMeta.label}
+                </Link>
+                {" / "}
+              </>
+            )}
             <span>{post.title}</span>
           </nav>
 
