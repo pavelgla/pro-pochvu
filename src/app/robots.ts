@@ -47,6 +47,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
+    // host: директива Host отменена Яндексом в 2018 — игнорируется, не указываем
   };
 }
