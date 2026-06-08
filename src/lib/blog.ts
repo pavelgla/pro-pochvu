@@ -192,6 +192,10 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "spatifillum-opustil-listya": "bio-chay-dekorativno-listvennye",
   "orhideya-otcvela-chto-delat": "bio-chay-orhidei",
   "dolgoigrayushchie-udobreniya-dlya-rasteniy": "bio-chay-yantar-fosfor",
+  // Батч 4 по материалам @spottykit (июнь 2026)
+  "petunii-v-kashpo-posadka-uhod": "udobrenie-tsvetushchie",
+  "vynos-rasteniy-na-ulitsu-zakalivanie": "bio-chay-yantar-fosfor",
+  "krupnomery-dlya-doma": "bio-chay-dekorativno-listvennye",
 };
 
 // Источник обложки статьи (стоковые фото Pexels). Показываем в футере статьи.
@@ -227,4 +231,8 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "spatifillum-opustil-listya": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
   "orhideya-otcvela-chto-delat": { author: "Pixabay", source: "https://www.pexels.com/photo/white-moth-orchids-87016/" },
   "dolgoigrayushchie-udobreniya-dlya-rasteniy": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  // Батч 4 @spottykit — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "petunii-v-kashpo-posadka-uhod": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
+  "vynos-rasteniy-na-ulitsu-zakalivanie": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
+  "krupnomery-dlya-doma": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
 };
