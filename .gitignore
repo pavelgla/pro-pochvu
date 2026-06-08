@@ -58,3 +58,7 @@ v1-final/
 docs/
 _SUMMARY.md
 docs/partner-content/
+
+# Google service account key (НЕ коммитить)
+.gsc-sa.json
+testai-*.json
