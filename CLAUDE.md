@@ -142,6 +142,16 @@ Build-args: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_YMAPS_API_KEY`, `NEXT_PUBLIC_ME
 
 **Текущий статус и TODO:** см. `SEO_TODO.md` в корне репо.
 
+### SEO-панель (дашборд индексации/трафика)
+
+**Где смотреть рост:** https://seo.pro-pochvu.ru — единая панель индексации и трафика (Яндекс.Вебмастер + Google Search Console + Яндекс.Метрика: показы/клики/позиции, визиты, источники, страниц в индексе, ИКС, топ-запросы).
+- **Доступ:** nginx basic-auth, логин `pavel`, пароль в Bitwarden (папка `seo-dashboard`).
+- **Код панели:** отдельный проект `~/Obsidian/seo-dashboard` (Node/Express + Chart.js). Полная операционка — `seo-dashboard/OPERATIONS.md` (где на spb1, как редеплоить, SSL/DNS). Прод: контейнер `seo-dashboard` на spb1 (сеть webproxy:8090).
+- **API-доступы, на которых она держится** (для ручных запросов/мониторинга):
+  - Яндекс.Вебмастер + Метрика — OAuth-токен `YANDEX_OAUTH_TOKEN` (в `.env`; Bitwarden «Yandex OAuth — pro-pochvu»). Вебмастер user_id `97877796`, host `https:pro-pochvu.ru:443`. Метрика counter `109043403`.
+  - Google Search Console — service account `.gsc-sa.json` + helper `scripts/gsc.sh` (`sites`/`query`/`inspect`). SA — владелец `https://pro-pochvu.ru/` (через Site Verification API; verification-файл отдаётся nginx-локацией — НЕ удалять).
+- **Где у меня записано детальнее:** память `yandex-api-access`, `gsc-api-access`, `bitwarden-access-structure` + `seo-dashboard/OPERATIONS.md`.
+
 ## Аналитика (Я.Метрика)
 
 - **Soft mode** (решено 2026-05-04): счётчик грузится сразу с webvisor + clickmap, cookie-баннер только информационный — не блокирует трекинг. Без согласия пользователя данные собираются — типовая практика на RU-сайтах. Жёсткий режим теряет данные тех, кто не нажимает кнопки.
