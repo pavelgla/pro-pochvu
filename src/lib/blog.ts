@@ -196,6 +196,10 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "petunii-v-kashpo-posadka-uhod": "udobrenie-tsvetushchie",
   "vynos-rasteniy-na-ulitsu-zakalivanie": "bio-chay-yantar-fosfor",
   "krupnomery-dlya-doma": "bio-chay-dekorativno-listvennye",
+  // Батч 5 по материалам @spottykit (июнь 2026)
+  "fikus-bendzhamina-sbrasyvaet-listya": "bio-chay-dekorativno-listvennye",
+  "kogda-peresazhivat-komnatnye-rasteniya": "grunt-ecokon-organicheskiy",
+  "zamiokulkas-uhod": "bio-chay-dekorativno-listvennye",
 };
 
 // Источник обложки статьи (стоковые фото Pexels). Показываем в футере статьи.
@@ -235,4 +239,8 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "petunii-v-kashpo-posadka-uhod": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
   "vynos-rasteniy-na-ulitsu-zakalivanie": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
   "krupnomery-dlya-doma": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
+  // Батч 5 @spottykit — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "fikus-bendzhamina-sbrasyvaet-listya": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  "kogda-peresazhivat-komnatnye-rasteniya": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
+  "zamiokulkas-uhod": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
 };
