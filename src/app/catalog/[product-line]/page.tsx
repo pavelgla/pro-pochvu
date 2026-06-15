@@ -14,12 +14,49 @@ type Props = {
 
 export const dynamic = "force-dynamic";
 
+// Уникальные SEO-заголовки и описания по линейкам. title идёт под шаблон "%s | Пропочву",
+// поэтому держим его коротким; h1 — видимый заголовок страницы.
+const seoByLine: Record<string, { h1: string; title: string; description: string }> = {
+  "bio-chay": {
+    h1: "Органические удобрения «Био-чай» ЭКО Конь",
+    title: "Органические удобрения Био-чай ЭКО Конь",
+    description:
+      "Био-чай ЭКО Конь — органические удобрения в форме стиков из ферментированного конского навоза. Для комнатных растений, орхидей и рассады. 30 000+ отзывов.",
+  },
+  grunty: {
+    h1: "Органические грунты и субстраты ЭКО Конь",
+    title: "Органические грунты для растений ЭКО Конь",
+    description:
+      "Органические грунты ЭКО Конь для рассады, овощей, цветов и орхидей: 90% органики, агроперлит, без запаха. Лёгкие, воздушные, не слёживаются.",
+  },
+  specialized: {
+    h1: "Специализированные удобрения для растений",
+    title: "Специализированные удобрения для растений",
+    description:
+      "Специализированные органические удобрения ЭКО Конь под культуру: орхидеи, цитрусовые, овощи, рассада. Точная формула на органической основе.",
+  },
+  fitmoduli: {
+    h1: "Фитомодули для вертикального озеленения «Цветология»",
+    title: "Фитомодули для вертикального озеленения",
+    description:
+      "Фитомодули Цветология — модульные системы вертикального озеленения для дома, офиса и ресторана. Монтаж за 15 минут, продуманная система полива.",
+  },
+  accessories: {
+    h1: "Аксессуары для фитомодулей и ухода за растениями",
+    title: "Аксессуары для фитомодулей — Цветология",
+    description:
+      "Аксессуары и расходные материалы Цветология: укрывные материалы, комплектующие для фитомодулей. Совместимы с системами вертикального озеленения.",
+  },
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pl = await getProductLineBySlug(params["product-line"]);
   if (!pl) return {};
 
-  const title = `${pl.name} — ${pl.brand === "ecokon" ? "ЭКО Конь" : "Цветология"}`;
-  const description = pl.description || `${pl.name} — купить в интернет-магазине pro-pochvu.ru`;
+  const seo = seoByLine[pl.slug];
+  const title = seo?.title || `${pl.name} — ${pl.brand === "ecokon" ? "ЭКО Конь" : "Цветология"}`;
+  const description =
+    seo?.description || pl.description || `${pl.name} — купить в интернет-магазине pro-pochvu.ru`;
 
   return {
     title,
@@ -95,7 +132,7 @@ export default async function ProductLinePage({ params }: Props) {
           <span>{pl.brand === "ecokon" ? "ЭКО КОНЬ" : "ЦВЕТОЛОГИЯ"}</span>
         </div>
         <h1 className="section-heading text-4xl md:text-5xl lg:text-6xl text-ink">
-          {pl.name}
+          {seoByLine[pl.slug]?.h1 || pl.name}
         </h1>
         {pl.description && (
           <p className="mt-4 max-w-2xl text-ink-2 leading-relaxed">
