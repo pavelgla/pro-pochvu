@@ -1,11 +1,14 @@
 ---
 type: plan
-status: in-progress
+status: done
 date: 2026-06-18
 updated: 2026-06-18
 project: pro-pochvu
 source_plan: чат (без ExitPlanMode)
 ---
+
+> ✅ Выполнено и задеплоено 2026-06-18. Прод: /press, 5 статей, обложки = 200; IndexNow 6 URL ok.
+> Деплой шёл через public-окно (биллинг Actions заблокирован) — `tools/ci-public-run.sh`.
 
 # Раздел «СМИ о нас» + газетные обложки
 
@@ -32,11 +35,11 @@ source_plan: чат (без ExitPlanMode)
 
 ## Фазы
 - [x] Фаза 0 — анализ docx, архитектуры блога
-- [ ] Фаза 1 — контент: `scripts/seed-press-articles.ts` (5 статей, рерайт под бренд)
-- [ ] Фаза 2 — газетные обложки → `public/images/press/<slug>.png` (chrome screenshot)
-- [ ] Фаза 3 — раздел `/press` + `PRESS_SOURCES` в `lib/blog.ts` + плашка на `/blog/[slug]`
-- [ ] Фаза 4 — nav (Header/MobileMenu/Footer), sitemap, build, lint
-- [ ] Фаза 5 — коммит/пуш (деплой), сид на проде, IndexNow-пинг
+- [x] Фаза 1 — контент: `scripts/seed-press-articles.ts` (5 статей, рерайт под бренд)
+- [x] Фаза 2 — газетные обложки → `public/images/press/<slug>.png` (chrome screenshot)
+- [x] Фаза 3 — раздел `/press` + `PRESS_SOURCES` в `lib/blog.ts` + плашка на `/blog/[slug]`
+- [x] Фаза 4 — nav (Header/MobileMenu/Footer), sitemap, build, lint
+- [x] Фаза 5 — коммит/пуш (деплой), сид на проде, IndexNow-пинг
 
 ## Заметки
 - Названия конкретных изданий НЕ выдумываем — masthead обложки декоративный
