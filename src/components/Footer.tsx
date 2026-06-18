@@ -16,7 +16,9 @@ const columns = [
   {
     title: "Узнать",
     links: [
+      { href: "/blog", label: "Блог" },
       { href: "/knowledge-base/video", label: "Видеоинструкции" },
+      { href: "/press", label: "СМИ о нас" },
       { href: "/about", label: "О бренде" },
     ],
   },

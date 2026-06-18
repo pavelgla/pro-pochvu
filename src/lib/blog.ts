@@ -200,7 +200,36 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "fikus-bendzhamina-sbrasyvaet-listya": "bio-chay-dekorativno-listvennye",
   "kogda-peresazhivat-komnatnye-rasteniya": "grunt-ecokon-organicheskiy",
   "zamiokulkas-uhod": "bio-chay-dekorativno-listvennye",
+  // Статьи из печатной прессы (июнь 2026)
+  "pochemu-rasteniya-chahnut": "bio-chay-dekorativno-listvennye",
+  "podkormka-rassady-domashnimi-metodami": "udobrenie-rassada",
+  "bio-chay-yantarnaya-kislota": "bio-chay-yantar-fosfor",
+  "vosstanovlenie-istoshchennoy-pochvy": "grunt-ecokon-organicheskiy",
+  "organicheskoe-zemledelie": "udobrenie-kornevaya",
 };
+
+// --- Статьи из печатной прессы («СМИ о нас») ---
+// Републикация PR-материалов про ЭКО Конь с разрешения издателей (июнь 2026).
+// Статьи хранятся как обычные BlogPost; /press — витрина, ведущая на /blog/<slug>.
+// outlet оставлен нейтральным (конкретные издания не выдумываем) — Павел может
+// вписать реальные названия здесь, плашка на витрине и в статье подхватит.
+export type PressSource = { outlet: string; dateLabel: string };
+export const PRESS_SOURCES: Record<string, PressSource> = {
+  "pochemu-rasteniya-chahnut": { outlet: "Печатная пресса", dateLabel: "июнь 2026" },
+  "podkormka-rassady-domashnimi-metodami": { outlet: "Печатная пресса", dateLabel: "июнь 2026" },
+  "bio-chay-yantarnaya-kislota": { outlet: "Печатная пресса", dateLabel: "июнь 2026" },
+  "vosstanovlenie-istoshchennoy-pochvy": { outlet: "Печатная пресса", dateLabel: "июнь 2026" },
+  "organicheskoe-zemledelie": { outlet: "Печатная пресса", dateLabel: "июнь 2026" },
+};
+
+// Порядок вывода на витрине /press (новые/важные сверху).
+export const PRESS_SLUGS: string[] = [
+  "pochemu-rasteniya-chahnut",
+  "bio-chay-yantarnaya-kislota",
+  "podkormka-rassady-domashnimi-metodami",
+  "vosstanovlenie-istoshchennoy-pochvy",
+  "organicheskoe-zemledelie",
+];
 
 // Источник обложки статьи (стоковые фото Pexels). Показываем в футере статьи.
 export type ImageCredit = { author: string; source: string };

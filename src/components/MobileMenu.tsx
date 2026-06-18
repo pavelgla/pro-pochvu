@@ -12,6 +12,7 @@ const menuLinks = [
   { href: "/catalog?brand=ecokon", label: "Бренды" },
   { href: "/blog", label: "Блог" },
   { href: "/knowledge-base/video", label: "Уход за растениями" },
+  { href: "/press", label: "СМИ о нас" },
   { href: "/about", label: "О нас" },
   ...(SHOW_TSVETOLOGIYA
     ? [{ href: "/catalog?brand=tsvetologiya", label: "Фитомодули" }]

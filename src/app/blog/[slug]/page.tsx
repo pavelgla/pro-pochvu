@@ -8,6 +8,7 @@ import {
   blogCategoryLabel,
   BLOG_PRODUCT_ANCHORS,
   BLOG_IMAGE_CREDITS,
+  PRESS_SOURCES,
   categorySlugForRaw,
   getCategoryMeta,
 } from "@/lib/blog";
@@ -73,6 +74,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const catSlug = categorySlugForRaw(post.category);
   const catMeta = catSlug ? getCategoryMeta(catSlug) : undefined;
+  const press = PRESS_SOURCES[post.slug];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -164,9 +166,23 @@ export default async function BlogPostPage({ params }: Props) {
               )}
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold text-ink mb-8 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-ink mb-6 leading-tight">
               {post.title}
             </h1>
+
+            {/* Плашка: публиковалось в прессе */}
+            {press && (
+              <div className="mb-8 flex items-center gap-2 rounded-xl border border-line bg-bg-soft px-4 py-3 text-sm text-ink/80">
+                <span aria-hidden>📰</span>
+                <span>
+                  Материал публиковался в&nbsp;печатной прессе ·{" "}
+                  {press.dateLabel}. Републикация с&nbsp;разрешения издателя.{" "}
+                  <Link href="/press" className="text-accent hover:text-accent-deep underline underline-offset-2">
+                    Все публикации в&nbsp;СМИ
+                  </Link>
+                </span>
+              </div>
+            )}
 
             {/* Markdown content */}
             <div className="prose prose-lg max-w-none [&_a]:text-accent [&_a:hover]:text-accent-deep [&_h2]:text-ink [&_h3]:text-ink [&_strong]:text-ink">
