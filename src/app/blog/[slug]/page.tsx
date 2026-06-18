@@ -116,18 +116,33 @@ export default async function BlogPostPage({ params }: Props) {
 
       <article>
         {/* Hero cover */}
-        {post.coverImage && (
-          <div className="relative w-full h-64 md:h-96 bg-bg-soft mb-8">
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              priority
-              className="object-cover"
-              sizes="100vw"
-            />
-          </div>
-        )}
+        {post.coverImage &&
+          (press ? (
+            /* Газетная полоса — вписываем целиком (без обрезки), поля = фон */
+            <div className="w-full bg-bg-soft mb-8 flex justify-center px-4 py-8 md:py-10">
+              <div className="relative aspect-[3/4] w-full max-w-md shadow-lg ring-1 ring-line">
+                <Image
+                  src={post.coverImage}
+                  alt={`Газетная публикация: ${post.title}`}
+                  fill
+                  priority
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 448px"
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="relative w-full h-64 md:h-96 bg-bg-soft mb-8">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+            </div>
+          ))}
 
         <div className="container-main pb-16">
           {/* Breadcrumb */}
