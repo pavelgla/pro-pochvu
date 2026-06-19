@@ -6,6 +6,7 @@ import {
   BLOG_CATEGORIES,
   getCategoryMeta,
   categorySlugForRaw,
+  brandTitle,
 } from "@/lib/blog";
 import { BlogCard } from "@/components/blog/BlogCard";
 
@@ -24,8 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cat) return {};
   const url = `${SITE_URL}/blog/category/${cat.slug}`;
   return {
-    title: cat.title,
+    title: { absolute: brandTitle(cat.title) },
     description: cat.description,
+    robots: { index: false, follow: true },
     alternates: { canonical: url },
     openGraph: { title: cat.title, description: cat.description, url, type: "website" },
   };

@@ -2,7 +2,6 @@ import { MetadataRoute } from "next";
 import { getAllProductSlugs, getProductLines } from "@/lib/catalog";
 import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import { BLOG_CATEGORIES, BLOG_COLLECTIONS, tagToSlug } from "@/lib/blog";
 
 const SITE_URL = "https://pro-pochvu.ru";
 
@@ -16,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getProductLines(),
     prisma.blogPost.findMany({
       where: { isPublished: true },
-      select: { slug: true, updatedAt: true, tags: true },
+      select: { slug: true, updatedAt: true },
     }),
   ]);
 
@@ -118,42 +117,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Рубрики блога
-  const blogCategoryPages: MetadataRoute.Sitemap = BLOG_CATEGORIES.map((c) => ({
-    url: `${SITE_URL}/blog/category/${c.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
-
-  // Подборки
-  const blogCollectionPages: MetadataRoute.Sitemap = BLOG_COLLECTIONS.map((c) => ({
-    url: `${SITE_URL}/blog/podborka/${c.slug}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
-
-  // Теги (уникальные по всем постам)
-  const tagSet = new Set<string>();
-  for (const p of blogPosts) {
-    const tags = Array.isArray(p.tags) ? (p.tags as string[]) : [];
-    for (const t of tags) tagSet.add(t);
-  }
-  const blogTagPages: MetadataRoute.Sitemap = Array.from(tagSet).map((t) => ({
-    url: `${SITE_URL}/blog/tag/${tagToSlug(t)}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.4,
-  }));
+  // Тонкие авто-страницы (tag/category/podborka) намеренно НЕ в sitemap:
+  // помечены noindex после массового LOW_QUALITY-удаления в Яндексе (2026-06-13).
 
   return [
     ...staticPages,
     ...productLinePages,
     ...productPages,
     ...blogPostPages,
-    ...blogCategoryPages,
-    ...blogCollectionPages,
-    ...blogTagPages,
   ];
 }

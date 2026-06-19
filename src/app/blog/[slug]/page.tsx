@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { prisma } from "@/lib/prisma";
 import {
   blogCategoryLabel,
+  brandTitle,
   BLOG_PRODUCT_ANCHORS,
   BLOG_IMAGE_CREDITS,
   PRESS_SOURCES,
@@ -37,12 +38,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) return {};
 
-  const title = post.seoTitle || post.title;
+  const title = brandTitle(post.seoTitle || post.title);
   const description = post.seoDescription || post.excerpt || "";
   const url = `${SITE_URL}/blog/${params.slug}`;
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: url },
     openGraph: {

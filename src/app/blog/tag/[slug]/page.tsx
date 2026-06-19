@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPublishedCardsWithTags } from "@/lib/blog-posts";
-import { slugToTag } from "@/lib/blog";
+import { slugToTag, brandTitle } from "@/lib/blog";
 import { BlogCard } from "@/components/blog/BlogCard";
 
 const SITE_URL = "https://pro-pochvu.ru";
@@ -13,11 +13,12 @@ type Props = { params: { slug: string } };
 export function generateMetadata({ params }: Props): Metadata {
   const tag = slugToTag(params.slug);
   const url = `${SITE_URL}/blog/tag/${params.slug}`;
-  const title = `Статьи по теме «${tag}» | Блог Пропочву`;
+  const title = brandTitle(`Статьи по теме «${tag}»`);
   const description = `Все статьи блога Пропочву по теме «${tag}»: уход за растениями, удобрения и озеленение.`;
   return {
-    title,
+    title: { absolute: title },
     description,
+    robots: { index: false, follow: true },
     alternates: { canonical: url },
     openGraph: { title, description, url, type: "website" },
   };

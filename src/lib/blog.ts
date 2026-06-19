@@ -19,6 +19,18 @@ export function blogCategoryLabel(category?: string | null): string | null {
   return BLOG_CATEGORY_LABELS[category.trim().toLowerCase()] ?? "Статьи";
 }
 
+// Бренд-суффикс <title>. Контент (seoTitle статей, заголовки рубрик/подборок)
+// нередко уже включает «… | Пропочву» / «… — блог Пропочву», а корневой layout
+// добавляет шаблон "%s | Пропочву" → получался дубль «… | Пропочву | Пропочву».
+// Нормализуем: срезаем любой хвостовой бренд и навешиваем ровно один.
+// Использовать с `title: { absolute: brandTitle(raw) }`, чтобы layout не дублировал.
+const BRAND_SUFFIX_RE = /\s*[|—–-]\s*(блог\s+)?пропочву\s*$/i;
+
+export function brandTitle(raw: string): string {
+  const clean = raw.replace(BRAND_SUFFIX_RE, "").trim();
+  return `${clean} | Пропочву`;
+}
+
 // --- Блог-хаб: канонические категории (рубрики) ---
 // raw-значения category в БД разнородны (ecokon/udobreniya, grunty/grunt, …),
 // поэтому каждую рубрику задаём списком match-значений + URL-slug + SEO-мета.

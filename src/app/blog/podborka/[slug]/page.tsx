@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPublishedCards } from "@/lib/blog-posts";
-import { BLOG_COLLECTIONS, getCollection } from "@/lib/blog";
+import { BLOG_COLLECTIONS, getCollection, brandTitle } from "@/lib/blog";
 import { BlogCard } from "@/components/blog/BlogCard";
 
 const SITE_URL = "https://pro-pochvu.ru";
@@ -20,8 +20,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!col) return {};
   const url = `${SITE_URL}/blog/podborka/${col.slug}`;
   return {
-    title: `${col.title} | Блог Пропочву`,
+    title: { absolute: brandTitle(col.title) },
     description: col.description,
+    robots: { index: false, follow: true },
     alternates: { canonical: url },
     openGraph: { title: col.title, description: col.description, url, type: "website" },
   };
