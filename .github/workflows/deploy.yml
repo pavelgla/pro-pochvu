@@ -124,15 +124,15 @@ jobs:
             set_env "OZON_API_KEY" "${{ secrets.OZON_API_KEY }}"
             set_env "OZON2_CLIENT_ID" "${{ secrets.OZON2_CLIENT_ID }}"
             set_env "OZON2_API_KEY" "${{ secrets.OZON2_API_KEY }}"
-            set_env "WB_API_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTcyODQwLCJpZCI6IjAxOWQ1ZTVmLWY2MzMtNzg5Mi04NzA2LWU3MTFmYWNmNDkwYSIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MTU0MDM5LCJzIjo2NzIsInNpZCI6IjA0N2ZhZmI3LWQzMWQtNGQ0MS04NGE4LWY2N2FiYzI3MDgyYyIsInQiOmZhbHNlLCJ1aWQiOjUzNjkyMjExfQ.Sl7mGYoSMfgXT4lPvEEd5ISGoAC3bW2oHJfmF4BGcdYxQ-AwaNXOWnSwOe3yyZA_75h_xcFYQnQ7rCya1_j4WQ"
-            set_env "WB2_API_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTcyNzMzLCJpZCI6IjAxOWQ1ZTVlLTUzNTctNzc4ZC04NDljLTk2ODNmMzg3ZmFiMyIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MjUwMDAxNzMzLCJzIjo2NzIsInNpZCI6IjYyMzkwYzVlLTFkNDItNDE4NS1hYjcyLTAwZmFkMTdjMDJlZSIsInQiOmZhbHNlLCJ1aWQiOjUzNjkyMjExfQ.0SPgEppmx3IQPJd7KOOewBJsPqYt-5g1436foLBqZhiLGmPIXQ6EpTfN7EDfc14f1qwjvINanER0UXVLab4jCQ"
+            set_env "WB_API_KEY" "${{ secrets.WB_API_KEY }}"
+            set_env "WB2_API_KEY" "${{ secrets.WB2_API_KEY }}"
             # WB Statistics keys (Content API: descriptions + photo URLs)
-            set_env "WB_STATS_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTcyMDk2LCJpZCI6IjAxOWQ1ZTU0LTliOWUtN2E2Mi1iZjBiLTY3NmYxMTEyMzc5NiIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MTU0MDM5LCJzIjoxMDczNzQxODc0LCJzaWQiOiIwNDdmYWZiNy1kMzFkLTRkNDEtODRhOC1mNjdhYmMyNzA4MmMiLCJ0IjpmYWxzZSwidWlkIjo1MzY5MjIxMX0.q0lOVXiMey_oBuysBhV6gmCcrloDu8N1Gisy6aZn1Sz1mFspCptvDfZCVVMZxnG090a0qBeNmn610hxa8yb1-Q"
-            set_env "WB2_STATS_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxNzkxMTcyMjEzLCJpZCI6IjAxOWQ1ZTU2LTY0N2UtNzIxNi1hYzk1LTY1MzM0MmRiYTU3MyIsImlpZCI6NTM2OTIyMTEsIm9pZCI6MjUwMDAxNzMzLCJzIjoxMDczNzQxODUwLCJzaWQiOiI2MjM5MGM1ZS0xZDQyLTQxODUtYWI3Mi0wMGZhZDE3YzAyZWUiLCJ0IjpmYWxzZSwidWlkIjo1MzY5MjIxMX0.PFOc3kAhmf-fdJIFibaubR6UdHc4O31BEOrlG14kYYv-1sTGVIFuJHV2_MkWcD0CRUl_0nQ2V0LA797oAcpIQQ"
+            set_env "WB_STATS_KEY" "${{ secrets.WB_STATS_KEY }}"
+            set_env "WB2_STATS_KEY" "${{ secrets.WB2_STATS_KEY }}"
             # WB Prices keys (Цены и скидки — discounts-prices-api.wb.ru)
-            set_env "WB_PRICES_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkxMjE2ODMwLCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkNjBmZi0zNDE3LTcwNGItODgwYy1lYmUyNzFhNDcwYzYiLCJpaWQiOjUzNjkyMjExLCJvaWQiOjE1NDAzOSwicyI6MTA3MzgwNzM3MCwic2lkIjoiMDQ3ZmFmYjctZDMxZC00ZDQxLTg0YTgtZjY3YWJjMjcwODJjIiwidCI6ZmFsc2UsInVpZCI6NTM2OTIyMTF9.e2O76NLjr3UQetcsPw5_kHXtR6txlA9yMqAM-2ba2qEtbrJAWBbiAnaWh-pFaI7xq6Znb3GN4ZyxOzPkDHwUGw"
-            set_env "WB2_PRICES_KEY" "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkxMjE2NzUzLCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkNjBmZS0wNjJmLTczNzktOTAzZi00M2NkMTg4YWJhNjQiLCJpaWQiOjUzNjkyMjExLCJvaWQiOjI1MDAwMTczMywicyI6MTA3MzgwNzM3MCwic2lkIjoiNjIzOTBjNWUtMWQ0Mi00MTg1LWFiNzItMDBmYWQxN2MwMmVlIiwidCI6ZmFsc2UsInVpZCI6NTM2OTIyMTF9.RRO3E5sqqTypqN0Fbn413qgIKueAQ_hPVid84xRtcGbN7bXV1-_7T5bCfbCLh7TaQs_fdUkA_qsJ4Cj8XVs8Pg"
-            set_env "TELEGRAM_BOT_TOKEN" "8479125268:AAFv4UxT2DkMn0kHnam8bXVMsfbSCzJh054"
+            set_env "WB_PRICES_KEY" "${{ secrets.WB_PRICES_KEY }}"
+            set_env "WB2_PRICES_KEY" "${{ secrets.WB2_PRICES_KEY }}"
+            set_env "TELEGRAM_BOT_TOKEN" "${{ secrets.TELEGRAM_BOT_TOKEN }}"
             set_env "TELEGRAM_CHAT_ID" "134445625"
             # Email SMTP (Mail.ru для бизнеса)
             set_env "EMAIL_SMTP_HOST" "smtp.mail.ru"
