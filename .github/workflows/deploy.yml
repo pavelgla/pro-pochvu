@@ -98,7 +98,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "docker-compose.prod.yml,deploy/"
-          target: ~/ecokon
+          target: /opt/ecokon
           overwrite: true
 
       - name: Deploy via SSH
@@ -108,7 +108,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd ~/ecokon
+            cd /opt/ecokon
 
             # Inject secrets into .env (create or update without duplicates)
             set_env() {
@@ -154,14 +154,9 @@ jobs:
             # Restart services (migrations run automatically on container start)
             docker compose -f docker-compose.prod.yml up -d --remove-orphans --force-recreate
 
-            # Update pdnguard nginx to use pro-pochvu.conf instead of ecokon.conf
-            if grep -q 'ecokon\.conf' ~/pdnguard/docker-compose.prod.yml 2>/dev/null; then
-              sed -i 's|~/ecokon/deploy/nginx/ecokon.conf:/etc/nginx/conf.d/ecokon.conf|~/ecokon/deploy/nginx/pro-pochvu.conf:/etc/nginx/conf.d/pro-pochvu.conf|' ~/pdnguard/docker-compose.prod.yml
-              cd ~/pdnguard && docker compose -f docker-compose.prod.yml up -d nginx && cd ~/ecokon
-            fi
-
-            # Reload nginx (from pdnguard stack)
-            docker exec pdnguard-nginx nginx -s reload 2>/dev/null || true
+            # nginx: на sel1 единый proxy-nginx (/opt/proxy), pro-pochvu.conf уже в conf.d
+            cp /opt/ecokon/deploy/nginx/pro-pochvu.conf /opt/proxy/nginx/conf.d/pro-pochvu.conf 2>/dev/null || true
+            docker exec proxy-nginx nginx -s reload 2>/dev/null || true
 
             # Cleanup old images
             docker image prune -f
