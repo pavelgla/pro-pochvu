@@ -218,6 +218,10 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "bio-chay-yantarnaya-kislota": "bio-chay-yantar-fosfor",
   "vosstanovlenie-istoshchennoy-pochvy": "grunt-ecokon-organicheskiy",
   "organicheskoe-zemledelie": "udobrenie-kornevaya",
+  // Батч 6 по материалам @spottykit (июль 2026)
+  "poliv-komnatnyh-rasteniy": "bio-chay-yantar-fosfor",
+  "bolezni-komnatnyh-rasteniy": "bio-chay-dekorativno-listvennye",
+  "konditsioner-i-rasteniya-letom": "bio-chay-yantar-fosfor",
 };
 
 // --- Статьи из печатной прессы («СМИ о нас») ---
@@ -284,4 +288,8 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "fikus-bendzhamina-sbrasyvaet-listya": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
   "kogda-peresazhivat-komnatnye-rasteniya": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
   "zamiokulkas-uhod": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
+  // Батч 6 @spottykit — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "poliv-komnatnyh-rasteniy": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
+  "bolezni-komnatnyh-rasteniy": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
+  "konditsioner-i-rasteniya-letom": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
 };
