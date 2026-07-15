@@ -37,7 +37,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
-  if (order.userId !== (session?.user as { id?: string } | undefined)?.id) {
+  // Retry-payment endpoint for logged-in customers only: guest orders get their
+  // payment created inside /api/orders/create and cannot be re-paid here.
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId || order.userId !== userId) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

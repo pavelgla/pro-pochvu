@@ -27,11 +27,22 @@ export async function POST(req: NextRequest) {
 
   switch (event.event) {
     case "payment.succeeded": {
-      const order = await prisma.order.update({
-        where: { id: orderId },
+      // Idempotency: YooKassa retries webhooks — only the first one for this
+      // order updates state and triggers notifications.
+      const updated = await prisma.order.updateMany({
+        where: { id: orderId, paymentStatus: { not: "succeeded" } },
         data: { status: "paid", paymentStatus: "succeeded" },
+      });
+      if (updated.count === 0) {
+        console.log("[payment/webhook] duplicate succeeded ignored", { orderId });
+        break;
+      }
+
+      const order = await prisma.order.findUnique({
+        where: { id: orderId },
         include: { items: true },
       });
+      if (!order) break;
 
       const items = order.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price }));
       const ymClientId = payment.metadata?.ym_client_id;
@@ -88,8 +99,9 @@ export async function POST(req: NextRequest) {
     }
 
     case "payment.canceled": {
-      await prisma.order.update({
-        where: { id: orderId },
+      // Never cancel an already paid order; ignore duplicate cancellations
+      await prisma.order.updateMany({
+        where: { id: orderId, paymentStatus: { notIn: ["succeeded", "cancelled"] } },
         data: { status: "cancelled", paymentStatus: "cancelled" },
       });
 

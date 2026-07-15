@@ -3,39 +3,31 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { FREE_DELIVERY_THRESHOLD } from "@/lib/constants";
-import { notifyNewOrder } from "@/lib/telegram";
+import { FREE_DELIVERY_THRESHOLD, OZON_DELIVERY_COST } from "@/lib/constants";
+import { createPayment } from "@/lib/yookassa";
 
 const itemSchema = z.object({
   product_id: z.string(),
   variant_id: z.string().optional(),
-  name: z.string(),
-  brand: z.string(),
-  price: z.number().positive(),
-  quantity: z.number().int().positive(),
-  image: z.string(),
-  slug: z.string(),
-  weight_grams: z.number(),
+  quantity: z.number().int().positive().max(999),
 });
 
 const schema = z.object({
   items: z.array(itemSchema).min(1),
-  customer_name: z.string().min(2),
+  customer_name: z.string().min(2).max(200),
   customer_email: z.string().email(),
-  customer_phone: z.string().min(11),
-  customer_comment: z.string().optional(),
-  delivery_provider: z.string(),
-  delivery_method: z.string(),
-  delivery_cost: z.number(),
-  delivery_tariff_id: z.string(),
-  delivery_address: z.any(),
-  delivery_point_id: z.string().optional(),
-  delivery_city_code: z.number().optional(),
-  promo_code: z.string().optional(),
-  promo_discount: z.number().optional(),
-  payment_method: z.string(),
-  ym_client_id: z.string().optional(),
+  customer_phone: z.string().min(11).max(20),
+  customer_comment: z.string().max(1000).optional(),
+  delivery_city: z.string().min(2).max(120),
+  delivery_pvz_address: z.string().min(5).max(300),
+  promo_code: z.string().max(50).optional(),
+  payment_method: z
+    .enum(["bank_card", "sbp", "sberbank", "tinkoff_bank", "installments"])
+    .optional(),
+  ym_client_id: z.string().max(64).optional(),
 });
+
+type Variant = { id: string; label: string; price_diff?: number };
 
 export async function POST(req: NextRequest) {
   let body;
@@ -46,11 +38,65 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
-  // Calculate totals server-side
-  const subtotal = body.items.reduce(
-    (sum, i) => sum + i.price * i.quantity,
-    0
-  );
+  // Prices, names and availability come from the DB only — client values are never trusted
+  const productIds = Array.from(new Set(body.items.map((i) => i.product_id)));
+  const products = await prisma.product.findMany({
+    where: { id: { in: productIds }, isActive: true, sellDirect: true },
+  });
+  const productById = new Map(products.map((p) => [p.id, p]));
+
+  const orderItems: {
+    productId: string;
+    variantId?: string;
+    quantity: number;
+    price: number;
+    name: string;
+    image: string;
+  }[] = [];
+
+  for (const item of body.items) {
+    const product = productById.get(item.product_id);
+    if (!product) {
+      return NextResponse.json(
+        { error: "Один из товаров недоступен для заказа. Обновите корзину." },
+        { status: 400 }
+      );
+    }
+    if (product.stock < item.quantity) {
+      return NextResponse.json(
+        { error: `«${product.name}» — недостаточно товара в наличии.` },
+        { status: 400 }
+      );
+    }
+
+    const variants = Array.isArray(product.variants)
+      ? (product.variants as Variant[])
+      : [];
+    const variant = item.variant_id
+      ? variants.find((v) => v.id === item.variant_id)
+      : undefined;
+    if (item.variant_id && !variant) {
+      return NextResponse.json(
+        { error: `«${product.name}» — выбранный вариант недоступен.` },
+        { status: 400 }
+      );
+    }
+
+    const images = Array.isArray(product.images)
+      ? (product.images as string[])
+      : [];
+
+    orderItems.push({
+      productId: product.id,
+      variantId: item.variant_id,
+      quantity: item.quantity,
+      price: product.price + (variant?.price_diff ?? 0),
+      name: variant ? `${product.name} — ${variant.label}` : product.name,
+      image: images[0] ?? "",
+    });
+  }
+
+  const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   // Fetch promo from DB — never trust client-supplied discount
   let promoRecord: Awaited<ReturnType<typeof prisma.promoCode.findFirst>> = null;
@@ -77,14 +123,9 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const deliveryCost =
-    subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : body.delivery_cost;
+  // MVP: single delivery option — Ozon pickup point, flat rate, computed server-side
+  const deliveryCost = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : OZON_DELIVERY_COST;
   const total = subtotal - discount + deliveryCost;
-
-  // COD surcharge
-  const isCod = body.payment_method === "cod";
-  const codSurcharge = isCod ? Math.round(total * 0.03) : 0;
-  const finalTotal = total + codSurcharge;
 
   const session = await getServerSession(authOptions);
 
@@ -93,33 +134,26 @@ export async function POST(req: NextRequest) {
     order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
         data: {
-          status: isCod ? "confirmed" : "pending",
-          total: finalTotal,
+          status: "pending",
+          total,
           subtotal,
           deliveryCost,
           discount,
-          promoCode: body.promo_code,
-          deliveryProvider: body.delivery_provider,
-          deliveryMethod: body.delivery_method,
-          deliveryAddress: body.delivery_address,
-          deliveryCityCode: body.delivery_city_code,
-          paymentMethod: body.payment_method,
-          paymentStatus: isCod ? "cod" : "pending",
+          promoCode: promoRecord?.code,
+          deliveryProvider: "ozon",
+          deliveryMethod: "ozon_pvz",
+          deliveryAddress: {
+            city: body.delivery_city,
+            point_address: body.delivery_pvz_address,
+          },
+          paymentMethod: body.payment_method ?? "bank_card",
+          paymentStatus: "pending",
           customerName: body.customer_name,
           customerEmail: body.customer_email,
           customerPhone: body.customer_phone,
           customerComment: body.customer_comment,
-          userId: session?.user ? (session.user as any).id : undefined,
-          items: {
-            create: body.items.map((item) => ({
-              productId: item.product_id,
-              variantId: item.variant_id,
-              quantity: item.quantity,
-              price: item.price,
-              name: item.name,
-              image: item.image,
-            })),
-          },
+          userId: session?.user ? (session.user as { id?: string }).id : undefined,
+          items: { create: orderItems },
         },
       });
       if (promoRecord) {
@@ -132,78 +166,49 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error("DB error creating order:", err);
-    return NextResponse.json({ error: "Не удалось создать заказ. Попробуйте ещё раз." }, { status: 500 });
-  }
-
-  if (isCod) {
-    // COD: notify admin, create delivery order immediately
-    // TODO: call ApiShip createOrder
-    notifyNewOrder({
-      id: order.id,
-      order_number: order.orderNumber,
-      total: finalTotal,
-      delivery_cost: deliveryCost,
-      delivery_provider: body.delivery_provider,
-      delivery_address: body.delivery_address,
-      delivery_track: null,
-      delivery_status: null,
-      payment_method: "cod",
-      customer_name: body.customer_name,
-      customer_phone: body.customer_phone,
-      items: body.items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
-    }).catch((e) => console.error("Telegram notification failed:", e));
-
-    return NextResponse.json({
-      orderId: order.id,
-      orderNumber: order.orderNumber,
-      redirectUrl: `/order/${order.id}?status=confirmed`,
-    });
-  }
-
-  // Online payment: create YooKassa payment
-  try {
-    const payRes = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/payment/create`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId: order.id,
-          orderNumber: order.orderNumber,
-          total: finalTotal,
-          items: body.items.map((i) => ({
-            name: i.name,
-            price: i.price,
-            quantity: i.quantity,
-          })),
-          deliveryCost,
-          customerEmail: body.customer_email,
-          customerPhone: body.customer_phone,
-          paymentMethod:
-            body.payment_method === "cod" ? undefined : body.payment_method,
-          ymClientId: body.ym_client_id,
-        }),
-      }
-    );
-
-    const payData = await payRes.json();
-
-    if (!payRes.ok) {
-      return NextResponse.json(
-        { error: payData.error || "Payment error" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      orderId: order.id,
-      orderNumber: order.orderNumber,
-      paymentId: payData.paymentId,
-      redirectUrl: payData.confirmationUrl,
-    });
-  } catch {
     return NextResponse.json(
-      { error: "Payment creation failed" },
+      { error: "Не удалось создать заказ. Попробуйте ещё раз." },
+      { status: 500 }
+    );
+  }
+
+  // Stock is not decremented in MVP — the seller adjusts it manually per shipment
+
+  try {
+    const { paymentId, confirmationUrl } = await createPayment({
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      total,
+      items: orderItems.map((i) => ({
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity,
+      })),
+      deliveryCost,
+      customerEmail: body.customer_email,
+      customerPhone: body.customer_phone,
+      paymentMethod: body.payment_method,
+      ymClientId: body.ym_client_id,
+    });
+
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { paymentId },
+    });
+
+    return NextResponse.json({
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      paymentId,
+      redirectUrl: confirmationUrl,
+    });
+  } catch (err) {
+    console.error("Payment creation failed:", err);
+    await prisma.order
+      .update({ where: { id: order.id }, data: { paymentStatus: "failed" } })
+      .catch(() => {});
+    return NextResponse.json(
+      { error: "Не удалось создать платёж. Попробуйте ещё раз." },
       { status: 500 }
     );
   }
