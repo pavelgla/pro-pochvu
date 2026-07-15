@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { prisma } from "@/lib/prisma";
 import {
   blogCategoryLabel,
@@ -202,7 +203,19 @@ export default async function BlogPostPage({ params }: Props) {
 
             {/* Markdown content */}
             <div className="prose prose-lg max-w-none [&_a]:text-accent [&_a:hover]:text-accent-deep [&_h2]:text-ink [&_h3]:text-ink [&_strong]:text-ink">
-              <ReactMarkdown>{post.content}</ReactMarkdown>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  // Wrap tables so wide ones scroll instead of breaking the layout on mobile
+                  table: ({ node: _node, ...props }) => (
+                    <div className="overflow-x-auto">
+                      <table {...props} />
+                    </div>
+                  ),
+                }}
+              >
+                {post.content}
+              </ReactMarkdown>
             </div>
 
             {/* CTA — товар из статьи + прямые кнопки маркетплейса */}
