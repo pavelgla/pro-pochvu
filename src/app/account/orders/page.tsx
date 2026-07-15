@@ -1,88 +1,106 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { OrderTracker } from "@/components/OrderTracker";
 import { formatPrice } from "@/lib/catalog";
+import { statusBadge } from "@/lib/order-status";
 import { useCartStore } from "@/store/cartStore";
 import { cn } from "@/lib/utils";
 
-type MockOrder = {
+type ApiOrderItem = {
   id: string;
-  order_number: number;
-  created_at: string;
-  total: number;
+  productId: string;
+  variantId: string | null;
+  quantity: number;
+  price: number;
+  name: string;
+  image: string | null;
+  product: {
+    slug: string;
+    weightGrams: number;
+    productLine: { brand: string } | null;
+  } | null;
+};
+
+type ApiOrder = {
+  id: string;
+  orderNumber: number;
   status: string;
-  delivery_track: string | null;
-  delivery_provider: string;
-  items: { name: string; quantity: number; price: number; slug: string; brand: string; image: string; weight_grams: number; product_id: string }[];
+  total: number;
+  deliveryProvider: string | null;
+  deliveryTrack: string | null;
+  createdAt: string;
+  items: ApiOrderItem[];
 };
 
-const statusBadge: Record<string, { variant: "success" | "warning" | "info" | "sale"; label: string }> = {
-  pending: { variant: "warning", label: "Ожидание" },
-  paid: { variant: "info", label: "Оплачен" },
-  confirmed: { variant: "info", label: "Подтверждён" },
-  shipped: { variant: "info", label: "Отправлен" },
-  delivered: { variant: "success", label: "Доставлен" },
-  cancelled: { variant: "sale", label: "Отменён" },
-};
-
-// Mock orders
-const mockOrders: MockOrder[] = [
-  {
-    id: "ord-1",
-    order_number: 100042,
-    created_at: "2026-03-28T14:30:00",
-    total: 1861,
-    status: "delivered",
-    delivery_track: "FP-123456",
-    delivery_provider: "5Post",
-    items: [
-      { name: "Био-чай Универсальный с янтарём", quantity: 2, price: 626, slug: "bio-chay-universalnyj-s-yantaryom", brand: "ecokon", image: "", weight_grams: 300, product_id: "c1000000-0000-0000-0000-000000000001" },
-      { name: "Био-чай Для орхидей", quantity: 1, price: 611, slug: "bio-chay-dlya-orhidej", brand: "ecokon", image: "", weight_grams: 300, product_id: "c1000000-0000-0000-0000-000000000003" },
-    ],
-  },
-  {
-    id: "ord-2",
-    order_number: 100043,
-    created_at: "2026-03-30T10:15:00",
-    total: 2748,
-    status: "shipped",
-    delivery_track: "CDEK-789012",
-    delivery_provider: "СДЭК",
-    items: [
-      { name: "Фитомодуль настенный 3 кармана (антрацит)", quantity: 1, price: 2748, slug: "fitomodul-nastennyj-3-karmana-antratsit", brand: "tsvetologiya", image: "", weight_grams: 800, product_id: "c1000000-0000-0000-0000-000000000009" },
-    ],
-  },
-];
+function providerLabel(provider: string | null): string {
+  if (!provider) return "";
+  return provider === "ozon" ? "Озон-доставка" : provider;
+}
 
 export default function OrdersPage() {
+  const [orders, setOrders] = useState<ApiOrder[] | null>(null);
+  const [error, setError] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const addItem = useCartStore((s) => s.addItem);
 
-  function reorder(order: MockOrder) {
+  useEffect(() => {
+    fetch("/api/user/orders")
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then((data: ApiOrder[]) => setOrders(data))
+      .catch(() => setError(true));
+  }, []);
+
+  function reorder(order: ApiOrder) {
     for (const item of order.items) {
       addItem({
-        product_id: item.product_id,
+        product_id: item.productId,
+        variant_id: item.variantId ?? undefined,
         name: item.name,
-        brand: item.brand,
+        brand: item.product?.productLine?.brand ?? "ecokon",
         price: item.price,
         quantity: item.quantity,
-        image: item.image,
-        slug: item.slug,
-        weight_grams: item.weight_grams,
+        image: item.image ?? "",
+        slug: item.product?.slug ?? "",
+        weight_grams: item.product?.weightGrams ?? 0,
       });
     }
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h2>Мои заказы</h2>
+        <p className="py-12 text-center text-mute">
+          Не удалось загрузить заказы. Обновите страницу.
+        </p>
+      </div>
+    );
+  }
+
+  if (orders === null) {
+    return (
+      <div className="space-y-6">
+        <h2>Мои заказы</h2>
+        <div className="flex justify-center py-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-accent" />
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
       <h2>Мои заказы</h2>
 
-      {mockOrders.length === 0 ? (
+      {orders.length === 0 ? (
         <div className="py-12 text-center">
           <p className="text-mute">У вас пока нет заказов</p>
           <Link href="/catalog" className="mt-4 inline-block">
@@ -91,8 +109,8 @@ export default function OrdersPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {mockOrders.map((order) => {
-            const badge = statusBadge[order.status] || statusBadge.pending;
+          {orders.map((order) => {
+            const badge = statusBadge(order.status);
             const isExpanded = expanded === order.id;
 
             return (
@@ -109,15 +127,15 @@ export default function OrdersPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold">
-                        #{order.order_number}
+                        #{order.orderNumber}
                       </span>
                       <Badge variant={badge.variant} size="sm">
                         {badge.label}
                       </Badge>
                     </div>
                     <p className="mt-0.5 text-xs text-mute">
-                      {new Date(order.created_at).toLocaleDateString("ru-RU")}
-                      {order.delivery_track && ` • Трек: ${order.delivery_track}`}
+                      {new Date(order.createdAt).toLocaleDateString("ru-RU")}
+                      {order.deliveryTrack && ` • Трек: ${order.deliveryTrack}`}
                     </p>
                   </div>
                   <span className="shrink-0 text-sm font-bold">
@@ -134,20 +152,22 @@ export default function OrdersPage() {
                 {/* Expanded details */}
                 {isExpanded && (
                   <div className="border-t border-line p-4 space-y-3">
-                    {order.items.map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 text-sm">
+                    {order.items.map((item) => (
+                      <div key={item.id} className="flex items-center gap-3 text-sm">
                         <div className="h-10 w-10 shrink-0 rounded-lg bg-bg-soft flex items-center justify-center text-xs text-mute/30">
-                          {item.brand === "ecokon" ? "🌿" : "🌱"}
+                          {item.product?.productLine?.brand === "tsvetologiya" ? "🌱" : "🌿"}
                         </div>
-                        <Link
-                          href={`/product/${item.slug}`}
-                          className="flex-1 hover:text-accent"
-                        >
-                          {item.name}
-                        </Link>
-                        <span className="text-mute">
-                          x{item.quantity}
-                        </span>
+                        {item.product?.slug ? (
+                          <Link
+                            href={`/product/${item.product.slug}`}
+                            className="flex-1 hover:text-accent"
+                          >
+                            {item.name}
+                          </Link>
+                        ) : (
+                          <span className="flex-1">{item.name}</span>
+                        )}
+                        <span className="text-mute">x{item.quantity}</span>
                         <span className="font-medium">
                           {formatPrice(item.price * item.quantity)}
                         </span>
@@ -157,16 +177,22 @@ export default function OrdersPage() {
                     {/* Order tracker */}
                     <div className="border-t border-line pt-3">
                       <OrderTracker
-                        currentStatus={order.status === "delivered" ? "delivered" : order.status === "shipped" ? "shipped" : "paid"}
-                        trackNumber={order.delivery_track}
-                        deliveryProvider={order.delivery_provider}
+                        currentStatus={
+                          order.status === "delivered"
+                            ? "delivered"
+                            : order.status === "shipped"
+                            ? "shipped"
+                            : "paid"
+                        }
+                        trackNumber={order.deliveryTrack}
+                        deliveryProvider={providerLabel(order.deliveryProvider)}
                       />
                     </div>
 
                     <div className="flex items-center justify-between border-t border-line pt-3">
                       <span className="text-xs text-mute">
-                        {order.delivery_provider}
-                        {order.delivery_track && ` • ${order.delivery_track}`}
+                        {providerLabel(order.deliveryProvider)}
+                        {order.deliveryTrack && ` • ${order.deliveryTrack}`}
                       </span>
                       <Button
                         variant="ghost"

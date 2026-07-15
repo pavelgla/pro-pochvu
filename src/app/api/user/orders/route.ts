@@ -18,9 +18,11 @@ export async function GET(req: NextRequest) {
     deliveryCost: true, discount: true, deliveryProvider: true, deliveryMethod: true,
     deliveryTrack: true, deliveryStatus: true, paymentMethod: true, paymentStatus: true,
     customerName: true, customerEmail: true, customerPhone: true, createdAt: true, updatedAt: true,
+    deliveryAddress: true,
     items: {
       select: {
         id: true, productId: true, variantId: true, quantity: true, price: true, name: true, image: true,
+        product: { select: { slug: true, weightGrams: true, productLine: { select: { brand: true } } } },
       },
     },
   };
