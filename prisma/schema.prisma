@@ -130,7 +130,7 @@ model Product {
   dimensions      Json?
   stock           Int          @default(0)
   badge           String?
-  sellDirect      Boolean      @default(false)
+  sellDirect      Boolean      @default(true)
   rating          Float        @default(0)
   reviewsCount    Int          @default(0)
   productLineId   String
@@ -182,6 +182,7 @@ model Order {
   customerEmail    String
   customerPhone    String
   customerComment  String?
+  adminNote        String?     @db.Text
   userId           String?
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
