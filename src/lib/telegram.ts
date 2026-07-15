@@ -79,14 +79,21 @@ export function newOrderMessage(order: OrderForNotification): string {
 
   const addr = order.delivery_address;
   const addressLine = addr
-    ? [addr.city, addr.street, addr.house, addr.apartment].filter(Boolean).join(", ")
+    ? [addr.city, addr.point_address ?? [addr.street, addr.house, addr.apartment].filter(Boolean).join(", ")]
+        .filter(Boolean)
+        .join(", ")
     : "Не указан";
+
+  const providerLabel =
+    order.delivery_provider === "ozon"
+      ? "Озон-доставка"
+      : order.delivery_provider || "СД";
 
   return [
     `🎉 <b>Новый заказ #${order.order_number}!</b>`,
     "",
     `💰 Сумма: <b>${formatPrice(order.total)}</b>`,
-    `📍 ${order.delivery_provider || "СД"} — ${escapeHtml(addressLine)}`,
+    `📍 ${providerLabel} — ${escapeHtml(addressLine)}`,
     "",
     `📦 Товары:`,
     items,

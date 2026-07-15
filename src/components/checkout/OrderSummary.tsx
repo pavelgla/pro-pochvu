@@ -3,14 +3,9 @@
 import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice } from "@/lib/catalog";
-import { FREE_DELIVERY_THRESHOLD } from "@/lib/constants";
-import type { DeliveryOption } from "@/types/delivery";
+import { FREE_DELIVERY_THRESHOLD, OZON_DELIVERY_COST } from "@/lib/constants";
 
-type Props = {
-  deliveryOption: DeliveryOption | null;
-};
-
-export function OrderSummary({ deliveryOption }: Props) {
+export function OrderSummary() {
   const items = useCartStore((s) => s.items);
   const getSubtotal = useCartStore((s) => s.getSubtotal);
   const getDiscount = useCartStore((s) => s.getDiscount);
@@ -19,7 +14,7 @@ export function OrderSummary({ deliveryOption }: Props) {
   const subtotal = getSubtotal();
   const discount = getDiscount();
   const deliveryCost =
-    subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : (deliveryOption?.cost || 0);
+    subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : OZON_DELIVERY_COST;
   const total = subtotal - discount + deliveryCost;
 
   return (
@@ -68,13 +63,7 @@ export function OrderSummary({ deliveryOption }: Props) {
         )}
         <div className="flex justify-between">
           <span className="text-mute">Доставка</span>
-          <span>
-            {deliveryOption
-              ? deliveryCost === 0
-                ? "Бесплатно"
-                : formatPrice(deliveryCost)
-              : "—"}
-          </span>
+          <span>{deliveryCost === 0 ? "Бесплатно" : formatPrice(deliveryCost)}</span>
         </div>
         <div className="flex justify-between border-t border-line pt-2 text-base font-bold">
           <span>Итого</span>

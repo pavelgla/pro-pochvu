@@ -42,6 +42,20 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
     document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" });
   }
 
+  function handleAddToCart() {
+    addItem({
+      product_id: product.id,
+      variant_id: selectedVariant ?? undefined,
+      name: product.name,
+      brand,
+      price: product.price,
+      quantity,
+      image: Array.isArray(product.images) ? ((product.images as string[])[0] ?? "") : "",
+      slug: product.slug,
+      weight_grams: product.weightGrams,
+    });
+  }
+
   return (
     <div className="space-y-5">
       {/* Brand */}
@@ -154,26 +168,23 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
       <FavoriteButton />
 
       {product.sellDirect && inStock ? (
-        /* Direct sale — own cart */
-        <Button
-          size="lg"
-          className="w-full"
-          onClick={() =>
-            addItem({
-              product_id: product.id,
-              variant_id: selectedVariant ?? undefined,
-              name: product.name,
-              brand,
-              price: product.price,
-              quantity,
-              image: Array.isArray(product.images) ? ((product.images as string[])[0] ?? "") : "",
-              slug: product.slug,
-              weight_grams: product.weightGrams,
-            })
-          }
-        >
-          В корзину
-        </Button>
+        /* Direct sale — own cart, marketplaces as secondary links */
+        <div className="flex flex-col gap-3">
+          <Button size="lg" className="w-full" onClick={handleAddToCart}>
+            В корзину
+          </Button>
+          {hasMarketplace && (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs text-mute">Также на маркетплейсах</p>
+              <MarketplaceButtons
+                wb={links.wb}
+                ozon={links.ozon}
+                slug={product.slug}
+                source="product"
+              />
+            </div>
+          )}
+        </div>
       ) : (
         /* Marketplace-first mode */
         <div className="flex flex-col gap-2">
@@ -197,8 +208,25 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
         </div>
       )}
 
-      {/* Mobile sticky buy bar */}
-      {!product.sellDirect && hasMarketplace && (
+      {/* Mobile sticky buy bar — own cart */}
+      {product.sellDirect && inStock && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur md:hidden">
+          <div className="flex items-center gap-3">
+            <span className="shrink-0 font-serif text-lg font-semibold text-ink">
+              {formatPrice(product.price)}
+            </span>
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 rounded-xl bg-accent py-2.5 text-center text-sm font-semibold text-white"
+            >
+              В корзину
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile sticky buy bar — marketplaces */}
+      {!(product.sellDirect && inStock) && hasMarketplace && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur md:hidden">
           <div className="flex items-center gap-3">
             <span className="shrink-0 font-serif text-lg font-semibold text-ink">

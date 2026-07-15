@@ -10,6 +10,11 @@ export const BRANDS = {
 
 export const FREE_DELIVERY_THRESHOLD = 3000;
 
+// MVP: единственный способ доставки — до пункта выдачи Ozon, фикс-тариф.
+// Отправление оформляется вручную в ЛК Ozon; API-интеграция — следующий этап.
+export const OZON_DELIVERY_COST = 300;
+export const OZON_PVZ_MAP_URL = "https://www.ozon.ru/geo/";
+
 export const DEFAULT_CURRENCY = "RUB";
 
 // Официальные магазины на маркетплейсах (продажи идут здесь, пока нет своей доставки).

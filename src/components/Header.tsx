@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { MobileMenu } from "./MobileMenu";
 import { Logo } from "./Logo";
-import { useCartStore } from "@/store/cartStore";
+import { useCartCount } from "@/hooks/useCart";
 import { SHOW_TSVETOLOGIYA } from "@/lib/constants";
 
 const navLinks = [
@@ -65,7 +65,8 @@ const IconMenu = () => (
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const cartCount = useCartStore((s) => s.getItemCount());
+  // SSR-safe: raw store reads mismatch the server-rendered 0 and break hydration
+  const cartCount = useCartCount();
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -76,7 +77,7 @@ export function Header() {
         <div className="container-main flex items-center justify-between py-2 text-[11px] tracking-[0.08em] font-sans">
           <span className="font-medium">★ 4.9 на Ozon · 51&nbsp;000+ отзывов</span>
           <span className="font-medium">
-            Продаём на Wildberries и&nbsp;Ozon · доставка маркетплейса
+            Доставка до пункта выдачи Ozon · бесплатно от 3&nbsp;000&nbsp;₽
           </span>
           <span className="opacity-80 font-medium">RU</span>
         </div>

@@ -6,15 +6,12 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/catalog";
 import type { PaymentMethod } from "@/types/yookassa";
-import type { DeliveryProvider } from "@/types/delivery";
 
 type PaymentOption = {
-  id: PaymentMethod | "cod";
+  id: PaymentMethod;
   label: string;
   icon: typeof CreditCard;
   description: string;
-  codOnly?: boolean;
-  surcharge?: number;
 };
 
 const paymentOptions: PaymentOption[] = [
@@ -23,38 +20,25 @@ const paymentOptions: PaymentOption[] = [
   { id: "sberbank", label: "SberPay", icon: Building2, description: "Оплата через Сбербанк" },
   { id: "tinkoff_bank", label: "Тинькофф Pay", icon: Building2, description: "Оплата через Тинькофф" },
   { id: "installments", label: "Рассрочка", icon: Clock, description: "Оплата частями" },
-  { id: "cod", label: "Наложенный платёж", icon: CreditCard, description: "Оплата при получении (+3%)", codOnly: true, surcharge: 0.03 },
 ];
 
 type Props = {
   total: number;
-  deliveryProvider?: DeliveryProvider;
-  onSubmit: (method: PaymentMethod | "cod") => void;
+  onSubmit: (method: PaymentMethod) => void;
   onBack: () => void;
   loading: boolean;
 };
 
-export function PaymentStep({ total, deliveryProvider, onSubmit, onBack, loading }: Props) {
-  const [selected, setSelected] = useState<PaymentMethod | "cod">("bank_card");
+export function PaymentStep({ total, onSubmit, onBack, loading }: Props) {
+  const [selected, setSelected] = useState<PaymentMethod>("bank_card");
   const [agreed, setAgreed] = useState(false);
-
-  const codAllowed = deliveryProvider === "cdek" || deliveryProvider === "pochta";
-
-  const available = paymentOptions.filter(
-    (o) => !o.codOnly || (o.codOnly && codAllowed)
-  );
-
-  const selectedOption = available.find((o) => o.id === selected);
-  const finalTotal = selectedOption?.surcharge
-    ? Math.round(total * (1 + selectedOption.surcharge))
-    : total;
 
   return (
     <div className="space-y-6">
       <h2>Способ оплаты</h2>
 
       <div className="space-y-2">
-        {available.map((option) => {
+        {paymentOptions.map((option) => {
           const Icon = option.icon;
           return (
             <button
@@ -110,7 +94,7 @@ export function PaymentStep({ total, deliveryProvider, onSubmit, onBack, loading
           loading={loading}
           onClick={() => onSubmit(selected)}
         >
-          Оплатить {formatPrice(finalTotal)}
+          Оплатить {formatPrice(total)}
         </Button>
       </div>
     </div>
