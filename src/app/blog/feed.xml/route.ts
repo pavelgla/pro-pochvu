@@ -92,7 +92,7 @@ export async function GET() {
 <channel>
 <title>Блог Пропочву — о растениях, удобрениях и озеленении</title>
 <link>${SITE}/blog</link>
-<description>Уход за растениями, органические удобрения, грунты и вертикальное озеленение от КФХ «Ранчо Мушкино».</description>
+<description>Уход за растениями, органические удобрения, грунты и вертикальное озеленение от команды «Пропочву».</description>
 <language>ru</language>
 <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${items}

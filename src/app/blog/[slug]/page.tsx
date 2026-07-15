@@ -86,7 +86,7 @@ export default async function BlogPostPage({ params }: Props) {
     dateModified: post.updatedAt.toISOString(),
     author: {
       "@type": "Organization",
-      name: "КФХ Ранчо Мушкино",
+      name: "Пропочву",
       url: SITE_URL,
     },
     publisher: {

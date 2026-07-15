@@ -1,6 +1,6 @@
 const SITE_URL = "https://pro-pochvu.ru";
 const SITE_NAME = "Пропочву";
-const LEGAL_NAME = "КФХ «Ранчо Мушкино»";
+const LEGAL_NAME = "ООО «Цветология»";
 const LOGO_URL = `${SITE_URL}/logo.png`;
 
 type JsonLdProduct = {
@@ -79,7 +79,7 @@ export function generateOrganizationJsonLd() {
     url: SITE_URL,
     logo: LOGO_URL,
     description:
-      "D2C экосистема КФХ «Ранчо Мушкино». Органические удобрения «ЭКО Конь» и фитомодули «Цветология».",
+      "Интернет-магазин ООО «Цветология». Органические удобрения «ЭКО Конь» и фитомодули «Цветология» с фермы «Ранчо Мушкино».",
     sameAs: [
       "https://t.me/+7cAd9gatgP44MDcy",
       "https://www.wildberries.ru/brands/eko-kon",

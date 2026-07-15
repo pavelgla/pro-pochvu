@@ -339,12 +339,6 @@ export default function PrivacyPage() {
               </a>
             </p>
           </div>
-          <div className="mt-4 border-t border-gray-200 pt-4 text-sm text-gray-500">
-            <p>
-              Также: КФХ «Ранчо Мушкино», Гладышев Юрий Евгеньевич
-              (Калининградская обл.)
-            </p>
-          </div>
         </section>
 
       </div>

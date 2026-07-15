@@ -318,7 +318,7 @@ export async function createOrder(
           address: orderData.toAddress,
           pointId: orderData.pickupPointId,
         },
-        sender: { contactName: "КФХ Ранчо Мушкино", phone: "+79001234567" },
+        sender: { contactName: "ООО «Цветология»", phone: "+79001234567" },
         receiver: {
           contactName: orderData.customerName,
           phone: orderData.customerPhone,

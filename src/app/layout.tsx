@@ -51,9 +51,9 @@ export const metadata: Metadata = {
     "удобрение для орхидей",
     "удобрение для цветущих",
   ],
-  authors: [{ name: "КФХ «Ранчо Мушкино»" }],
-  creator: "КФХ «Ранчо Мушкино»",
-  publisher: "КФХ «Ранчо Мушкино»",
+  authors: [{ name: "ООО «Цветология»" }],
+  creator: "ООО «Цветология»",
+  publisher: "ООО «Цветология»",
   alternates: {
     canonical: "/",
   },
