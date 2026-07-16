@@ -24,7 +24,7 @@ const WB1_MAP: Record<number, string> = {
 const WB2_MAP: Record<number, string> = {};
 
 interface WbGood {
-  nmId: number;
+  nmID: number;
   sizes: Array<{ price: number; discountedPrice: number }>;
 }
 
@@ -38,7 +38,7 @@ async function fetchAllPrices(apiKey: string): Promise<WbGood[]> {
   const limit = 1000;
 
   while (true) {
-    const url = `https://discounts-prices-api.wb.ru/api/v2/list/goods/filter?limit=${limit}&offset=${offset}`;
+    const url = `https://discounts-prices-api.wildberries.ru/api/v2/list/goods/filter?limit=${limit}&offset=${offset}`;
     try {
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${apiKey}` },
@@ -83,7 +83,7 @@ async function syncWbPrices(
   console.log(`[WB-PRICES] ${accountName}: ${goods.length} позиций`);
 
   for (const good of goods) {
-    const slug = nmIdMap[good.nmId];
+    const slug = nmIdMap[good.nmID];
     if (!slug) continue;
 
     const product = await prisma.product.findUnique({ where: { slug } });
