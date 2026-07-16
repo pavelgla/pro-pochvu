@@ -111,8 +111,8 @@ export async function getCategories(productLineId?: string) {
 }
 
 export async function getProductBySlug(slug: string) {
-  return prisma.product.findUnique({
-    where: { slug },
+  return prisma.product.findFirst({
+    where: { slug, isActive: true },
     include: {
       productLine: true,
       category: true,
