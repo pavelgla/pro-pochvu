@@ -8,6 +8,7 @@
 
 export const PARTNER = {
   name: "Катя",
+  nameGenitive: "Кати",
   fullName: "Катя · Дом соломинки",
   channel: "spottykit",
   url: "https://t.me/spottykit",

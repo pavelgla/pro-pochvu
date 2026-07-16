@@ -93,7 +93,7 @@ export default async function ProductPage({ params }: Props) {
         <div className="mt-12 border-t border-ink/10 pt-10">
           <div className="mb-6 max-w-xl">
             <h2 className="font-serif text-2xl font-medium tracking-tight">
-              Видео-обзор от <span className="text-accent">{PARTNER.name}</span>
+              Видео-обзор от <span className="text-accent">{PARTNER.nameGenitive}</span>
             </h2>
             <p className="mt-2 text-sm text-ink/70">
               {PARTNER.fullName} рассказывает о товаре своим подписчикам в Telegram.
