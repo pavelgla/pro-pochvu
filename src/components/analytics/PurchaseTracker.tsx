@@ -11,9 +11,9 @@ type Props = {
   coupon?: string;
   products: EcommerceProduct[];
   /**
-   * Whether the order is actually paid/confirmed. We only fire `purchase`
-   * once we know payment succeeded (paid, COD accepted, or `?payment=success`
-   * from YooKassa redirect).
+   * Whether the order is actually paid/confirmed per the DB (set by the
+   * YooKassa webhook or COD). Must never be derived from a redirect query
+   * param — YooKassa returns to the same URL for cancelled payments too.
    */
   enabled: boolean;
 };

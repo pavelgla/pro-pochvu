@@ -24,3 +24,21 @@ export const STATUS_LABELS: Record<
 export function statusBadge(status: string) {
   return STATUS_LABELS[status as OrderStatus] ?? STATUS_LABELS.pending;
 }
+
+/**
+ * Whether an order is actually paid/confirmed. Only trusts DB fields set by
+ * the YooKassa webhook or an admin — never a redirect query param, since
+ * YooKassa bounces the browser back to the same return_url regardless of
+ * whether the payment succeeded, failed, or was abandoned.
+ */
+export function isOrderConfirmed(order: {
+  paymentStatus: string | null;
+  status: string;
+}): boolean {
+  return (
+    order.paymentStatus === "succeeded" ||
+    order.paymentStatus === "cod" ||
+    order.status === "paid" ||
+    order.status === "confirmed"
+  );
+}

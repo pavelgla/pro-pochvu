@@ -5,8 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/Button";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { OrderTracker } from "@/components/OrderTracker";
+import { OrderStatusPoller } from "@/components/OrderStatusPoller";
 import { PurchaseTracker } from "@/components/analytics/PurchaseTracker";
 import type { EcommerceProduct } from "@/lib/analytics";
+import { isOrderConfirmed } from "@/lib/order-status";
 
 type Props = {
   params: { id: string };
@@ -50,12 +52,13 @@ export default async function OrderPage({ params, searchParams }: Props) {
   const isPending =
     order.paymentStatus === "pending" && order.paymentMethod !== "cod";
   const redirectUrl = searchParams.redirectUrl;
-  const isConfirmed =
-    order.paymentStatus === "paid" ||
-    order.paymentStatus === "cod" ||
-    order.status === "confirmed" ||
-    searchParams.payment === "success" ||
-    searchParams.status === "confirmed";
+  const isConfirmed = isOrderConfirmed(order);
+  // Buyer just bounced back from YooKassa's hosted payment page — the
+  // webhook that actually confirms payment may not have landed yet, so
+  // give it a few seconds of client-side polling before settling on
+  // "Ожидание оплаты" for a genuinely unpaid/cancelled order.
+  const justReturnedFromPayment =
+    searchParams.payment === "success" || searchParams.status === "confirmed";
 
   const orderNumber = String(order.orderNumber).padStart(6, "0");
 
@@ -69,6 +72,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
 
   return (
     <div className="container-main section-padding">
+      <OrderStatusPoller active={!isConfirmed && justReturnedFromPayment} />
       <PurchaseTracker
         orderId={order.id}
         orderNumber={order.orderNumber}
