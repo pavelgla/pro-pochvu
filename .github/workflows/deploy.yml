@@ -120,6 +120,8 @@ jobs:
                 echo "${key}=${val}" >> "$file"
               fi
             }
+            set_env "YOOKASSA_SHOP_ID" "${{ secrets.YOOKASSA_SHOP_ID }}"
+            set_env "YOOKASSA_SECRET_KEY" "${{ secrets.YOOKASSA_SECRET_KEY }}"
             set_env "OZON_CLIENT_ID" "${{ secrets.OZON_CLIENT_ID }}"
             set_env "OZON_API_KEY" "${{ secrets.OZON_API_KEY }}"
             set_env "OZON2_CLIENT_ID" "${{ secrets.OZON2_CLIENT_ID }}"
