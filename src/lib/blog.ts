@@ -222,6 +222,11 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "poliv-komnatnyh-rasteniy": "bio-chay-yantar-fosfor",
   "bolezni-komnatnyh-rasteniy": "bio-chay-dekorativno-listvennye",
   "konditsioner-i-rasteniya-letom": "bio-chay-yantar-fosfor",
+  // Батч 7 по материалам @spottykit (июль 2026)
+  "nefrolepis-uhod": "bio-chay-dekorativno-listvennye",
+  "alokaziya-uhod": "grunt-ecokon-organicheskiy",
+  "komnatnye-rasteniya-s-cvetnoy-listvoy": "bio-chay-dekorativno-listvennye",
+  "podkormka-komnatnyh-lian": "bio-chay-dekorativno-listvennye",
 };
 
 // --- Статьи из печатной прессы («СМИ о нас») ---
@@ -292,4 +297,9 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "poliv-komnatnyh-rasteniy": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
   "bolezni-komnatnyh-rasteniy": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
   "konditsioner-i-rasteniya-letom": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  // Батч 7 @spottykit — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "nefrolepis-uhod": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  "alokaziya-uhod": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
+  "komnatnye-rasteniya-s-cvetnoy-listvoy": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
+  "podkormka-komnatnyh-lian": { author: "Asanjorjo", source: "https://www.pexels.com/photo/lush-vertical-garden-in-singapore-s-marina-bay-31712918/" },
 };
