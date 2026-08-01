@@ -59,6 +59,10 @@
 
 ### Уход (uhod) — дополнительно опубликовано
 - ✅ **Кондиционер и комнатные растения: как подружить летом** → konditsioner-i-rasteniya-letom · bio-chay-yantar-fosfor (пост Кати 10855)
+- ✅ **Нефролепис: уход за пышным домашним папоротником** → nefrolepis-uhod · bio-chay-dekorativno-listvennye (батч 7 @spottykit)
+- ✅ **Алоказия: уход за капризной тропической красавицей** → alokaziya-uhod · grunt-ecokon-organicheskiy (батч 7 @spottykit)
+- ✅ **Комнатные растения с цветной листвой: 5 ярких видов** → komnatnye-rasteniya-s-cvetnoy-listvoy · bio-chay-dekorativno-listvennye (батч 7 @spottykit)
+- ✅ **Лианы дома: как кормить, чтобы «джунгли» ожили** → podkormka-komnatnyh-lian · bio-chay-dekorativno-listvennye (батч 7 @spottykit, category udobreniya)
 
 ## Производство
 
