@@ -376,8 +376,7 @@ async function main() {
       slug: "kolyshki-skoby-silikon",
       name: "Набор горшков прозрачных для фитомодуля Цветология",
       price: 1061,
-      rating: 5.0,
-      reviewsCount: 182,
+      // no Ozon SKU of its own yet — the reviews that used to sit here belong to the plugs
       images: ["/images/ozon/kolyshki-skoby-silikon_1.jpg"],
       shortDesc:
         "Прозрачные горшки из прочного ABS-пластика «Цветология» — функциональное решение для выращивания растений в домашних условиях.",
