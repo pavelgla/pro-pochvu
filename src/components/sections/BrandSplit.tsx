@@ -17,7 +17,7 @@ const categories = [
     description:
       "Био-чай, гранулы, готовые смеси — ферментированная органика из конского навоза. 51 000+ отзывов, 4.92 на маркетплейсах.",
     href: "/catalog?brand=ecokon",
-    image: "/images/ecokon/bio-chay-yantar-fosfor_0.jpg",
+    image: "/images/main/ecokon-brand.webp",
     fromPrice: "399",
   },
   {
