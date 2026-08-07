@@ -35,6 +35,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : "";
   const description = baseDescript + brandSuffix;
 
+  // seoOgImage is an explicit override; otherwise share the main product photo.
+  const gallery = Array.isArray(product.images) ? (product.images as string[]) : [];
+  const ogImage = product.seoOgImage || gallery[0];
+
   return {
     title,
     description,
@@ -43,7 +47,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: product.seoOgImage ? [product.seoOgImage] : undefined,
+      images: ogImage ? [ogImage] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
     },
   };
 }
