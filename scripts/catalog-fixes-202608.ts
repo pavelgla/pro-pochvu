@@ -5,6 +5,7 @@
  *      Fix the name, set the price to 1061 and move it to the "Горшки и кашпо"
  *      category (it sat in a category belonging to another product line).
  *   2. Add "Заглушки для фитомодуля Цветология" — 505 ₽.
+ *   3. Drop two seeded reviews that describe silicone clips, not this product.
  *
  * Idempotent: safe to re-run.
  *
@@ -97,9 +98,18 @@ async function addPlugs() {
   console.log(`DONE plugs: created ${PLUGS_SLUG} at 505 ₽ in category ${category.slug}`);
 }
 
+async function dropMismatchedReviews() {
+  // Seeded texts describe silicone clips ("скобы держат ветки томатов"), not the pot set.
+  const { count } = await prisma.review.deleteMany({
+    where: { id: { in: ['review-kolyshki-1', 'review-kolyshki-2'] } },
+  });
+  console.log(count ? `DONE reviews: removed ${count} mismatched review(s)` : 'OK   reviews: nothing to remove');
+}
+
 async function main() {
   await fixPots();
   await addPlugs();
+  await dropMismatchedReviews();
 }
 
 main()
