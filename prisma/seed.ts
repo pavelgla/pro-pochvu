@@ -372,19 +372,19 @@ async function main() {
     },
     // --- Цветология — Аксессуары ---
     {
+      // slug kept for URL continuity — the row has always been the pot set, only the name was wrong
       slug: "kolyshki-skoby-silikon",
-      name: "Колышки-скобы садовые силиконовые Цветология",
-      price: 233,
-      oldPrice: 399,
+      name: "Набор горшков прозрачных для фитомодуля Цветология",
+      price: 1061,
       rating: 5.0,
       reviewsCount: 182,
-      badge: "sale",
-      images: ["/images/tsvetologiya/kolyshki-skoby-silikon_0.jpg"],
-      shortDesc: "Силиконовые скобы для подвязки растений. Не травмируют стебли, многоразовые, мягкие.",
+      images: ["/images/ozon/kolyshki-skoby-silikon_1.jpg"],
+      shortDesc:
+        "Прозрачные горшки из прочного ABS-пластика «Цветология» — функциональное решение для выращивания растений в домашних условиях.",
       weightGrams: 50,
       stock: 500,
       productLineId: "a1000000-0000-0000-0000-000000000004",
-      categoryId: "b1000000-0000-0000-0000-000000000004",
+      categoryId: "b1000000-0000-0000-0000-000000000007",
     },
   ];
 
@@ -502,9 +502,8 @@ async function main() {
   const productListvennye = await prisma.product.findUnique({ where: { slug: "bio-chay-dekorativno-listvennye" }, select: { id: true } });
   const productKornevaya = await prisma.product.findUnique({ where: { slug: "udobrenie-kornevaya" }, select: { id: true } });
   const productFitomodul = await prisma.product.findUnique({ where: { slug: "fitomodul-50-4-white" }, select: { id: true } });
-  const productKolyshki = await prisma.product.findUnique({ where: { slug: "kolyshki-skoby-silikon" }, select: { id: true } });
 
-  if (productYantar && productListvennye && productKornevaya && productFitomodul && productKolyshki) {
+  if (productYantar && productListvennye && productKornevaya && productFitomodul) {
     const reviewsData = [
       // bio-chay-yantar-fosfor
       { id: "review-bio-chay-yantar-1", productId: productYantar.id, author: "Наталья К.", rating: 5, source: "ozon", isVerified: true, text: "Пользуюсь уже полгода — орхидеи просто расцвели! Раньше один цветонос в год, теперь три. Стики удобно дозировать, не пачкаешься. Запах специфический но терпимый. Заказала ещё 3 упаковки про запас.", createdAt: new Date("2025-08-15") },
@@ -524,9 +523,6 @@ async function main() {
       { id: "review-fitomodul-white-1", productId: productFitomodul.id, author: "Марина П.", rating: 5, source: "ozon", isVerified: true, text: "Сделала целую стену из цветов в гостиной — просто чудо! Модули крепкие, монтаж несложный, муж справился за час. Белый цвет идеально под интерьер. Уже докупила ещё 2 комплекта для спальни.", createdAt: new Date("2025-08-09") },
       { id: "review-fitomodul-white-2", productId: productFitomodul.id, author: "Наталья Ф.", rating: 5, source: "ozon", isVerified: true, text: "Очень качественный товар. Пластик плотный, не гнётся, не желтеет. Живу с ними уже 8 месяцев — как новые. Под бегонии и традесканции подходит отлично.", createdAt: new Date("2025-10-22") },
       { id: "review-fitomodul-white-3", productId: productFitomodul.id, author: "Екатерина В.", rating: 5, source: "ozon", isVerified: false, text: "Модули отличные! Взяла для офиса — сотрудники в восторге, посетители фотографируются. Растения держатся хорошо, ничего не падает. Гарантия 5 лет — это серьёзно.", createdAt: new Date("2025-11-30") },
-      // kolyshki-skoby-silikon
-      { id: "review-kolyshki-1", productId: productKolyshki.id, author: "Галина В.", rating: 5, source: "ozon", isVerified: true, text: "Мягкие, не травмируют стебли совсем. У меня хрупкие орхидеи — раньше всё пластиковыми прищепками крепила и оставляла следы. Эти силиконовые идеальны. Куплю ещё.", createdAt: new Date("2025-09-25") },
-      { id: "review-kolyshki-2", productId: productKolyshki.id, author: "Оксана Ш.", rating: 5, source: "ozon", isVerified: true, text: "Недорого и очень удобно. Скобы держат даже тяжёлые ветки томатов. Силикон не рвётся, можно переставлять много раз. Отличная покупка.", createdAt: new Date("2025-12-15") },
     ];
 
     for (const r of reviewsData) {
