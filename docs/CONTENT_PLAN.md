@@ -63,6 +63,13 @@
 - ✅ **Алоказия: уход за капризной тропической красавицей** → alokaziya-uhod · grunt-ecokon-organicheskiy (батч 7 @spottykit)
 - ✅ **Комнатные растения с цветной листвой: 5 ярких видов** → komnatnye-rasteniya-s-cvetnoy-listvoy · bio-chay-dekorativno-listvennye (батч 7 @spottykit)
 - ✅ **Лианы дома: как кормить, чтобы «джунгли» ожили** → podkormka-komnatnyh-lian · bio-chay-dekorativno-listvennye (батч 7 @spottykit, category udobreniya)
+- ✅ **Пеностекло, диатомит, песок: чем ещё разрыхлить грунт** → razryhliteli-grunta-penosteklo-diatomit-pesok · grunt-ecokon-organicheskiy (батч 8 @spottykit, category grunty)
+- ✅ **Безопасные растения для школы и детской** → bezopasnye-rasteniya-dlya-shkoly-i-detskoy · bio-chay-dekorativno-listvennye (батч 8 @spottykit)
+- ✅ **Чем заменить петунию в кашпо: 5 ампельных альтернатив** → chem-zamenit-petuniyu-v-kashpo · udobrenie-tsvetushchie (батч 8 @spottykit)
+- ✅ **Крестовник Роули: уход за суккулентом «нитка жемчуга»** → krestovnik-rowli-uhod · grunt-ecokon-organicheskiy (батч 8 @spottykit)
+- ✅ **Как перевести растения на фитильный полив в фитомодуле** → kak-perevesti-rasteniya-na-fitilnyy-poliv · fitomodul-50-4-white (батч 8 @spottykit, category tsvetologiya)
+- ✅ **Размножение хойи: черенком быстрее, чем листом** → razmnozhenie-hoyi-cherenkom-ili-listom · udobrenie-kornevaya (батч 8 @spottykit)
+- ✅ **Влажный тропический уголок для растений своими руками** → tropicheskaya-zona-dlya-rasteniy-svoimi-rukami · fitomodul-50-4-green (батч 8 @spottykit)
 
 ## Производство
 
