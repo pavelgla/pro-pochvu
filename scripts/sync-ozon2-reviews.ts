@@ -8,7 +8,7 @@ const OZON2_SKU_MAP: Record<string, string> = {
   "2081828814": "fitomodul-50-4-black",
   "2439041908": "fitomodul-50-4-green",
   "2825417652": "zaglushki-fitomodul",
-  "2209878912": "fitomodul-15-6",
+  "2209878912": "gorshki-prozrachnye-fitomodul",
   "1902553919": "grunt-ecokon-20l",
   "1902567457": "grunt-ecokon-ovoshchi",
   "1928618714": "grunt-ecokon-organicheskiy",

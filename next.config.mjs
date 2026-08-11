@@ -9,6 +9,16 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
   },
+  async redirects() {
+    return [
+      {
+        // old slug predates the "Колышки-скобы" -> "Набор горшков прозрачных" rename
+        source: '/product/kolyshki-skoby-silikon',
+        destination: '/product/gorshki-prozrachnye-fitomodul',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

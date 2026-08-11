@@ -22,7 +22,8 @@ const OZON1_OFFER_MAP: Record<string, string> = {
 
 // Ozon acc2 (Цветология + Грунт, Client-Id: 2576567) — offer_id → slug
 // Ссылки проверены по https://ozon.ru/t/sSMKTX4 → SKU 2439041908 = fitomodul-50-4-green
-// TODO: уточните Gorshok W (kolyshki?) и zagl cv (fitomodul-15-6?)
+// (Ozon offer_id "FITOCVET GREY" сам подтверждает: этот цвет — серый, не зелёный)
+// Gorshok W / zagl cv уточнены Ириной 2026-08-11
 const OZON2_OFFER_MAP: Record<string, string> = {
   FITOCVET: "fitomodul-50-4-white",
   "FITOCVET DARK": "fitomodul-50-4-black",
@@ -30,8 +31,8 @@ const OZON2_OFFER_MAP: Record<string, string> = {
   grunt20u: "grunt-ecokon-20l",
   grunt20o: "grunt-ecokon-ovoshchi",
   gruovo: "grunt-ecokon-organicheskiy",
-  // 'Gorshok W': 'kolyshki-skoby-silikon', // uncertain — уточните у владельца
-  // 'zagl cv': 'fitomodul-15-6', // uncertain — уточните у владельца
+  "Gorshok W": "gorshki-prozrachnye-fitomodul",
+  "zagl cv": "zaglushki-fitomodul",
 };
 
 interface OzonPriceItem {
