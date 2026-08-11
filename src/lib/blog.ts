@@ -227,6 +227,14 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "alokaziya-uhod": "grunt-ecokon-organicheskiy",
   "komnatnye-rasteniya-s-cvetnoy-listvoy": "bio-chay-dekorativno-listvennye",
   "podkormka-komnatnyh-lian": "bio-chay-dekorativno-listvennye",
+  // Батч 8 по материалам @spottykit (август 2026)
+  "razryhliteli-grunta-penosteklo-diatomit-pesok": "grunt-ecokon-organicheskiy",
+  "bezopasnye-rasteniya-dlya-shkoly-i-detskoy": "bio-chay-dekorativno-listvennye",
+  "chem-zamenit-petuniyu-v-kashpo": "udobrenie-tsvetushchie",
+  "krestovnik-rowli-uhod": "grunt-ecokon-organicheskiy",
+  "kak-perevesti-rasteniya-na-fitilnyy-poliv": "fitomodul-50-4-white",
+  "razmnozhenie-hoyi-cherenkom-ili-listom": "udobrenie-kornevaya",
+  "tropicheskaya-zona-dlya-rasteniy-svoimi-rukami": "fitomodul-50-4-green",
 };
 
 // --- Статьи из печатной прессы («СМИ о нас») ---
@@ -302,4 +310,12 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "alokaziya-uhod": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
   "komnatnye-rasteniya-s-cvetnoy-listvoy": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
   "podkormka-komnatnyh-lian": { author: "Asanjorjo", source: "https://www.pexels.com/photo/lush-vertical-garden-in-singapore-s-marina-bay-31712918/" },
+  // Батч 8 @spottykit — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "razryhliteli-grunta-penosteklo-diatomit-pesok": { author: "Teona Swift", source: "https://www.pexels.com/photo/gardener-planting-cactus-in-pot-with-soil-6912844/" },
+  "bezopasnye-rasteniya-dlya-shkoly-i-detskoy": { author: "Ian Panelo", source: "https://www.pexels.com/photo/various-potted-plants-in-orangery-6911178/" },
+  "chem-zamenit-petuniyu-v-kashpo": { author: "Rocketmann Prod", source: "https://www.pexels.com/photo/a-person-putting-in-some-soil-in-a-white-pot-9507236/" },
+  "krestovnik-rowli-uhod": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  "kak-perevesti-rasteniya-na-fitilnyy-poliv": { author: "Sayeed X Chowdhury", source: "https://www.pexels.com/photo/colorful-vertical-garden-wall-with-potted-plants-33628019/" },
+  "razmnozhenie-hoyi-cherenkom-ili-listom": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
+  "tropicheskaya-zona-dlya-rasteniy-svoimi-rukami": { author: "Magda Ehlers", source: "https://www.pexels.com/photo/green-plants-on-black-pots-5958769/" },
 };
