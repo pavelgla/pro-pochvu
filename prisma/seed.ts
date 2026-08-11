@@ -177,6 +177,14 @@ async function main() {
 
   console.log(`Seeded ${categories.length} categories`);
 
+  // One-off slug rename (2026-08-11): the upsert below is keyed by slug, so on a
+  // DB that predates the rename it would create a duplicate row instead of
+  // updating the existing one — rename first so the upsert lands on it.
+  await prisma.product.updateMany({
+    where: { slug: "kolyshki-skoby-silikon" },
+    data: { slug: "gorshki-prozrachnye-fitomodul" },
+  });
+
   // Products (13)
   const productsData = [
     // --- ЭКО Конь — Био-чай ---
