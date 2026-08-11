@@ -68,10 +68,13 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/prisma ./prisma
 
-# WB sync script (compiled to JS)
+# WB/Ozon sync scripts (compiled to JS)
 COPY --from=builder /app/scripts/sync-wb-reviews.js ./scripts/sync-wb-reviews.js
 COPY --from=builder /app/scripts/sync-ozon-reviews.js ./scripts/sync-ozon-reviews.js
 COPY --from=builder /app/scripts/sync-ozon2-reviews.js ./scripts/sync-ozon2-reviews.js
+COPY --from=builder /app/scripts/sync-wb-content.js ./scripts/sync-wb-content.js
+COPY --from=builder /app/scripts/sync-ozon-prices.js ./scripts/sync-ozon-prices.js
+COPY --from=builder /app/scripts/sync-wb-prices.js ./scripts/sync-wb-prices.js
 
 # Entrypoint для автоматических миграций при старте
 COPY scripts/deploy-migrate.sh ./scripts/deploy-migrate.sh
