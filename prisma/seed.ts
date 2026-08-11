@@ -327,31 +327,31 @@ async function main() {
     },
     {
       slug: "fitomodul-50-4-black",
-      name: "Фитомодуль Цветология настенный 50см 4шт (чёрный)",
+      name: "Фитомодуль Цветология настенный 50см 4шт (графитовый)",
       price: 5333,
       oldPrice: null,
       rating: 4.9,
       reviewsCount: 575,
       images: ["/images/tsvetologiya/fitomodul-50-4-black_0.jpg"],
-      shortDesc: "Настенный модуль для вертикального озеленения. Комплект 4 секции, 50 см, цвет: чёрный. Гарантия 5 лет. Производство Россия.",
+      shortDesc: "Настенный модуль для вертикального озеленения. Комплект 4 секции, 50 см, цвет: графитовый. Гарантия 5 лет. Производство Россия.",
       weightGrams: 1200,
       stock: 60,
-      characteristics: { "Цвет": "Чёрный", "Размер модуля": "50 см", "Количество секций": "4 шт", "Материал": "ABS-пластик", "Гарантия": "5 лет", "Производство": "Россия" },
+      characteristics: { "Цвет": "Графитовый", "Размер модуля": "50 см", "Количество секций": "4 шт", "Материал": "ABS-пластик", "Гарантия": "5 лет", "Производство": "Россия" },
       productLineId: "a1000000-0000-0000-0000-000000000003",
       categoryId: "b1000000-0000-0000-0000-000000000003",
     },
     {
       slug: "fitomodul-50-4-green",
-      name: "Фитомодуль Цветология настенный 50см 4шт (зелёный)",
+      name: "Фитомодуль Цветология настенный 50см 4шт (серый)",
       price: 5407,
       oldPrice: null,
       rating: 4.9,
       reviewsCount: 179,
       images: ["/images/tsvetologiya/fitomodul-50-4-green_0.jpg"],
-      shortDesc: "Настенный модуль для вертикального озеленения. Комплект 4 секции, 50 см, цвет: зелёный. Гарантия 5 лет. Производство Россия.",
+      shortDesc: "Настенный модуль для вертикального озеленения. Комплект 4 секции, 50 см, цвет: серый. Гарантия 5 лет. Производство Россия.",
       weightGrams: 1200,
       stock: 40,
-      characteristics: { "Цвет": "Зелёный", "Размер модуля": "50 см", "Количество секций": "4 шт", "Материал": "ABS-пластик", "Гарантия": "5 лет", "Производство": "Россия" },
+      characteristics: { "Цвет": "Серый", "Размер модуля": "50 см", "Количество секций": "4 шт", "Материал": "ABS-пластик", "Гарантия": "5 лет", "Производство": "Россия" },
       productLineId: "a1000000-0000-0000-0000-000000000003",
       categoryId: "b1000000-0000-0000-0000-000000000003",
     },
@@ -372,11 +372,11 @@ async function main() {
     },
     // --- Цветология — Аксессуары ---
     {
-      // slug kept for URL continuity — the row has always been the pot set, only the name was wrong
-      slug: "kolyshki-skoby-silikon",
+      // renamed from kolyshki-skoby-silikon 2026-08-11 — old slug redirects via next.config.mjs
+      slug: "gorshki-prozrachnye-fitomodul",
       name: "Набор горшков прозрачных для фитомодуля Цветология",
       price: 1061,
-      // no Ozon SKU of its own yet — the reviews that used to sit here belong to the plugs
+      // Ozon SKU 2209878912 (acc2) — see src/lib/marketplace-map.ts
       images: ["/images/ozon/kolyshki-skoby-silikon_1.jpg"],
       shortDesc:
         "Прозрачные горшки из прочного ABS-пластика «Цветология» — функциональное решение для выращивания растений в домашних условиях.",
