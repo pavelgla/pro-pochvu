@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Heart, Minus, Plus, Weight } from "lucide-react";
+import { Star, Heart, Minus, Plus, Weight, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { BrandLabel } from "@/components/BrandLabel";
@@ -131,6 +131,19 @@ export function ProductInfo({ product }: { product: ProductWithLine }) {
 
       {/* Compact characteristics */}
       <ProductCharacteristics characteristics={product.characteristics} compact />
+
+      {/* Quality certificate — ЭКО Конь fertilizers (система «Эко Лайн», до 08.2029) */}
+      {["bio-chay", "specialized"].includes(product.productLine?.slug ?? "") && (
+        <a
+          href="/certificates/sertifikat-sootvetstviya-eko-kon.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-sm text-mute transition-colors hover:text-ink"
+        >
+          <FileCheck className="h-4 w-4 shrink-0 text-success" />
+          Сертификат соответствия экологическим требованиям (PDF)
+        </a>
+      )}
 
       {/* Quantity */}
       <div className="flex items-center gap-3">
