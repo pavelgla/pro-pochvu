@@ -4,6 +4,7 @@
  * Stores CDN photo URLs in product.images, descriptions in product.fullDesc
  */
 import { PrismaClient } from "@prisma/client";
+import { mergeProductImages } from "../src/lib/marketplace-images";
 
 const prisma = new PrismaClient();
 
@@ -114,24 +115,28 @@ async function syncAccount(
       .map((p) => p.big)
       .filter(Boolean);
 
-    // Merge: keep existing non-WB images, add WB CDN images
+    // Merge: keep existing non-WB images, add WB CDN images.
+    // Returns null for products whose gallery is curated by hand — those keep theirs.
     const existingImages = Array.isArray(product.images)
       ? (product.images as string[])
       : [];
-    const nonWbImages = existingImages.filter(
-      (url) => !url.includes("wbbasket.ru") && !url.includes("/images/wb/")
-    );
-    const mergedImages = [...imageUrls, ...nonWbImages];
+    const mergedImages = mergeProductImages(slug, existingImages, imageUrls);
 
     // Update product: images + fullDesc (only if empty)
-    const updateData: Record<string, unknown> = {
-      images: mergedImages,
-    };
+    const updateData: Record<string, unknown> = {};
+
+    if (mergedImages) {
+      updateData.images = mergedImages;
+    } else {
+      console.log(`[WB-CONTENT] ${slug}: галерея ведётся вручную, фото не трогаем`);
+    }
 
     if (!product.fullDesc && card.description) {
       updateData.fullDesc = card.description;
       console.log(`[WB-CONTENT] ${slug}: обновляем описание (${card.description.length} симв)`);
     }
+
+    if (Object.keys(updateData).length === 0) continue;
 
     await prisma.product.update({
       where: { id: product.id },
@@ -139,7 +144,7 @@ async function syncAccount(
     });
 
     console.log(
-      `[WB-CONTENT] ${slug}: ${imageUrls.length} фото, ` +
+      `[WB-CONTENT] ${slug}: ${mergedImages ? `${imageUrls.length} фото` : "фото сохранены"}, ` +
       `${updateData.fullDesc ? "описание обновлено" : "описание уже есть"}`
     );
   }
