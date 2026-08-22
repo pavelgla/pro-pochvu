@@ -18,6 +18,19 @@ const nextConfig = {
         destination: '/product/gorshki-prozrachnye-fitomodul',
         permanent: true,
       },
+      // Grunt SKUs consolidated into grunt-ecokon-20l (deactivated 2026-05 / 2026-08).
+      // Both pages had organic traffic and were dropped by Yandex as HTTP_ERROR;
+      // grunt-ecokon-organicheskiy was Google's top landing for "грунт эко конь".
+      {
+        source: '/product/grunt-ecokon-organicheskiy',
+        destination: '/product/grunt-ecokon-20l',
+        permanent: true,
+      },
+      {
+        source: '/product/grunt-ecokon-ovoshchi',
+        destination: '/product/grunt-ecokon-20l',
+        permanent: true,
+      },
     ];
   },
 };

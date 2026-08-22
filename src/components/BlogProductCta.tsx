@@ -11,11 +11,15 @@ import { TELEGRAM_URL } from "@/lib/constants";
  * End-of-article CTA. Shows the article's anchor product with direct
  * "buy on marketplace" buttons. Falls back to a generic catalog CTA
  * when no product is mapped/found.
+ *
+ * The isActive filter is load-bearing: /product/<slug> 404s for a deactivated
+ * product, so without it a discontinued SKU keeps rendering a full CTA whose
+ * every link is dead. Guarded by scripts/check-blog-anchors.ts.
  */
 export async function BlogProductCta({ productSlug }: { productSlug?: string }) {
   const product = productSlug
-    ? await prisma.product.findUnique({
-        where: { slug: productSlug },
+    ? await prisma.product.findFirst({
+        where: { slug: productSlug, isActive: true },
         include: { productLine: true },
       })
     : null;
