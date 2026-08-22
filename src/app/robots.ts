@@ -30,7 +30,9 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
       {
-        // Яндекс читает Clean-param через свой формат, но дополнительно явный disallow не помешает
+        // Свой блок User-agent роботом читается ВМЕСТО общего, а не в дополнение к нему,
+        // поэтому параметрические запреты приходится дублировать: без них Яндекс ходил
+        // в /catalog?brand=… и раз за разом выкидывал их как NOT_CANONICAL.
         userAgent: "Yandex",
         allow: "/",
         disallow: [
@@ -43,6 +45,14 @@ export default function robots(): MetadataRoute.Robots {
           "/order/",
           "/test-ui",
           "/legal",
+          "/catalog?",
+          "/*?sort=",
+          "/*?page=",
+          "/*?brand=",
+          "/*?category=",
+          "/*?priceMin=",
+          "/*?priceMax=",
+          "/*?rating=",
         ],
       },
     ],
