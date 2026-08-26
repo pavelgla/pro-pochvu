@@ -41,12 +41,51 @@ describe("buildBotCatalogWhere", () => {
   it("never returns inactive products", () => {
     expect(buildBotCatalogWhere({ limit: 5 }, true).isActive).toBe(true);
   });
+  it("matches each word separately — the buyer's phrase is never a product name", () => {
+    // Live smoke 27.08: "рассада томатов" found nothing and the assistant told the buyer
+    // we have no fertiliser for tomato seedlings, while "Удобрение ЭКО Конь для рассады"
+    // sits in the catalogue. A whole-phrase LIKE never matches how people write.
+    const where = buildBotCatalogWhere({ q: "рассада томатов", limit: 5 }, true);
+    expect(where.AND).toEqual([
+      { OR: [
+        { name: { contains: "расса", mode: "insensitive" } },
+        { shortDesc: { contains: "расса", mode: "insensitive" } },
+        { fullDesc: { contains: "расса", mode: "insensitive" } },
+      ] },
+      { OR: [
+        { name: { contains: "томат", mode: "insensitive" } },
+        { shortDesc: { contains: "томат", mode: "insensitive" } },
+        { fullDesc: { contains: "томат", mode: "insensitive" } },
+      ] },
+    ]);
+  });
+
+  it("matches on a stem so падежи do not break the lookup", () => {
+    // The card says «для рассады», the buyer writes «рассада» — a plain LIKE on the whole
+    // word misses it, and the assistant answers that we have no such product.
+    const where = buildBotCatalogWhere({ q: "рассада", limit: 5 }, true);
+    expect(where.AND[0].OR[0]).toEqual({ name: { contains: "расса", mode: "insensitive" } });
+  });
+
+  it("does not chop short words into noise", () => {
+    expect(buildBotCatalogWhere({ q: "грунт", limit: 5 }, true).AND[0].OR[0])
+      .toEqual({ name: { contains: "грунт", mode: "insensitive" } });
+  });
+
+  it("drops words shorter than three letters so 'для' and 'на' do not narrow the search", () => {
+    const where = buildBotCatalogWhere({ q: "для орхидей", limit: 5 }, true);
+    expect(where.AND).toHaveLength(1);
+    expect(where.AND[0].OR[0]).toEqual({ name: { contains: "орхид", mode: "insensitive" } });
+  });
+
   it("searches name and description by text", () => {
     const where = buildBotCatalogWhere({ q: "орхид", limit: 5 }, true);
-    expect(where.OR).toEqual([
-      { name: { contains: "орхид", mode: "insensitive" } },
-      { shortDesc: { contains: "орхид", mode: "insensitive" } },
-      { fullDesc: { contains: "орхид", mode: "insensitive" } },
+    expect(where.AND).toEqual([
+      { OR: [
+        { name: { contains: "орхид", mode: "insensitive" } },
+        { shortDesc: { contains: "орхид", mode: "insensitive" } },
+        { fullDesc: { contains: "орхид", mode: "insensitive" } },
+      ] },
     ]);
   });
   it("hides Tsvetologiya when the feature flag is off", () => {

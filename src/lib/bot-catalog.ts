@@ -7,6 +7,13 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pro-pochvu.ru";
 export const BOT_SEARCH_DEFAULT_LIMIT = 5;
 export const BOT_SEARCH_MAX_LIMIT = 20;
 
+// Words that carry no meaning for a catalogue lookup but would narrow it to nothing.
+const STOP_WORDS = new Set([
+  "для", "или", "что", "как", "это", "чем", "при", "под", "над", "без", "тоже", "если",
+  "мне", "вам", "нам", "ваш", "наш", "есть", "нужно", "надо", "можно", "хочу", "купить",
+  "посоветуйте", "подскажите", "пожалуйста", "удобрение", "удобрения",
+]);
+
 const BRANDS = ["ecokon", "tsvetologiya"] as const;
 type Brand = (typeof BRANDS)[number];
 
@@ -39,15 +46,33 @@ export function parseBotSearchParams(sp: URLSearchParams): BotSearchParams {
   };
 }
 
+// Poor man's Russian stemming: the catalogue says «для рассады», the buyer writes «рассада»,
+// and a plain LIKE on the whole word misses it. Keeping the first five letters covers the
+// endings; a slightly wider match is far cheaper than a missed product in a 14-item catalogue.
+const STEM_LENGTH = 5;
+
+function stem(word: string): string {
+  return word.length > STEM_LENGTH ? word.slice(0, STEM_LENGTH) : word;
+}
+
 export function buildBotCatalogWhere(params: BotSearchParams, showTsvetologiya: boolean) {
   const where: Record<string, any> = { isActive: true };
 
-  if (params.q) {
-    where.OR = [
-      { name: { contains: params.q, mode: "insensitive" } },
-      { shortDesc: { contains: params.q, mode: "insensitive" } },
-      { fullDesc: { contains: params.q, mode: "insensitive" } },
-    ];
+  // People type "рассада томатов" or "чем подкормить орхидею", never a product name, so the
+  // phrase is matched word by word: every meaningful word must appear somewhere in the card.
+  const words = (params.q || "")
+    .toLowerCase()
+    .split(/[^a-zA-Zа-яА-ЯёЁ0-9]+/)
+    .filter((word) => word.length >= 3 && !STOP_WORDS.has(word))
+    .map(stem);
+  if (words.length) {
+    where.AND = words.map((word) => ({
+      OR: [
+        { name: { contains: word, mode: "insensitive" } },
+        { shortDesc: { contains: word, mode: "insensitive" } },
+        { fullDesc: { contains: word, mode: "insensitive" } },
+      ],
+    }));
   }
 
   // With the flag off, /catalog/fitmoduli and the tsvetologiya lines are 404 —
