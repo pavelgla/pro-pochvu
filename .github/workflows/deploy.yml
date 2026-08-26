@@ -80,6 +80,7 @@ jobs:
             NEXT_PUBLIC_SHOW_TSVETOLOGIYA=true
             NEXT_PUBLIC_YANDEX_VERIFICATION=53a70f2c26dfd38f
             NEXT_PUBLIC_GOOGLE_VERIFICATION=scIwgrTC_5V2PiG2S9E5T8u_AYsFkB4ctn6PLVCnXNM
+            NEXT_PUBLIC_CONOMNI_WIDGET_TOKEN=${{ secrets.NEXT_PUBLIC_CONOMNI_WIDGET_TOKEN }}
           cache-from: type=gha,scope=web
           cache-to: type=gha,mode=max,scope=web
 
@@ -143,6 +144,8 @@ jobs:
             set_env "EMAIL_SMTP_PASS" "${{ secrets.EMAIL_SMTP_PASS }}"
             set_env "EMAIL_SMTP_FROM" "Эко Конь <noreply@pro-pochvu.ru>"
             set_env "EMAIL_SMTP_SECURE" "true"
+            # Shared secret for the site assistant's catalog tool (server-side only, NOT a build-arg)
+            set_env "BOT_API_SECRET" "${{ secrets.BOT_API_SECRET }}"
 
             # Login to GHCR
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

@@ -4,6 +4,7 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
+import ConomniWidget from "@/components/ConomniWidget";
 import { Metrika } from "@/components/analytics/Metrika";
 import { ClickTracker } from "@/components/analytics/ClickTracker";
 import {
@@ -155,6 +156,7 @@ export default function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer />
           <CookieBanner />
+          <ConomniWidget />
         </AuthProvider>
         <Metrika />
         <ClickTracker />
