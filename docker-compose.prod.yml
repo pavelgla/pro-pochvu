@@ -47,6 +47,9 @@ services:
       APISHIP_API_KEY: ${APISHIP_API_KEY}
       APISHIP_FROM_CITY_ID: ${APISHIP_FROM_CITY_ID}
       APISHIP_PLATFORM_ID: ${APISHIP_PLATFORM_ID:-}
+      # Общий секрет инструмента search_catalog у ассистента сайта. Без строки здесь
+      # переменная лежит в .env на VPS, но в контейнер не попадает — эндпоинт отвечает 401 всем.
+      BOT_API_SECRET: ${BOT_API_SECRET:-}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
       EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST:-smtp.mail.ru}
