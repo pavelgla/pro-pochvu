@@ -5,6 +5,8 @@ import {
   parseBotSearchParams,
   buildBotCatalogWhere,
   serializeBotProduct,
+  botSearchStems,
+  rankBotResults,
 } from "@/lib/bot-catalog";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +28,9 @@ export async function GET(req: NextRequest) {
       prisma.product.count({ where }),
       prisma.product.findMany({
         where,
-        take: params.limit,
+        // The whole catalogue is small, so matches are ranked here rather than in SQL:
+        // relevance by name first, popularity second (see rankBotResults).
+        take: 50,
         orderBy: [{ reviewsCount: "desc" }, { rating: "desc" }],
         select: {
           name: true,
@@ -42,7 +46,9 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    const results = products.map(serializeBotProduct);
+    const results = rankBotResults(products, botSearchStems(params.q))
+      .slice(0, params.limit)
+      .map(serializeBotProduct);
     return NextResponse.json({ count: total, returned: results.length, results });
   } catch (error) {
     console.error("[api/catalog/search] catalog unavailable:", error);

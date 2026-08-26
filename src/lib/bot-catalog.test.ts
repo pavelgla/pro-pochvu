@@ -3,6 +3,7 @@ import {
   parseBotSearchParams,
   buildBotCatalogWhere,
   serializeBotProduct,
+  rankBotResults,
   BOT_SEARCH_MAX_LIMIT,
 } from "./bot-catalog";
 
@@ -108,6 +109,40 @@ describe("buildBotCatalogWhere", () => {
   it("applies the price range", () => {
     expect(buildBotCatalogWhere({ priceMin: 500, priceMax: 1200, limit: 5 }, true).price)
       .toEqual({ gte: 500, lte: 1200 });
+  });
+});
+
+describe("rankBotResults", () => {
+  const line = { name: "Био-чай", slug: "bio-chay", brand: "ecokon" };
+  const product = (name: string, reviewsCount: number) => ({
+    name, slug: "s", price: 1, oldPrice: null, stock: 1, rating: 4.5,
+    reviewsCount, weightGrams: 80, productLine: line,
+  });
+
+  it("puts the product whose name matches the question first", () => {
+    // Sorted by popularity alone, «Удобрение для рассады» loses to the bestseller and the
+    // assistant recommends the wrong thing while the right one sits two lines below.
+    const ranked = rankBotResults(
+      [product("Био-чай с янтарём и фосфором", 748), product("Удобрение для рассады", 63)],
+      ["расса"]
+    );
+    expect(ranked[0].name).toBe("Удобрение для рассады");
+  });
+
+  it("falls back to popularity when nothing matches by name", () => {
+    const ranked = rankBotResults(
+      [product("Удобрение для овощей", 106), product("Био-чай с янтарём", 748)],
+      ["фитом"]
+    );
+    expect(ranked[0].name).toBe("Био-чай с янтарём");
+  });
+
+  it("keeps popularity order among equally matching names", () => {
+    const ranked = rankBotResults(
+      [product("Био-чай для орхидей", 166), product("Био-чай с янтарём", 748)],
+      ["био"]
+    );
+    expect(ranked.map((p) => p.name)).toEqual(["Био-чай с янтарём", "Био-чай для орхидей"]);
   });
 });
 
