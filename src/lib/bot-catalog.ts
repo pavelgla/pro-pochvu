@@ -55,16 +55,35 @@ function stem(word: string): string {
   return word.length > STEM_LENGTH ? word.slice(0, STEM_LENGTH) : word;
 }
 
+export function botSearchStems(q?: string): string[] {
+  return (q || "")
+    .toLowerCase()
+    .split(/[^a-zA-Zа-яА-ЯёЁ0-9]+/)
+    .filter((word) => word.length >= 3 && !STOP_WORDS.has(word))
+    .map(stem);
+}
+
+// A hit in the product name beats a hit buried in the description: «рассада томатов» must
+// surface «Удобрение для рассады», not the bestseller that happens to mention tomatoes.
+export function rankBotResults<T extends { name: string; reviewsCount: number }>(
+  products: T[],
+  stems: string[]
+): T[] {
+  const nameScore = (product: T) => {
+    const name = product.name.toLowerCase();
+    return stems.filter((s) => name.includes(s)).length;
+  };
+  return [...products].sort(
+    (a, b) => nameScore(b) - nameScore(a) || b.reviewsCount - a.reviewsCount
+  );
+}
+
 export function buildBotCatalogWhere(params: BotSearchParams, showTsvetologiya: boolean) {
   const where: Record<string, any> = { isActive: true };
 
   // People type "рассада томатов" or "чем подкормить орхидею", never a product name, so the
   // phrase is matched word by word: every meaningful word must appear somewhere in the card.
-  const words = (params.q || "")
-    .toLowerCase()
-    .split(/[^a-zA-Zа-яА-ЯёЁ0-9]+/)
-    .filter((word) => word.length >= 3 && !STOP_WORDS.has(word))
-    .map(stem);
+  const words = botSearchStems(params.q);
   if (words.length) {
     where.AND = words.map((word) => ({
       OR: [
