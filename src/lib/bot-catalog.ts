@@ -123,12 +123,15 @@ type BotProductInput = {
   productLine: { name: string; slug: string; brand: string } | null;
 };
 
+// Money is deliberately absent from what the assistant sees (decision of 27.08). A model
+// holding a number starts improvising with it — a live run quoted 600 ₽ for a 1000 ₽ product
+// and invented the slug to go with it. The price lives on the product page, which is where
+// the buyer is sent; it also changes with the marketplace sync, so a quoted figure ages badly.
 export function serializeBotProduct(product: BotProductInput) {
   return {
     name: product.name,
     slug: product.slug,
-    price: product.price,
-    oldPrice: product.oldPrice ?? null,
+    hasDiscount: product.oldPrice != null && product.oldPrice > product.price,
     // A flag, not a count: how many bags are on the shelf is none of the buyer's business.
     inStock: product.stock > 0,
     rating: product.rating,
