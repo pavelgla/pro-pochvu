@@ -159,6 +159,15 @@ describe("serializeBotProduct", () => {
     productLine: { name: "Био-чай", slug: "bio-chay", brand: "ecokon" },
   };
 
+  it("never hands the assistant a price — what the model cannot see, it cannot invent", () => {
+    // Decision of 27.08: the assistant sends people to the product page instead of quoting
+    // money. A model that sees a number starts improvising with it (live run invented 600 ₽
+    // and a slug that 404s), and prices here change with marketplace sync anyway.
+    const out = serializeBotProduct(product) as Record<string, unknown>;
+    expect(out).not.toHaveProperty("price");
+    expect(out).not.toHaveProperty("oldPrice");
+  });
+
   it("gives the assistant an absolute product link", () => {
     expect(serializeBotProduct(product).url).toBe(
       "https://pro-pochvu.ru/product/bio-chay-orhidei"
@@ -172,11 +181,9 @@ describe("serializeBotProduct", () => {
   it("marks a sold-out product", () => {
     expect(serializeBotProduct({ ...product, stock: 0 }).inStock).toBe(false);
   });
-  it("passes price, discount and reviews through", () => {
+  it("passes name, line and reviews through", () => {
     expect(serializeBotProduct(product)).toMatchObject({
       name: "Удобрение ЭКО КОНЬ Био-чай для орхидей",
-      price: 933,
-      oldPrice: 1150,
       rating: 4.5,
       reviewsCount: 166,
       weightGrams: 80,
@@ -184,7 +191,8 @@ describe("serializeBotProduct", () => {
       brand: "ecokon",
     });
   });
-  it("survives a product without a discount", () => {
-    expect(serializeBotProduct({ ...product, oldPrice: null }).oldPrice).toBeNull();
+  it("still marks a discount, without naming the numbers", () => {
+    expect(serializeBotProduct(product).hasDiscount).toBe(true);
+    expect(serializeBotProduct({ ...product, oldPrice: null }).hasDiscount).toBe(false);
   });
 });
