@@ -137,6 +137,7 @@ jobs:
             set_env "WB2_PRICES_KEY" "${{ secrets.WB2_PRICES_KEY }}"
             set_env "TELEGRAM_BOT_TOKEN" "${{ secrets.TELEGRAM_BOT_TOKEN }}"
             set_env "TELEGRAM_CHAT_ID" "134445625"
+            set_env "TELEGRAM_ADMIN_CHAT_ID" "134445625"
             # Email SMTP (Mail.ru для бизнеса)
             set_env "EMAIL_SMTP_HOST" "smtp.mail.ru"
             set_env "EMAIL_SMTP_PORT" "465"

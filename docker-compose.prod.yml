@@ -52,6 +52,9 @@ services:
       BOT_API_SECRET: ${BOT_API_SECRET:-}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      # Админ-чат для уведомлений о заказах (см. src/lib/telegram.ts → TELEGRAM_ADMIN_CHAT_ID).
+      # Раньше имя переменной не совпадало с кодом, и уведомления молча уходили в mock.
+      TELEGRAM_ADMIN_CHAT_ID: ${TELEGRAM_ADMIN_CHAT_ID:-134445625}
       EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST:-smtp.mail.ru}
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT:-465}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
