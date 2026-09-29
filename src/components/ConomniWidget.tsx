@@ -4,7 +4,7 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { shouldShowConomniWidget } from "@/lib/widget";
 
-const BASE_URL = "https://conomni.ru";
+const BASE_URL = "https://odnokno.ru";
 
 export default function ConomniWidget() {
   // Read the token inside the component, not as a module constant: a module
