@@ -235,6 +235,10 @@ export const BLOG_PRODUCT_ANCHORS: Record<string, string> = {
   "kak-perevesti-rasteniya-na-fitilnyy-poliv": "fitomodul-50-4-white",
   "razmnozhenie-hoyi-cherenkom-ili-listom": "udobrenie-kornevaya",
   "tropicheskaya-zona-dlya-rasteniy-svoimi-rukami": "fitomodul-50-4-green",
+  // Батч 9 по материалам @spottykit (октябрь 2026)
+  "podkormka-komnatnyh-rasteniy-osenyu": "bio-chay-yantar-fosfor",
+  "osenniy-uhod-za-komnatnymi-rasteniyami": "udobrenie-kornevaya",
+  "pochemu-hoyya-ne-tsvetet": "bio-chay-yantar-fosfor",
 };
 
 // --- Статьи из печатной прессы («СМИ о нас») ---
@@ -318,4 +322,8 @@ export const BLOG_IMAGE_CREDITS: Record<string, ImageCredit> = {
   "kak-perevesti-rasteniya-na-fitilnyy-poliv": { author: "Sayeed X Chowdhury", source: "https://www.pexels.com/photo/colorful-vertical-garden-wall-with-potted-plants-33628019/" },
   "razmnozhenie-hoyi-cherenkom-ili-listom": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
   "tropicheskaya-zona-dlya-rasteniy-svoimi-rukami": { author: "Magda Ehlers", source: "https://www.pexels.com/photo/green-plants-on-black-pots-5958769/" },
+  // Батч 9 @spottykit (октябрь 2026) — переиспользованы существующие фото Pexels (тот же автор/источник)
+  "podkormka-komnatnyh-rasteniy-osenyu": { author: "cottonbro studio", source: "https://www.pexels.com/photo/a-man-watering-green-houseplants-9710641/" },
+  "osenniy-uhod-za-komnatnymi-rasteniyami": { author: "primitive-spaces", source: "https://www.pexels.com/photo/indoor-potted-plants-by-a-glass-window-36065272/" },
+  "pochemu-hoyya-ne-tsvetet": { author: "Karola G", source: "https://www.pexels.com/photo/person-watering-plants-on-white-table-6640487/" },
 };
