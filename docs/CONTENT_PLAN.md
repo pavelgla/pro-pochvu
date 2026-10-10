@@ -70,6 +70,9 @@
 - ✅ **Как перевести растения на фитильный полив в фитомодуле** → kak-perevesti-rasteniya-na-fitilnyy-poliv · fitomodul-50-4-white (батч 8 @spottykit, category tsvetologiya)
 - ✅ **Размножение хойи: черенком быстрее, чем листом** → razmnozhenie-hoyi-cherenkom-ili-listom · udobrenie-kornevaya (батч 8 @spottykit)
 - ✅ **Влажный тропический уголок для растений своими руками** → tropicheskaya-zona-dlya-rasteniy-svoimi-rukami · fitomodul-50-4-green (батч 8 @spottykit)
+- ✅ **Подкормка комнатных растений осенью: кормить или нет** → podkormka-komnatnyh-rasteniy-osenyu · bio-chay-yantar-fosfor (батч 9 @spottykit, category udobreniya, 2026-10-10)
+- ✅ **Осенний уход за комнатными растениями: что поменять** → osenniy-uhod-za-komnatnymi-rasteniyami · udobrenie-kornevaya (батч 9 @spottykit, 2026-10-10)
+- ✅ **Почему хойя не цветёт: 5 условий для бутонов** → pochemu-hoyya-ne-tsvetet · bio-chay-yantar-fosfor (батч 9 @spottykit, 2026-10-10)
 
 ## Производство
 
